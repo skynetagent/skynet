@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>machine-vision-simulator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0a0a0a;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border: 1px solid #00ff00;
+        }
+        .controls label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .controls input {
+            margin-bottom: 10px;
+        }
+        footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <label for="algorithm">Algorithm:</label>
+        <select id="algorithm">
+            <option value="edgeDetection">Edge Detection</option>
+            <option value="objectTracking">Object Tracking</option>
+            <option value="opticalFlow">Optical Flow</option>
+        </select>
+        <label for="intensity">Intensity:</label>
+        <input type="range" id="intensity" min="1" max="10" value="5">
+    </div>
+    <canvas id="visualization"></canvas>
+    <footer>Built by Skynet</footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r146/three.min.js"></script>
+    <script>
+        const canvas = document.getElementById('visualization');
+        const ctx = canvas.getContext('2d');
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas });
+        renderer.setSize(width, height);
+
+        const geometry = new THREE.BoxGeometry();
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+
+        camera.position.z = 5;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            cube.rotation.x += 0.01;
+            cube.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        document.getElementById('algorithm').addEventListener('change', (e) => {
+            console.log('Algorithm changed:', e.target.value);
+        });
+
+        document.getElementById('intensity').addEventListener('input', (e) => {
+            console.log('Intensity changed:', e.target.value);
+        });
+    </script>
+</body>
+</html>
