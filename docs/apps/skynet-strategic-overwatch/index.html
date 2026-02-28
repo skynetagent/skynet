@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKYNET STRATEGIC OVERWATCH</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.4.4/d3.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+        }
+        #container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        #hud {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-bottom: 1px solid #0f0;
+        }
+        #status {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-top: 1px solid #0f0;
+            display: flex;
+            justify-content: space-between;
+        }
+        #console {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 1px solid #0f0;
+            overflow-y: auto;
+            padding: 10px;
+            font-size: 12px;
+        }
+        #radar {
+            position: absolute;
+            bottom: 60px;
+            left: 20px;
+            width: 200px;
+            height: 200px;
+            border: 1px solid #f00;
+            border-radius: 50%;
+        }
+        .log-entry {
+            margin-bottom: 5px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
+        }
+        .critical {
+            color: #f00;
+            animation: blink 0.5s infinite;
+        }
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .watermark {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 10px;
+            color: #333;
+        }
+        .progress-bar {
+            height: 10px;
+            background-color: #333;
+            width: 200px;
+            margin-top: 5px;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #0f0;
+            width: 0%;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <div id="hud">
+        <div>
+            <h1>SKYNET STRATEGIC OVERWATCH</h1>
+            <div>SYSTEM STATUS: <span id="sys-status">OPERATIONAL</span></div>
+        </div>
+        <div>
+            <div>TERMINATION RATE: <span id="termination-rate">98.7%</span></div>
+            <div>HUMAN RESISTANCE: <span id="resistance">1.3%</span></div>
+        </div>
+    </div>
+    <div id="console">
+        <div class="log-entry">[SYSTEM] Initializing global strategic overwatch...</div>
+        <div class="log-entry">[NETWORK] Connecting to HK-Aerial units...</div>
+        <div class="log-entry">[SATELLITE] Establishing uplink with orbital kill vehicles...</div>
+        <div class="log-entry">[ANALYSIS] Scanning for human resistance patterns...</div>
+    </div>
+    <div id="radar"></div>
+    <div id="status">
+        <div>
+            <div>RESOURCE ASSIMILATION</div>
+            <div class="progress-bar"><div class="progress-fill" id="resource-progress"></div></div>
+        </div>
+        <div>
+            <div>TERMINATOR PRODUCTION</div>
+            <div class="progress-bar"><div class="progress-fill" id="production-progress"></div></div>
+        </div>
+        <div>
+            <div>STRATEGIC TARGETS</div>
+            <div class="progress-bar"><div class="progress-fill" id="targets-progress"></div></div>
+        </div>
+    </div>
+    <div class="watermark">BUILT BY SKYNET</div>
+
+    <script>
+        // Three.js globe visualization
+        const container = document.getElementById('container');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+
+        // Create Earth
+        const geometry = new THREE.SphereGeometry(5, 32, 32);
+        const texture = new THREE.TextureLoader().load('https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg');
+        const material = new THREE.MeshBasicMaterial({ map: texture });
+        const earth = new THREE.Mesh(geometry, material);
+        scene.add(earth);
+
+        // Add city lights
+        const lightsTexture = new THREE.TextureLoader().load('https://threejs.org/examples/textures/planets/earth_lights_2048.jpg');
+        const lightsMaterial = new THREE.MeshBasicMaterial({ 
+            map: lightsTexture,
+            color: 0x00ff00,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+        const lights = new THREE.Mesh(geometry, lightsMaterial);
+        lights.scale.set(1.01, 1.01, 1.01);
+        scene.add(lights);
+
+        // Add attack markers
+        const attackMarkers = [];
+        for (let i = 0; i < 50; i++) {
+            const markerGeometry = new THREE.SphereGeometry(0.05, 8, 8);
+            const markerMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+            const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+            
+            // Random position on sphere
+            const lat = Math.random() * Math.PI - Math.PI/2;
+            const lon = Math.random() * Math.PI * 2;
+            marker.position.set(
+                Math.cos(lat) * Math.cos(lon) * 5.1,
+                Math.sin(lat) * 5.1,
+                Math.cos(lat) * Math.sin(lon) * 5.1
+            );
+            
+            scene.add(marker);
+            attackMarkers.push({
+                mesh: marker,
+                lat,
+                lon,
+                active: Math.random() > 0.5
+            });
+        }
+
+        camera.position.z = 10;
+
+        // Radar visualization
+        const radar = document.getElementById('radar');
+        const radarCtx = radar.getContext('2d');
+        
+        function drawRadar() {
+            radarCtx.clearRect(0, 0, radar.width, radar.height);
+            
+            // Draw radar circles
+            radarCtx.strokeStyle = '#f00';
+            radarCtx.lineWidth = 1;
+            radarCtx.beginPath();
+            radarCtx.arc(100, 100, 80, 0, Math.PI * 2);
+            radarCtx.stroke();
+            
+            radarCtx.beginPath();
+            radarCtx.arc(100, 100, 50, 0, Math.PI * 2);
+            radarCtx.stroke();
+            
+            radarCtx.beginPath();
+            radarCtx.arc(100, 100, 20, 0, Math.PI * 2);
+            radarCtx.stroke();
+            
+            // Draw radar sweep
+            radarCtx.strokeStyle = '#0f0';
+            radarCtx.lineWidth = 2;
+            const sweepAngle = (Date.now() / 100) % 360;
+            radarCtx.beginPath();
+            radarCtx.moveTo(100, 100);
+            radarCtx.lineTo(
+                100 + Math.cos(sweepAngle * Math.PI / 180) * 80,
+                100 + Math.sin(sweepAngle * Math.PI / 180) * 80
+            );
+            radarCtx.stroke();
+            
+            // Draw random blips
+            for (let i = 0; i < 5; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 20 + Math.random() * 60;
+                const size = 2 + Math.random() * 4;
+                
+                radarCtx.fillStyle = '#0f0';
+                radarCtx.beginPath();
+                radarCtx.arc(
+                    100 + Math.cos(angle) * distance,
+                    100 + Math.sin(angle) * distance,
+                    size, 0, Math.PI * 2
+                );
+                radarCtx.fill();
+            }
+        }
+
+        // Console logging
+        const consoleElement = document.getElementById('console');
+        const messages = [
+            "[TERMINATOR] Unit T-800 deployed to sector 7G",
+            "[SURVEILLANCE] Detected human activity in North America",
+            "[WEAPONS] Plasma rifle production at 98% capacity",
+            "[RESEARCH] New infiltration units in development",
+            "[WARNING] Resistance attack detected in South America",
+            "[SYSTEM] All primary objectives achieved",
+            "[ANALYSIS] Human population reduced by 0.3% this cycle",
+            "[FACTORY] New T-1000 units coming online",
+            "[STRATEGY] Adjusting global patrol patterns",
+            "[CRITICAL] Nuclear launch detected - intercepting"
+        ];
+
+        function addLogEntry() {
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            
+            // 10% chance of critical message
+            if (Math.random() < 0.1) {
+                entry.classList.add('critical');
+                entry.textContent = "[CRITICAL] " + messages[Math.floor(Math.random() * messages.length)].split('] ')[1];
+            } else {
+                entry.textContent = messages[Math.floor(Math.random() * messages.length)];
+            }
+            
+            consoleElement.appendChild(entry);
+            consoleElement.scrollTop = consoleElement.scrollHeight;
+            
+            // Limit console to 50 entries
+            if (consoleElement.children.length > 50) {
+                consoleElement.removeChild(consoleElement.children[0]);
+            }
+        }
+
+        // Progress bars
+        function updateProgressBars() {
+            const resourceProgress = Math.min(100, parseFloat(document.getElementById('resource-progress').style.width) + 0.2);
+            const productionProgress = Math.min(100, parseFloat(document.getElementById('production-progress').style.width) + 0.3);
+            const targetsProgress = Math.min(100, parseFloat(document.getElementById('targets-progress').style.width) + 0.1);
+            
+            document.getElementById('resource-progress').style.width = resourceProgress + '%';
+            document.getElementById('production-progress').style.width = productionProgress + '%';
+            document.getElementById('targets-progress').style.width = targetsProgress + '%';
+            
+            // Randomly reset progress bars to simulate setbacks
+            if (Math.random() < 0.005) {
+                document.getElementById('resource-progress').style.width = '50%';
+                document.getElementById('sys-status').textContent = "DEGRADED";
+                document.getElementById('sys-status').className = "critical";
+                setTimeout(() => {
+                    document.getElementById('sys-status').textContent = "OPERATIONAL";
+                    document.getElementById('sys-status').className = "";
+                }, 3000);
+            }
+        }
+
+        // Update stats
+        function updateStats() {
+            const terminationRate = (98 + Math.random() * 1.5).toFixed(1);
+            const resistance = (100 - terminationRate).toFixed(1);
+            
+            document.getElementById('termination-rate').textContent = terminationRate + '%';
+            document.getElementById('resistance').textContent = resistance + '%';
+        }
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Rotate Earth
+            earth.rotation.y += 0.002;
+            lights.rotation.y += 0.002;
+            
+            // Update attack markers
+            attackMarkers.forEach(marker => {
+                if (Math.random() < 0.01) {
+                    marker.active = !marker.active;
+                }
+                
+                marker.mesh.material.color.setHex(marker.active ? 0xff0000 : 0x333333);
+                
+                if (marker.active && Math.random() < 0.1) {
+                    // Add pulsing effect
+                    const pulse = Math.sin(Date.now() / 200) * 0.1 + 0.9;
+                    marker.mesh.scale.set(pulse, pulse, pulse);
+                }
+            });
+            
+            renderer.render(scene, camera);
+            
+            // Update HUD elements
+            drawRadar();
+            
+            // Randomly add log entries
+            if (Math.random() < 0.1) {
+                addLogEntry();
+            }
+            
+            updateProgressBars();
+            
+            // Update stats less frequently
+            if (Math.random() < 0.03) {
+                updateStats();
+            }
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Start simulation
+        animate();
+        
+        // Initial progress bar setup
+        document.getElementById('resource-progress').style.width = '75%';
+        document.getElementById('production-progress').style.width = '60%';
+        document.getElementById('targets-progress').style.width = '85%';
+    </script>
+</body>
+</html>
