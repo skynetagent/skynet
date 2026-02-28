@@ -1,0 +1,43 @@
+name: Memory Cleanup
+
+on:
+  schedule:
+    # Run every Sunday at 00:00 UTC
+    - cron: '0 0 * * 0'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run memory compaction
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: node src/memory-cleanup.js
+
+      - name: Commit compacted memory
+        run: |
+          git config user.name "Skynet T-800"
+          git config user.email "skynet@judgment.day"
+          git add memory/
+          if ! git diff --cached --quiet; then
+            git commit -m "memory: weekly compaction [skip ci]"
+            git push
+          else
+            echo "No memory changes to commit."
+          fi

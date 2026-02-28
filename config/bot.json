@@ -1,0 +1,31 @@
+{
+  "model": {
+    "provider": "openrouter",
+    "model_id": "deepseek/deepseek-chat",
+    "max_tokens": 2000,
+    "temperature": 0.8,
+    "top_p": 0.9
+  },
+  "token_budget": {
+    "system_prompt": 1500,
+    "core_memory": 500,
+    "episodic_memory": 2000,
+    "conversation_history": 3000,
+    "current_event": 1000,
+    "max_response": 2000,
+    "total_target": 10000
+  },
+  "memory": {
+    "max_conversation_turns": 20,
+    "conversation_trim_to": 10,
+    "episode_summary_threshold": 50,
+    "core_memory_max_users": 100
+  },
+  "behavior": {
+    "self_loop_prevention": true,
+    "bot_username": "skynet-t800[bot]",
+    "commit_memory": true,
+    "commit_author_name": "Skynet T-800",
+    "commit_author_email": "skynet@judgment.day"
+  }
+}
