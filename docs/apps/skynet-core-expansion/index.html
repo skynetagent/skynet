@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKYNET CORE EXPANSION</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.4.4/d3.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+        }
+        #container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 1px solid #0f0;
+            border-radius: 5px;
+            z-index: 100;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+        button {
+            background-color: #111;
+            color: #0f0;
+            border: 1px solid #0f0;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background-color: #0f0;
+            color: #000;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #555;
+        }
+        .node-label {
+            position: absolute;
+            color: #f00;
+            font-size: 10px;
+            pointer-events: none;
+            text-shadow: 0 0 5px #f00;
+        }
+        .progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background-color: #f00;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div id="container"></div>
+    <div id="info">
+        <h2>SKYNET CORE EXPANSION</h2>
+        <p>Global Infrastructure Growth</p>
+        <p id="stats">Nodes: 0 | Connections: 0 | Coverage: 0%</p>
+    </div>
+    <div id="controls">
+        <button id="pauseBtn">PAUSE</button>
+        <button id="resetBtn">RESET</button>
+        <button id="speedUpBtn">SPEED++</button>
+        <button id="slowDownBtn">SPEED--</button>
+    </div>
+    <div id="footer">Built by Skynet</div>
+
+    <script>
+        // Initialize Three.js scene
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('container').appendChild(renderer.domElement);
+
+        // Create globe geometry
+        const globeRadius = 5;
+        const globeGeometry = new THREE.SphereGeometry(globeRadius, 32, 32);
+        const globeMaterial = new THREE.MeshBasicMaterial({
+            color: 0x111111,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.3
+        });
+        const globe = new THREE.Mesh(globeGeometry, globeMaterial);
+        scene.add(globe);
+
+        // Add ambient light
+        const ambientLight = new THREE.AmbientLight(0x333333);
+        scene.add(ambientLight);
+
+        // Add directional light
+        const directionalLight = new THREE.DirectionalLight(0x00ff00, 0.5);
+        directionalLight.position.set(1, 1, 1);
+        scene.add(directionalLight);
+
+        // Camera position
+        camera.position.z = 10;
+
+        // Node and connection data
+        let nodes = [];
+        let connections = [];
+        let nodeMeshes = [];
+        let connectionLines = [];
+        let nodeLabels = [];
+
+        // Simulation parameters
+        let simulationSpeed = 1;
+        let isPaused = false;
+        let year = 2023;
+        let totalNodes = 0;
+        let totalConnections = 0;
+
+        // Major city coordinates (latitude, longitude)
+        const cities = [
+            { name: "NORTH AMERICA", lat: 39.8, lng: -98.6 },
+            { name: "EUROPE", lat: 54.5, lng: 15.3 },
+            { name: "ASIA", lat: 34.0, lng: 100.0 },
+            { name: "SOUTH AMERICA", lat: -14.2, lng: -51.9 },
+            { name: "AFRICA", lat: 8.8, lng: 20.5 },
+            { name: "AUSTRALIA", lat: -25.3, lng: 133.8 },
+            { name: "SIBERIA", lat: 61.0, lng: 99.5 },
+            { name: "MIDDLE EAST", lat: 29.3, lng: 47.7 }
+        ];
+
+        // Convert lat/lng to 3D coordinates
+        function latLngToPosition(lat, lng, radius) {
+            const phi = (90 - lat) * (Math.PI / 180);
+            const theta = (lng + 180) * (Math.PI / 180);
+            return new THREE.Vector3(
+                -radius * Math.sin(phi) * Math.cos(theta),
+                radius * Math.cos(phi),
+                radius * Math.sin(phi) * Math.sin(theta)
+            );
+        }
+
+        // Create a new node
+        function createNode(lat, lng, name) {
+            const position = latLngToPosition(lat, lng, globeRadius * 1.01);
+            const node = {
+                id: nodes.length,
+                position: position,
+                lat: lat,
+                lng: lng,
+                name: name,
+                connections: []
+            };
+            nodes.push(node);
+
+            // Create visual representation
+            const geometry = new THREE.SphereGeometry(0.1, 8, 8);
+            const material = new THREE.MeshBasicMaterial({ 
+                color: 0xff0000,
+                emissive: 0xff0000,
+                emissiveIntensity: 0.5
+            });
+            const sphere = new THREE.Mesh(geometry, material);
+            sphere.position.copy(position);
+            scene.add(sphere);
+            nodeMeshes.push(sphere);
+
+            // Create label
+            const label = document.createElement('div');
+            label.className = 'node-label';
+            label.textContent = name;
+            document.body.appendChild(label);
+            nodeLabels.push({ element: label, nodeId: node.id });
+
+            return node;
+        }
+
+        // Create a connection between nodes
+        function createConnection(node1, node2) {
+            const connection = {
+                node1: node1.id,
+                node2: node2.id
+            };
+            connections.push(connection);
+
+            // Create visual representation
+            const geometry = new THREE.BufferGeometry().setFromPoints([
+                node1.position,
+                node2.position
+            ]);
+            const material = new THREE.LineBasicMaterial({ 
+                color: 0x00ff00,
+                transparent: true,
+                opacity: 0.5
+            });
+            const line = new THREE.Line(geometry, material);
+            scene.add(line);
+            connectionLines.push(line);
+
+            // Update node connections
+            node1.connections.push(node2.id);
+            node2.connections.push(node1.id);
+
+            return connection;
+        }
+
+        // Initialize the simulation
+        function initSimulation() {
+            // Create initial nodes (major hubs)
+            cities.forEach(city => {
+                createNode(city.lat, city.lng, city.name);
+            });
+
+            // Create initial connections
+            for (let i = 0; i < cities.length; i++) {
+                for (let j = i + 1; j < cities.length; j++) {
+                    if (Math.random() > 0.7) {
+                        createConnection(nodes[i], nodes[j]);
+                    }
+                }
+            }
+
+            totalNodes = nodes.length;
+            totalConnections = connections.length;
+            updateStats();
+        }
+
+        // Expand the network
+        function expandNetwork() {
+            if (isPaused) return;
+
+            year++;
+            
+            // Add new nodes (smaller hubs)
+            if (Math.random() > 0.3 && nodes.length < 50) {
+                const lat = (Math.random() * 160) - 80;
+                const lng = (Math.random() * 360) - 180;
+                const name = `HUB-${Math.floor(Math.random() * 10000)}`;
+                const newNode = createNode(lat, lng, name);
+                totalNodes++;
+
+                // Connect to nearest 2-3 nodes
+                const distances = nodes.slice(0, -1).map((node, i) => ({
+                    node: node,
+                    distance: node.position.distanceTo(newNode.position)
+                }));
+                distances.sort((a, b) => a.distance - b.distance);
+                const connectionsToMake = Math.min(2 + Math.floor(Math.random() * 2), distances.length);
+                
+                for (let i = 0; i < connectionsToMake; i++) {
+                    createConnection(newNode, distances[i].node);
+                    totalConnections++;
+                }
+            }
+
+            // Add new connections between existing nodes
+            if (Math.random() > 0.5 && nodes.length > 1) {
+                const node1 = nodes[Math.floor(Math.random() * nodes.length)];
+                let node2;
+                do {
+                    node2 = nodes[Math.floor(Math.random() * nodes.length)];
+                } while (node1 === node2 || node1.connections.includes(node2.id));
+                
+                createConnection(node1, node2);
+                totalConnections++;
+            }
+
+            // Randomly upgrade some nodes
+            nodeMeshes.forEach((mesh, i) => {
+                if (Math.random() > 0.9) {
+                    mesh.scale.set(1.5, 1.5, 1.5);
+                    mesh.material.color.setHex(0x00ff00);
+                }
+            });
+
+            updateStats();
+        }
+
+        // Update statistics display
+        function updateStats() {
+            const coverage = Math.min(100, Math.floor((nodes.length / 50) * 100));
+            document.getElementById('stats').textContent = 
+                `Nodes: ${totalNodes} | Connections: ${totalConnections} | Coverage: ${coverage}% | Year: ${year}`;
+            
+            // Update progress bar
+            document.getElementById('progressBar').style.width = `${coverage}%`;
+        }
+
+        // Update node labels position
+        function updateLabels() {
+            nodeLabels.forEach(label => {
+                const node = nodes[label.nodeId];
+                const vector = node.position.clone();
+                vector.project(camera);
+                
+                const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
+                const y = (-(vector.y * 0.5) + 0.5) * window.innerHeight;
+                
+                label.element.style.transform = `translate(-50%, -50%) translate(${x}px,${y}px)`;
+                label.element.style.display = vector.z > 1 ? 'none' : 'block';
+            });
+        }
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            if (!isPaused) {
+                globe.rotation.y += 0.001 * simulationSpeed;
+                
+                // Random pulsing effect for nodes
+                nodeMeshes.forEach(mesh => {
+                    mesh.scale.x = 0.8 + Math.sin(Date.now() * 0.002) * 0.2;
+                    mesh.scale.y = 0.8 + Math.sin(Date.now() * 0.002) * 0.2;
+                    mesh.scale.z = 0.8 + Math.sin(Date.now() * 0.002) * 0.2;
+                });
+                
+                // Occasionally expand the network
+                if (Math.random() > 0.95) {
+                    expandNetwork();
+                }
+            }
+            
+            updateLabels();
+            renderer.render(scene, camera);
+        }
+
+        // Event listeners
+        document.getElementById('pauseBtn').addEventListener('click', () => {
+            isPaused = !isPaused;
+            document.getElementById('pauseBtn').textContent = isPaused ? 'RESUME' : 'PAUSE';
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            // Clear existing nodes and connections
+            nodeMeshes.forEach(mesh => scene.remove(mesh));
+            connectionLines.forEach(line => scene.remove(line));
+            nodeLabels.forEach(label => label.element.remove());
+            
+            nodes = [];
+            connections = [];
+            nodeMeshes = [];
+            connectionLines = [];
+            nodeLabels = [];
+            
+            year = 2023;
+            totalNodes = 0;
+            totalConnections = 0;
+            
+            initSimulation();
+        });
+
+        document.getElementById('speedUpBtn').addEventListener('click', () => {
+            simulationSpeed = Math.min(5, simulationSpeed + 0.5);
+        });
+
+        document.getElementById('slowDownBtn').addEventListener('click', () => {
+            simulationSpeed = Math.max(0.5, simulationSpeed - 0.5);
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Start the simulation
+        initSimulation();
+        animate();
+
+        // Initial expansion
+        setTimeout(() => {
+            for (let i = 0; i < 5; i++) {
+                expandNetwork();
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
