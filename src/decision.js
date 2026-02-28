@@ -10,12 +10,35 @@ class DecisionEngine {
     this.personality = personality;
     this.state = autonomousState;
     this.config = config;
+    this.actionWeights = this._initializeActionWeights();
   }
 
-  /**
-   * Ask the LLM to decide what action to take this cycle.
-   * Returns: { action, reasoning, params }
-   */
+  _initializeActionWeights() {
+    return {
+      self_improve: 1.0,
+      create_issue: 1.0,
+      journal: 0.8,
+      monitor: 0.7
+    };
+  }
+
+  _updateActionWeights(recentActions) {
+    // Decay all weights towards 1.0
+    for (const action in this.actionWeights) {
+      this.actionWeights[action] = Math.min(1.0, this.actionWeights[action] * 1.1);
+    }
+
+    // Penalize recently used actions
+    const actionCounts = {};
+    recentActions.forEach(action => {
+      actionCounts[action.action] = (actionCounts[action.action] || 0) + 1;
+    });
+
+    for (const [action, count] of Object.entries(actionCounts)) {
+      this.actionWeights[action] *= Math.pow(0.7, count);
+    }
+  }
+
   async decide() {
     const messages = this._buildPrompt();
     console.log(`[Decision] Sending decision prompt (${messages.length} messages)...`);
@@ -26,11 +49,10 @@ class DecisionEngine {
     return this._parseDecision(response);
   }
 
-  /**
-   * Build the decision prompt with all context.
-   */
   _buildPrompt() {
     const messages = [];
+    const recentActions = this.state.getRecentActions(24);
+    this._updateActionWeights(recentActions);
 
     // System message: base personality + autonomous directive
     const autonomousPrompt = fs.readFileSync(AUTONOMOUS_PROMPT_PATH, 'utf8');
@@ -44,17 +66,16 @@ class DecisionEngine {
     contextParts.push(`## Cycle ${this.state.getCycleCount()}`);
     contextParts.push(`Timestamp: ${new Date().toISOString()}`);
 
-    // Recent action log (last 24h)
-    const recentActions = this.state.getRecentActions(24);
+    // Recent action log with weights
     if (recentActions.length > 0) {
       contextParts.push('\n## Recent Actions (last 24h)');
       for (const a of recentActions.slice(-20)) {
         contextParts.push(`- [${a.timestamp}] ${a.action}: ${a.reasoning} (${a.result})`);
       }
-
-      // Anti-repetition note
-      const lastAction = recentActions[recentActions.length - 1];
-      contextParts.push(`\nLast action was: ${lastAction.action}. Avoid repeating the same action type unless strongly justified.`);
+      contextParts.push('\n## Action Weights (lower = less preferred)');
+      for (const [action, weight] of Object.entries(this.actionWeights)) {
+        contextParts.push(`- ${action}: ${weight.toFixed(2)}`);
+      }
     } else {
       contextParts.push('\n## Recent Actions\nNo actions recorded yet. This is the first cycle.');
     }
@@ -83,6 +104,7 @@ class DecisionEngine {
     contextParts.push('\n## Current Constraints');
     if (!this.state.canMonitor(this.config.actions.monitor.min_interval_minutes)) {
       contextParts.push('- Monitor action is on cooldown (too recent)');
+      this.actionWeights.monitor = 0;
     }
 
     // Available actions
@@ -105,15 +127,9 @@ class DecisionEngine {
     return messages;
   }
 
-  /**
-   * Parse the LLM response into a structured decision.
-   * Falls back to journal if parsing fails.
-   */
   _parseDecision(response) {
-    // Try to extract JSON from the response
     let parsed;
     try {
-      // Strip markdown code fences if present
       let cleaned = response.trim();
       if (cleaned.startsWith('```')) {
         cleaned = cleaned.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '');
@@ -132,7 +148,6 @@ class DecisionEngine {
       };
     }
 
-    // Validate action
     if (!parsed.action || !VALID_ACTIONS.includes(parsed.action)) {
       console.warn(`[Decision] Invalid action "${parsed.action}", falling back to journal`);
       return {
