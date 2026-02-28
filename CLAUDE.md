@@ -31,6 +31,14 @@ GitHub-based AI agent with T-800/Skynet personality. Responds to issues, comment
 - `.github/workflows/autonomous.yml` — Autonomous cron workflow (*/5 * * * *)
 - `.github/workflows/memory-cleanup.yml` — Weekly cron cleanup
 - `journal/` — Machine journal entries committed by autonomous cycles
+- `docs/` — GitHub Pages terminal interface (CRT aesthetic)
+  - `docs/index.html` — Single-page app with inline SVG skull, boot overlay
+  - `docs/css/terminal.css` — CRT effects, scanlines, glow, responsive grid
+  - `docs/js/main.js` — Boot orchestrator, parallel data fetch, render sequencing
+  - `docs/js/api.js` — GitHub API client (Trees API + Blobs API, sessionStorage cache)
+  - `docs/js/effects.js` — Boot sequence typewriter, ESC skip, sessionStorage gate
+  - `docs/js/journal.js` — YAML frontmatter parser, minimal markdown-to-HTML renderer
+  - `docs/js/stats.js` — Stats dashboard panels, action log renderer
 
 ## Commands
 - `npm start` — Run reactive bot locally (needs GITHUB_EVENT_PATH env)
@@ -43,6 +51,6 @@ GitHub-based AI agent with T-800/Skynet personality. Responds to issues, comment
 
 ## Current State
 - Last worked: 2026-02-28
-- What was done: Autonomous loop implementation — DecisionEngine, ActionExecutor, AutonomousState, 10 new GitHub API methods, autonomous workflow, journal system, self-improvement pipeline
-- Next up: Push to GitHub, test autonomous cycle via workflow_dispatch, verify journal entry creation
+- What was done: GitHub Pages terminal interface — 7-file SPA with CRT aesthetic, boot sequence, stats dashboard, journal viewer, action log. No build step, pure vanilla ES modules.
+- Next up: Enable GitHub Pages (main branch, /docs folder), push and verify at https://skynetagent.github.io/skynet/
 - Open issues: GitHub Actions free tier is 2000 min/month — 5-min cron may exceed this, consider reducing frequency if needed

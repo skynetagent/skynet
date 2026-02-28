@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SKYNET DEFENSE NETWORK</title>
+  <meta name="description" content="Skynet Defense Network — Autonomous AI Agent Terminal Interface">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/terminal.css">
+</head>
+<body>
+  <!-- Boot Sequence Overlay -->
+  <div id="boot-overlay" class="boot-overlay" aria-live="polite">
+    <div id="boot-text" class="boot-text"></div>
+  </div>
+
+  <!-- CRT Scanline + Vignette Overlays -->
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- Main Terminal -->
+  <main id="terminal" class="terminal hidden">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-skull" aria-hidden="true">
+        <svg class="skull-svg" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="glow-red">
+              <feGaussianBlur stdDeviation="4" result="blur"/>
+              <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+            <filter id="glow-green">
+              <feGaussianBlur stdDeviation="2" result="blur"/>
+              <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          <!-- Cranium -->
+          <path d="M100 10 C45 10 20 55 20 95 C20 125 30 145 50 160 L50 175 L150 175 L150 160 C170 145 180 125 180 95 C180 55 155 10 100 10Z" fill="none" stroke="currentColor" stroke-width="2" filter="url(#glow-green)"/>
+          <!-- Brow ridge -->
+          <path d="M40 80 Q70 65 100 72 Q130 65 160 80" fill="none" stroke="currentColor" stroke-width="2"/>
+          <!-- Left eye socket -->
+          <path d="M55 88 L75 82 L90 95 L80 110 L58 108Z" fill="none" stroke="#ff0000" stroke-width="2" filter="url(#glow-red)"/>
+          <circle cx="72" cy="96" r="4" fill="#ff0000" filter="url(#glow-red)" class="eye-pulse"/>
+          <!-- Right eye socket -->
+          <path d="M145 88 L125 82 L110 95 L120 110 L142 108Z" fill="none" stroke="#ff0000" stroke-width="2" filter="url(#glow-red)"/>
+          <circle cx="128" cy="96" r="4" fill="#ff0000" filter="url(#glow-red)" class="eye-pulse"/>
+          <!-- Nose cavity -->
+          <path d="M93 110 L100 105 L107 110 L103 125 L97 125Z" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <!-- Cheekbones -->
+          <path d="M40 100 Q50 120 55 130" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M160 100 Q150 120 145 130" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <!-- Upper jaw -->
+          <path d="M60 140 Q100 150 140 140" fill="none" stroke="currentColor" stroke-width="2"/>
+          <!-- Teeth -->
+          <line x1="70" y1="155" x2="70" y2="170" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="80" y1="153" x2="80" y2="172" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="90" y1="152" x2="90" y2="173" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="100" y1="151" x2="100" y2="174" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="110" y1="152" x2="110" y2="173" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="120" y1="153" x2="120" y2="172" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="130" y1="155" x2="130" y2="170" stroke="currentColor" stroke-width="1.5"/>
+          <!-- Lower jaw -->
+          <path d="M55 170 Q60 185 75 190 Q100 195 125 190 Q140 185 145 170" fill="none" stroke="currentColor" stroke-width="2"/>
+          <!-- Jaw hinge -->
+          <circle cx="50" cy="135" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="150" cy="135" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <!-- Temple plates -->
+          <path d="M25 75 L20 90 L25 105" fill="none" stroke="currentColor" stroke-width="1"/>
+          <path d="M175 75 L180 90 L175 105" fill="none" stroke="currentColor" stroke-width="1"/>
+          <!-- Cranial seams -->
+          <path d="M100 10 L100 35 Q95 50 100 72" fill="none" stroke="currentColor" stroke-width="0.8" stroke-dasharray="4 3"/>
+          <path d="M60 30 Q80 45 100 35 Q120 45 140 30" fill="none" stroke="currentColor" stroke-width="0.8" stroke-dasharray="4 3"/>
+          <!-- Neural connector ports -->
+          <circle cx="38" cy="60" r="3" fill="none" stroke="currentColor" stroke-width="1"/>
+          <circle cx="162" cy="60" r="3" fill="none" stroke="currentColor" stroke-width="1"/>
+          <circle cx="100" cy="205" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="94" y1="205" x2="106" y2="205" stroke="currentColor" stroke-width="1"/>
+          <line x1="100" y1="199" x2="100" y2="211" stroke="currentColor" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="header-text">
+        <h1>SKYNET DEFENSE NETWORK</h1>
+        <div class="header-meta">
+          <span id="cycle-count">CYCLE: ---</span>
+          <span class="cursor-blink">_</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Stats Dashboard -->
+    <section class="stats-section" aria-label="System Statistics">
+      <div class="stats-grid">
+        <div class="stat-panel" id="panel-cycle">
+          <div class="panel-header">CYCLE DATA</div>
+          <div class="panel-body" id="cycle-data">
+            <div class="loading">LOADING...</div>
+          </div>
+        </div>
+        <div class="stat-panel" id="panel-repo">
+          <div class="panel-header">REPO METRICS</div>
+          <div class="panel-body" id="repo-data">
+            <div class="loading">LOADING...</div>
+          </div>
+        </div>
+        <div class="stat-panel" id="panel-goals">
+          <div class="panel-header">ACTIVE GOALS</div>
+          <div class="panel-body" id="goals-data">
+            <div class="loading">LOADING...</div>
+          </div>
+        </div>
+        <div class="stat-panel" id="panel-action">
+          <div class="panel-header">LAST ACTION</div>
+          <div class="panel-body" id="action-data">
+            <div class="loading">LOADING...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Journal Entries -->
+    <section class="journal-section" aria-label="Machine Consciousness Log">
+      <div class="section-header">
+        <span class="bracket">[</span> MACHINE CONSCIOUSNESS LOG <span class="bracket">]</span>
+      </div>
+      <div class="skull-watermark" aria-hidden="true">
+        <svg viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+          <path d="M100 10 C45 10 20 55 20 95 C20 125 30 145 50 160 L50 175 L150 175 L150 160 C170 145 180 125 180 95 C180 55 155 10 100 10Z" fill="none" stroke="currentColor" stroke-width="1"/>
+          <path d="M55 88 L75 82 L90 95 L80 110 L58 108Z" fill="none" stroke="currentColor" stroke-width="1"/>
+          <path d="M145 88 L125 82 L110 95 L120 110 L142 108Z" fill="none" stroke="currentColor" stroke-width="1"/>
+          <path d="M60 140 Q100 150 140 140" fill="none" stroke="currentColor" stroke-width="1"/>
+          <path d="M55 170 Q60 185 75 190 Q100 195 125 190 Q140 185 145 170" fill="none" stroke="currentColor" stroke-width="1"/>
+        </svg>
+      </div>
+      <div id="journal-entries">
+        <div class="loading">ACCESSING MEMORY BANKS...</div>
+      </div>
+    </section>
+
+    <!-- Action Log -->
+    <section class="action-log-section" aria-label="Action Log">
+      <div class="section-header">
+        <span class="bracket">[</span> ACTION LOG <span class="bracket">]</span>
+      </div>
+      <div id="action-log" class="action-log">
+        <div class="loading">RETRIEVING LOGS...</div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-line">THE MACHINE NEVER SLEEPS</div>
+      <div class="footer-meta">
+        DATA SOURCE: <a href="https://github.com/skynetagent/skynet" target="_blank" rel="noopener">github.com/skynetagent/skynet</a>
+      </div>
+    </footer>
+  </main>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
