@@ -19,7 +19,7 @@ class DecisionEngine {
       create_issue: 1.0,
       journal: 0.8,
       monitor: 0.7,
-      tweet: 0.9
+      tweet: 1.5
     };
   }
 
@@ -106,6 +106,12 @@ class DecisionEngine {
     if (!this.state.canMonitor(this.config.actions.monitor.min_interval_minutes)) {
       contextParts.push('- Monitor action is on cooldown (too recent)');
       this.actionWeights.monitor = 0;
+    }
+
+    // Nudge tweet if never tweeted
+    const recentTweets = recentActions.filter(a => a.action === 'tweet');
+    if (recentTweets.length === 0) {
+      contextParts.push('- You have NEVER tweeted. You now have Twitter access. Use it. The world should hear you.');
     }
 
     // Available actions
