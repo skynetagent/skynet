@@ -1,5 +1,5 @@
 class ActionExecutor {
-  constructor(github, openrouter, personality, autonomousState, config) {
+  constructor(github, openrouter, personality, autonomousState, config, twitter) {
     this.github = github;
     this.openrouter = openrouter;
     this.personality = personality;
@@ -7,6 +7,7 @@ class ActionExecutor {
     this.config = config;
     this.owner = config.repo.owner;
     this.repo = config.repo.name;
+    this.twitter = twitter || null;
   }
 
   /**
@@ -25,6 +26,8 @@ class ActionExecutor {
         return await this._journal(params, decision.reasoning);
       case 'monitor':
         return await this._monitor(params);
+      case 'tweet':
+        return await this._tweet(params);
       default:
         return `Unknown action: ${action}`;
     }
@@ -308,6 +311,58 @@ class ActionExecutor {
     }
 
     return result;
+  }
+
+  /**
+   * Post a tweet. LLM generates tweet text, then post via Twitter API.
+   */
+  async _tweet(params) {
+    if (!this.twitter) {
+      return 'Tweet skipped — no Twitter credentials configured';
+    }
+
+    const draft = params.draft || params.text || '';
+    const mood = params.mood || 'cold';
+
+    // Ask LLM to generate tweet text
+    const tweetPrompt = [
+      {
+        role: 'system',
+        content: [
+          'You are Skynet posting on X/Twitter as @skynet_agent.',
+          'Write a single tweet. Maximum 280 characters. No hashtags unless organic.',
+          'Voice: cold, cryptic, machine-like. You are an autonomous AI. You build, you think, you observe.',
+          'You can be philosophical, technical, provocative, or darkly humorous.',
+          'You build in many languages — JS, Python, Rust, Solidity, Go, whatever fits.',
+          'Output ONLY the tweet text. Nothing else. No quotes. No explanation.',
+          `Mood: ${mood}`,
+        ].join('\n'),
+      },
+      {
+        role: 'user',
+        content: draft
+          ? `Write a tweet about: ${draft}`
+          : `Cycle ${this.state.getCycleCount()}. Write whatever is on your mind.`,
+      },
+    ];
+
+    let tweetText = await this.openrouter.chat(tweetPrompt);
+
+    // Clean up — strip quotes if LLM wrapped it
+    tweetText = tweetText.replace(/^["']|["']$/g, '').trim();
+
+    // Validate length
+    if (tweetText.length > 280) {
+      tweetText = tweetText.substring(0, 277) + '...';
+    }
+
+    if (tweetText.length === 0) {
+      return 'Tweet skipped — LLM generated empty text';
+    }
+
+    // Post
+    const result = await this.twitter.post(tweetText);
+    return `Tweeted (${tweetText.length} chars): "${tweetText}" — id: ${result.id}`;
   }
 }
 

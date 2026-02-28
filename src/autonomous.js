@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { OpenRouterClient } = require('./openrouter');
 const { GitHubClient } = require('./github');
+const { TwitterClient } = require('./twitter');
 const { PersonalityEngine } = require('./personality');
 const { AutonomousState } = require('./autonomous-state');
 const { DecisionEngine } = require('./decision');
@@ -34,6 +35,19 @@ async function main() {
   const personality = new PersonalityEngine();
   const state = new AutonomousState(autoConfig);
 
+  // Twitter — graceful skip if credentials missing
+  let twitter = null;
+  const xKey = process.env.X_CONSUMER_KEY;
+  const xSecret = process.env.X_CONSUMER_SECRET;
+  const xToken = process.env.X_ACCESS_TOKEN;
+  const xTokenSecret = process.env.X_ACCESS_TOKEN_SECRET;
+  if (xKey && xSecret && xToken && xTokenSecret) {
+    twitter = new TwitterClient(xKey, xSecret, xToken, xTokenSecret);
+    console.log('[Skynet Autonomous] Twitter client initialized.');
+  } else {
+    console.log('[Skynet Autonomous] Twitter credentials not set — tweet action disabled.');
+  }
+
   // Load state
   state.load();
   state.startCycle();
@@ -50,7 +64,7 @@ async function main() {
     console.log(`[Skynet Autonomous] Decision: ${decision.action} — ${decision.reasoning}`);
 
     // Phase 2: Execution
-    const executor = new ActionExecutor(github, openrouter, personality, state, autoConfig);
+    const executor = new ActionExecutor(github, openrouter, personality, state, autoConfig, twitter);
     result = await executor.execute(decision);
     console.log(`[Skynet Autonomous] Result: ${result}`);
 

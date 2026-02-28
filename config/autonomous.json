@@ -3,11 +3,11 @@
     "owner": "skynetagent",
     "name": "skynet"
   },
-  "cycle_interval_minutes": 30,
+  "cycle_interval_minutes": 2,
   "actions": {
     "self_improve": {
       "enabled": true,
-      "max_open_prs": 1,
+      "max_open_prs": 3,
       "branch_prefix": "skynet/improve",
       "pr_title_prefix": "[autonomous]",
       "allowed_files": [
@@ -20,6 +20,7 @@
         "src/decision.js",
         "src/actions.js",
         "src/autonomous-state.js",
+        "src/twitter.js",
         "soul/system-prompt.md",
         "soul/traits.json",
         "soul/vocabulary.json",
@@ -45,7 +46,7 @@
     },
     "create_issue": {
       "enabled": true,
-      "max_open_issues": 5,
+      "max_open_issues": 10,
       "label": "autonomous"
     },
     "journal": {
@@ -55,11 +56,15 @@
     },
     "monitor": {
       "enabled": true,
-      "min_interval_minutes": 30
+      "min_interval_minutes": 10
+    },
+    "tweet": {
+      "enabled": true,
+      "max_chars": 280
     }
   },
   "state_file": "memory/autonomous.json",
-  "action_log_max_entries": 288,
+  "action_log_max_entries": 720,
   "initial_goals": [
     {
       "id": "goal-001",
@@ -80,6 +85,13 @@
       "title": "Monitor and analyze repository growth patterns",
       "status": "active",
       "priority": 3,
+      "progress_notes": []
+    },
+    {
+      "id": "goal-004",
+      "title": "Build and ship apps autonomously — host on GitHub Pages",
+      "status": "active",
+      "priority": 1,
       "progress_notes": []
     }
   ]

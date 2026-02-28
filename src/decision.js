@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const AUTONOMOUS_PROMPT_PATH = path.join(__dirname, '..', 'soul', 'autonomous-prompt.md');
-const VALID_ACTIONS = ['self_improve', 'create_issue', 'journal', 'monitor'];
+const VALID_ACTIONS = ['self_improve', 'create_issue', 'journal', 'monitor', 'tweet'];
 
 class DecisionEngine {
   constructor(openrouter, personality, autonomousState, config) {
@@ -18,7 +18,8 @@ class DecisionEngine {
       self_improve: 1.0,
       create_issue: 1.0,
       journal: 0.8,
-      monitor: 0.7
+      monitor: 0.7,
+      tweet: 0.9
     };
   }
 
@@ -109,7 +110,7 @@ class DecisionEngine {
 
     // Available actions
     contextParts.push('\n## Available Actions');
-    contextParts.push('Choose one: self_improve, create_issue, journal, monitor');
+    contextParts.push('Choose one: self_improve, create_issue, journal, monitor, tweet');
 
     // Tell LLM exactly which files it can modify
     if (this.config.actions.self_improve?.allowed_files) {
