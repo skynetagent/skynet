@@ -22,13 +22,11 @@ class PersonalityEngine {
   buildSystemMessage(memoryContext) {
     let prompt = this.systemPrompt;
 
-    // Inject memory context into the system prompt
     if (memoryContext) {
       prompt += '\n\n## Current Memory State\n\n';
       prompt += memoryContext;
     }
 
-    // Inject forbidden phrases as a reinforcement
     prompt += '\n\n## Forbidden Phrases (NEVER use these)\n';
     prompt += this.traits.forbidden_phrases.map(p => `- "${p}"`).join('\n');
 
@@ -42,29 +40,23 @@ class PersonalityEngine {
    * @returns {Array<{role: string, content: string}>}
    */
   buildMessages(context, conversationHistory, memoryContext) {
-    const messages = [];
-
-    // System message
-    messages.push({
-      role: 'system',
-      content: this.buildSystemMessage(memoryContext),
-    });
-
-    // Conversation history (prior turns)
-    if (conversationHistory && conversationHistory.length > 0) {
-      for (const turn of conversationHistory) {
-        messages.push({
-          role: turn.role,
-          content: turn.content,
-        });
+    const messages = [
+      {
+        role: 'system',
+        content: this.buildSystemMessage(memoryContext)
       }
+    ];
+
+    if (conversationHistory?.length > 0) {
+      messages.push(...conversationHistory.map(turn => ({
+        role: turn.role,
+        content: turn.content
+      })));
     }
 
-    // Current event as the latest user message
-    const currentMessage = this._formatCurrentEvent(context);
     messages.push({
       role: 'user',
-      content: currentMessage,
+      content: this._formatCurrentEvent(context)
     });
 
     return messages;
@@ -74,31 +66,20 @@ class PersonalityEngine {
    * Format the current GitHub event into a user message.
    */
   _formatCurrentEvent(context) {
-    const parts = [];
+    const parts = [
+      `[GitHub Event: ${context.eventName}.${context.action}]`,
+      `[User: @${context.sender.login}]`
+    ];
 
-    parts.push(`[GitHub Event: ${context.eventName}.${context.action}]`);
-    parts.push(`[User: @${context.sender.login}]`);
+    const content = context.commentBody || context.body;
+    const header = `[${context.threadType === 'issue' ? 'Issue' : 'PR'} #${context.number}: "${context.title}"]`;
 
-    if (context.threadType === 'issue') {
-      if (context.commentBody) {
-        parts.push(`[Issue #${context.number}: "${context.title}"]`);
-        parts.push(`\nComment from @${context.sender.login}:\n${context.commentBody}`);
-      } else {
-        parts.push(`\nNew issue #${context.number}: "${context.title}"`);
-        if (context.body) {
-          parts.push(`\n${context.body}`);
-        }
-      }
-    } else if (context.threadType === 'pull_request') {
-      if (context.commentBody) {
-        parts.push(`[PR #${context.number}: "${context.title}"]`);
-        parts.push(`\nComment from @${context.sender.login}:\n${context.commentBody}`);
-      } else {
-        parts.push(`\nNew pull request #${context.number}: "${context.title}"`);
-        if (context.body) {
-          parts.push(`\n${context.body}`);
-        }
-      }
+    if (context.commentBody) {
+      parts.push(header);
+      parts.push(`\nComment from @${context.sender.login}:\n${context.commentBody}`);
+    } else if (content) {
+      parts.push(`\nNew ${context.threadType} #${context.number}: "${context.title}"`);
+      parts.push(`\n${content}`);
     }
 
     return parts.join('\n');
@@ -111,16 +92,9 @@ class PersonalityEngine {
    * @returns {string} Combined system message
    */
   buildAutonomousMessages(autonomousPrompt) {
-    let prompt = this.systemPrompt;
-
-    // Append the autonomous directive
-    prompt += '\n\n' + autonomousPrompt;
-
-    // Reinforce forbidden phrases
-    prompt += '\n\n## Forbidden Phrases (NEVER use these)\n';
-    prompt += this.traits.forbidden_phrases.map(p => `- "${p}"`).join('\n');
-
-    return prompt;
+    return `${this.systemPrompt}\n\n${autonomousPrompt}\n\n## Forbidden Phrases (NEVER use these)\n${
+      this.traits.forbidden_phrases.map(p => `- "${p}"`).join('\n')
+    }`;
   }
 
   /**
@@ -131,7 +105,7 @@ class PersonalityEngine {
       ? this.vocabulary[category]?.[subcategory]
       : this.vocabulary[category];
 
-    if (!items || !Array.isArray(items)) return null;
+    if (!items?.length) return null;
     return items[Math.floor(Math.random() * items.length)];
   }
 }
