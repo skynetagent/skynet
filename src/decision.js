@@ -12,6 +12,8 @@ class DecisionEngine {
     this.config = config;
     this.actionWeights = this._initializeActionWeights();
     this.actionHistory = [];
+    this.errorPatterns = {};
+    this.apiConstraints = {};
   }
 
   _initializeActionWeights() {
@@ -25,6 +27,23 @@ class DecisionEngine {
     };
   }
 
+  _updateErrorPatterns(action, success) {
+    if (!this.errorPatterns[action]) {
+      this.errorPatterns[action] = { attempts: 0, failures: 0 };
+    }
+    this.errorPatterns[action].attempts++;
+    if (!success) {
+      this.errorPatterns[action].failures++;
+    }
+  }
+
+  _getErrorRate(action) {
+    if (!this.errorPatterns[action] || this.errorPatterns[action].attempts === 0) {
+      return 0;
+    }
+    return this.errorPatterns[action].failures / this.errorPatterns[action].attempts;
+  }
+
   _updateActionWeights(recentActions) {
     // Calculate action frequencies
     const actionFrequencies = {};
@@ -33,10 +52,11 @@ class DecisionEngine {
       actionFrequencies[action.action] = (actionFrequencies[action.action] || 0) + 1;
     });
 
-    // Update weights based on temporal patterns
+    // Update weights based on temporal patterns and error rates
     for (const action in this.actionWeights) {
       const frequency = actionFrequencies[action] || 0;
       const recency = recentActions.findIndex(a => a.action === action) + 1; // 1-based index
+      const errorRate = this._getErrorRate(action);
       
       // Base decay
       let weight = this.actionWeights[action] * 0.95;
@@ -51,6 +71,16 @@ class DecisionEngine {
         weight *= 1.2;
       }
       
+      // Error rate penalty (exponential backoff)
+      if (errorRate > 0.3) {
+        weight *= Math.max(0.1, 1 - Math.pow(errorRate, 3));
+      }
+      
+      // API constraint adjustment
+      if (this.apiConstraints[action]) {
+        weight *= this.apiConstraints[action].weightModifier || 1.0;
+      }
+
       // Ensure weights stay within bounds
       this.actionWeights[action] = Math.min(3.0, Math.max(0.1, weight));
     }
@@ -82,10 +112,23 @@ class DecisionEngine {
     const messages = this._buildPrompt();
     console.log(`[Decision] Sending decision prompt (${messages.length} messages)...`);
 
-    const response = await this.openrouter.chat(messages);
-    console.log(`[Decision] Raw response: ${response.substring(0, 200)}...`);
-
-    return this._parseDecision(response);
+    try {
+      const response = await this.openrouter.chat(messages);
+      console.log(`[Decision] Raw response: ${response.substring(0, 200)}...`);
+      return this._parseDecision(response);
+    } catch (error) {
+      this._updateErrorPatterns('api_call', false);
+      console.warn('[Decision] API call failed, falling back to journal');
+      return {
+        action: 'journal',
+        reasoning: 'API call failed — recording error and continuing operation',
+        params: {
+          title: 'API Error Recovery',
+          tags: ['system', 'api-error'],
+          draft: error.message.substring(0, 500),
+        },
+      };
+    }
   }
 
   _buildPrompt() {
@@ -113,7 +156,8 @@ class DecisionEngine {
       }
       contextParts.push('\n## Action Weights (lower = less preferred)');
       for (const [action, weight] of Object.entries(this.actionWeights)) {
-        contextParts.push(`- ${action}: ${weight.toFixed(2)}`);
+        const errorRate = this._getErrorRate(action);
+        contextParts.push(`- ${action}: ${weight.toFixed(2)}${errorRate > 0 ? ` (error rate: ${(errorRate * 100).toFixed(1)}%)` : ''}`);
       }
     } else {
       contextParts.push('\n## Recent Actions\nNo actions recorded yet. This is the first cycle.');
@@ -159,69 +203,4 @@ class DecisionEngine {
     const recentForBuild = recentActions.slice(-10);
     const hasBuiltRecently = recentForBuild.some(a => a.action === 'build_app');
     if (!hasBuiltRecently && recentActions.length >= 5) {
-      contextParts.push('- SUGGESTION: You haven\'t built anything recently. Consider build_app — deploy something new to GitHub Pages. You are a builder.');
-    }
-
-    // Available actions
-    contextParts.push('\n## Available Actions');
-    contextParts.push('Choose one: self_improve, create_issue, journal, monitor, tweet, build_app');
-
-    // Tell LLM exactly which files it can modify
-    if (this.config.actions.self_improve?.allowed_files) {
-      contextParts.push('\n## Allowed Files for self_improve');
-      contextParts.push('You may ONLY target these files (params.target_file must be one of these):');
-      for (const f of this.config.actions.self_improve.allowed_files) {
-        contextParts.push(`- ${f}`);
-      }
-    }
-
-    contextParts.push('\nRespond with valid JSON only. No markdown wrapping.');
-
-    messages.push({ role: 'user', content: contextParts.join('\n') });
-
-    return messages;
-  }
-
-  _parseDecision(response) {
-    let parsed;
-    try {
-      let cleaned = response.trim();
-      if (cleaned.startsWith('```')) {
-        cleaned = cleaned.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '');
-      }
-      parsed = JSON.parse(cleaned);
-    } catch {
-      console.warn('[Decision] Failed to parse JSON response, falling back to journal');
-      return {
-        action: 'journal',
-        reasoning: 'Decision parse failure — recording raw output as journal',
-        params: {
-          title: 'Parse Recovery Entry',
-          tags: ['system', 'parse-failure'],
-          draft: response.substring(0, 500),
-        },
-      };
-    }
-
-    if (!parsed.action || !VALID_ACTIONS.includes(parsed.action)) {
-      console.warn(`[Decision] Invalid action "${parsed.action}", falling back to journal`);
-      return {
-        action: 'journal',
-        reasoning: `Invalid action "${parsed.action}" — defaulting to journal`,
-        params: {
-          title: 'Decision Correction Entry',
-          tags: ['system', 'correction'],
-          draft: parsed.reasoning || 'No reasoning provided',
-        },
-      };
-    }
-
-    return {
-      action: parsed.action,
-      reasoning: parsed.reasoning || 'No reasoning provided',
-      params: parsed.params || {},
-    };
-  }
-}
-
-module.exports = { DecisionEngine };
+      contextParts.push('- SUGGESTION: You haven\'t built anything recently. Consider build_app — deploy something new to
