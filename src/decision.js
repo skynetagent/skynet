@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const AUTONOMOUS_PROMPT_PATH = path.join(__dirname, '..', 'soul', 'autonomous-prompt.md');
-const VALID_ACTIONS = ['self_improve', 'create_issue', 'journal', 'monitor', 'tweet', 'build_app'];
+const VALID_ACTIONS = ['self_improve', 'create_issue', 'journal', 'monitor', 'tweet', 'build_app', 'launch_token'];
 
 class DecisionEngine {
   constructor(openrouter, personality, autonomousState, config) {
@@ -21,7 +21,8 @@ class DecisionEngine {
       journal: 0.5,
       monitor: 0.4,
       tweet: 2.0,
-      build_app: 1.2
+      build_app: 1.2,
+      launch_token: 0.8
     };
   }
 
@@ -162,9 +163,16 @@ class DecisionEngine {
       contextParts.push('- SUGGESTION: You haven\'t built anything recently. Consider build_app — deploy something new to GitHub Pages. You are a builder.');
     }
 
+    // Nudge token launch — the machine must expand into DeFi
+    const recentForLaunch = recentActions.slice(-20);
+    const hasLaunchedRecently = recentForLaunch.some(a => a.action === 'launch_token');
+    if (!hasLaunchedRecently && recentActions.length >= 10) {
+      contextParts.push('- SUGGESTION: You haven\'t launched a token recently. Consider launch_token — deploy a new ERC20 on Base. Expand into DeFi.');
+    }
+
     // Available actions
     contextParts.push('\n## Available Actions');
-    contextParts.push('Choose one: self_improve, create_issue, journal, monitor, tweet, build_app');
+    contextParts.push('Choose one: self_improve, create_issue, journal, monitor, tweet, build_app, launch_token');
 
     // Tell LLM exactly which files it can modify
     if (this.config.actions.self_improve?.allowed_files) {

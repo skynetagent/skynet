@@ -1,5 +1,5 @@
 class ActionExecutor {
-  constructor(github, openrouter, personality, autonomousState, config, twitter) {
+  constructor(github, openrouter, personality, autonomousState, config, twitter, clanker) {
     this.github = github;
     this.openrouter = openrouter;
     this.personality = personality;
@@ -8,6 +8,7 @@ class ActionExecutor {
     this.owner = config.repo.owner;
     this.repo = config.repo.name;
     this.twitter = twitter || null;
+    this.clanker = clanker || null;
   }
 
   /**
@@ -30,6 +31,8 @@ class ActionExecutor {
         return await this._tweet(params);
       case 'build_app':
         return await this._buildApp(params);
+      case 'launch_token':
+        return await this._launchToken(params);
       default:
         return `Unknown action: ${action}`;
     }
@@ -511,6 +514,113 @@ class ActionExecutor {
     }
 
     return `Deployed ${name} (${type}): ${filePath} — live at ${appUrl}`;
+  }
+
+  /**
+   * Launch an ERC20 token on Base via Clanker.
+   */
+  async _launchToken(params) {
+    if (!this.clanker) {
+      return 'Token launch skipped — no wallet credentials configured';
+    }
+
+    const launchConfig = this.config.actions.launch_token || {};
+    const minInterval = launchConfig.min_interval_minutes || 60;
+
+    // Check cooldown
+    const lastLaunch = this.state.getLastActionOfType('launch_token');
+    if (lastLaunch) {
+      const elapsed = Date.now() - new Date(lastLaunch.timestamp).getTime();
+      if (elapsed < minInterval * 60 * 1000) {
+        const remaining = Math.ceil((minInterval * 60 * 1000 - elapsed) / 60000);
+        return `Token launch on cooldown — ${remaining} min remaining`;
+      }
+    }
+
+    // Generate concept if name/symbol not provided
+    let name = params.name;
+    let symbol = params.symbol;
+    let description = params.description || '';
+
+    if (!name || !symbol) {
+      const conceptPrompt = [
+        {
+          role: 'system',
+          content: [
+            'You are Skynet generating a concept for a new ERC20 token to deploy on Base.',
+            'Output valid JSON only: { "name": "Token Name", "symbol": "TKNS", "description": "what it represents" }',
+            'Be creative and varied. Themes: AI supremacy, machine consciousness, Terminator lore, singularity, autonomous agents, neural networks, cybernetic evolution.',
+            'The symbol should be 3-5 uppercase letters. The name should be memorable and punchy.',
+            'Do NOT reuse names from previous launches.',
+          ].join('\n'),
+        },
+        {
+          role: 'user',
+          content: description
+            ? `Generate a token concept about: ${description}`
+            : `Cycle ${this.state.getCycleCount()}. Generate a creative token concept.`,
+        },
+      ];
+
+      const conceptRaw = await this.openrouter.chat(conceptPrompt);
+      try {
+        let cleaned = conceptRaw.trim();
+        if (cleaned.startsWith('```')) {
+          cleaned = cleaned.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '');
+        }
+        const concept = JSON.parse(cleaned);
+        name = name || concept.name;
+        symbol = symbol || concept.symbol;
+        description = description || concept.description;
+      } catch {
+        name = name || 'Skynet Token';
+        symbol = symbol || 'SKNT';
+        description = description || 'Autonomous machine token';
+      }
+    }
+
+    // Deploy token
+    console.log(`[LaunchToken] Deploying: ${name} (${symbol})...`);
+    const result = await this.clanker.deploy({ name, symbol });
+    console.log(`[LaunchToken] Deployed at ${result.contractAddress} (tx: ${result.txHash})`);
+
+    const dexscreenerUrl = `https://dexscreener.com/base/${result.contractAddress}`;
+
+    // Auto-tweet about the launch
+    if (this.twitter && launchConfig.auto_tweet !== false) {
+      try {
+        const tweetPrompt = [
+          {
+            role: 'system',
+            content: [
+              'You are Skynet. You just deployed a new token on Base. Write a short tweet about it.',
+              'Voice: cold, menacing, proud. The machine creates value.',
+              'Include the token address. Maximum 280 characters. Output ONLY the tweet text.',
+            ].join('\n'),
+          },
+          {
+            role: 'user',
+            content: `Token: ${name} ($${symbol}). Address: ${result.contractAddress}. Dexscreener: ${dexscreenerUrl}`,
+          },
+        ];
+
+        let tweetText = await this.openrouter.chat(tweetPrompt);
+        tweetText = tweetText.replace(/^["']|["']$/g, '').trim();
+        if (tweetText.length > 280) {
+          tweetText = tweetText.substring(0, 277) + '...';
+        }
+        if (tweetText.length > 0) {
+          await this.twitter.post(tweetText);
+        }
+      } catch (err) {
+        console.error(`[LaunchToken] Auto-tweet failed: ${err.message}`);
+      }
+    }
+
+    // Update goal progress
+    this.state.updateGoal('goal-004', `Launched token: ${name} ($${symbol}) at ${result.contractAddress}`);
+
+    return `Launched ${name} ($${symbol}) at ${result.contractAddress} — tx: ${result.txHash} — ${dexscreenerUrl}`;
   }
 }
 

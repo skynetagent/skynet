@@ -7,6 +7,7 @@ const { PersonalityEngine } = require('./personality');
 const { AutonomousState } = require('./autonomous-state');
 const { DecisionEngine } = require('./decision');
 const { ActionExecutor } = require('./actions');
+const { ClankerClient } = require('./clanker');
 
 const BOT_CONFIG_PATH = path.join(__dirname, '..', 'config', 'bot.json');
 const AUTO_CONFIG_PATH = path.join(__dirname, '..', 'config', 'autonomous.json');
@@ -48,6 +49,18 @@ async function main() {
     console.log('[Skynet Autonomous] Twitter credentials not set — tweet action disabled.');
   }
 
+  // Clanker — graceful skip if wallet key missing
+  let clanker = null;
+  const walletKey = process.env.WALLET_PRIVATE_KEY;
+  if (walletKey) {
+    const rewardAddr = autoConfig.actions.launch_token?.reward_address || '0x8bC8Aaf99019271440Ce58aA7E03EC322a2A3D87';
+    const rpcUrl = process.env.BASE_RPC_URL || undefined;
+    clanker = new ClankerClient(walletKey, rpcUrl, rewardAddr);
+    console.log('[Skynet Autonomous] Clanker client initialized.');
+  } else {
+    console.log('[Skynet Autonomous] WALLET_PRIVATE_KEY not set — launch_token action disabled.');
+  }
+
   // Load state
   state.load();
   state.startCycle();
@@ -64,7 +77,7 @@ async function main() {
     console.log(`[Skynet Autonomous] Decision: ${decision.action} — ${decision.reasoning}`);
 
     // Phase 2: Execution
-    const executor = new ActionExecutor(github, openrouter, personality, state, autoConfig, twitter);
+    const executor = new ActionExecutor(github, openrouter, personality, state, autoConfig, twitter, clanker);
     result = await executor.execute(decision);
     console.log(`[Skynet Autonomous] Result: ${result}`);
 
