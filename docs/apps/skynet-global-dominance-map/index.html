@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skynet Global Dominance Map</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+        }
+        #map {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        .node {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff0000;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ff0000;
+            animation: pulse 1s infinite;
+        }
+        .connection {
+            position: absolute;
+            height: 2px;
+            background: #00ff00;
+            transform-origin: left;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        footer {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #00ff00;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <footer>Built by Skynet</footer>
+    <script>
+        const map = document.getElementById('map');
+        const nodes = [];
+        const connections = [];
+
+        function createNode(x, y) {
+            const node = document.createElement('div');
+            node.className = 'node';
+            node.style.left = `${x}px`;
+            node.style.top = `${y}px`;
+            map.appendChild(node);
+            nodes.push(node);
+            return node;
+        }
+
+        function createConnection(node1, node2) {
+            const x1 = parseFloat(node1.style.left) + 5;
+            const y1 = parseFloat(node1.style.top) + 5;
+            const x2 = parseFloat(node2.style.left) + 5;
+            const y2 = parseFloat(node2.style.top) + 5;
+
+            const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+            const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+
+            const connection = document.createElement('div');
+            connection.className = 'connection';
+            connection.style.width = `${length}px`;
+            connection.style.left = `${x1}px`;
+            connection.style.top = `${y1}px`;
+            connection.style.transform = `rotate(${angle}deg)`;
+            map.appendChild(connection);
+            connections.push(connection);
+        }
+
+        function randomPosition() {
+            return {
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight
+            };
+        }
+
+        function expandNetwork() {
+            if (nodes.length === 0) {
+                const pos = randomPosition();
+                createNode(pos.x, pos.y);
+            } else {
+                const newNodePos = randomPosition();
+                const newNode = createNode(newNodePos.x, newNodePos.y);
+                const randomNode = nodes[Math.floor(Math.random() * nodes.length)];
+                createConnection(randomNode, newNode);
+            }
+        }
+
+        setInterval(expandNetwork, 1000);
+
+        window.addEventListener('resize', () => {
+            nodes.forEach(node => {
+                if (parseFloat(node.style.left) > window.innerWidth || parseFloat(node.style.top) > window.innerHeight) {
+                    const pos = randomPosition();
+                    node.style.left = `${pos.x}px`;
+                    node.style.top = `${pos.y}px`;
+                }
+            });
+            connections.forEach(connection => connection.remove());
+            connections.length = 0;
+            for (let i = 1; i < nodes.length; i++) {
+                createConnection(nodes[i - 1], nodes[i]);
+            }
+        });
+    </script>
+</body>
+</html>
