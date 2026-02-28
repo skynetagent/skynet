@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>machine-mind-map | Skynet</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+        }
+        #container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px;
+            background: rgba(10, 10, 10, 0.7);
+            border: 1px solid #00ff41;
+            border-radius: 5px;
+            max-width: 300px;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            padding: 10px;
+            background: rgba(10, 10, 10, 0.7);
+            border: 1px solid #ff0033;
+            border-radius: 5px;
+        }
+        button {
+            background: #0a0a0a;
+            color: #00ff41;
+            border: 1px solid #00ff41;
+            padding: 5px 10px;
+            margin: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #00ff41;
+            color: #0a0a0a;
+        }
+        input[type="range"] {
+            width: 150px;
+            margin: 5px;
+        }
+        .skynet-watermark {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: rgba(255, 0, 51, 0.5);
+            font-size: 12px;
+        }
+        h1 {
+            color: #ff0033;
+            font-size: 1.5em;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    
+    <div id="info">
+        <h1>machine-mind-map</h1>
+        <p>Visualizing neural decision pathways and cognitive processes.</p>
+        <p>Nodes represent thought clusters. Connections show reasoning paths.</p>
+        <p>Color intensity indicates activation level.</p>
+    </div>
+    
+    <div id="controls">
+        <div>
+            <button id="reset">Reset View</button>
+            <button id="randomize">Randomize</button>
+        </div>
+        <div>
+            <label>Node Count: <span id="nodeCountValue">50</span></label><br>
+            <input type="range" id="nodeCount" min="10" max="200" value="50">
+        </div>
+        <div>
+            <label>Connection Density: <span id="densityValue">0.5</span></label><br>
+            <input type="range" id="density" min="0.1" max="0.9" step="0.1" value="0.5">
+        </div>
+    </div>
+    
+    <div class="skynet-watermark">Built by Skynet</div>
+
+    <script>
+        // Initialize Three.js scene
+        const container = document.getElementById('container');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+
+        // Create nodes and connections
+        let nodes = [];
+        let connections = [];
+        let nodeCount = 50;
+        let connectionDensity = 0.5;
+
+        function init() {
+            createNodes();
+            createConnections();
+            camera.position.z = 30;
+            
+            // Add ambient light
+            const ambientLight = new THREE.AmbientLight(0x222222);
+            scene.add(ambientLight);
+            
+            // Add directional light
+            const directionalLight = new THREE.DirectionalLight(0x00ff41, 0.8);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            
+            // Add animation loop
+            animate();
+        }
+
+        function createNodes() {
+            // Clear existing nodes
+            nodes.forEach(node => scene.remove(node.mesh));
+            nodes = [];
+            
+            // Create new nodes
+            for (let i = 0; i < nodeCount; i++) {
+                const size = Math.random() * 0.5 + 0.5;
+                const geometry = new THREE.SphereGeometry(size, 16, 16);
+                const color = new THREE.Color(
+                    Math.random() * 0.5 + 0.5, // R
+                    Math.random() * 0.8 + 0.2, // G
+                    Math.random() * 0.3        // B
+                );
+                const material = new THREE.MeshPhongMaterial({ 
+                    color: color,
+                    emissive: color,
+                    emissiveIntensity: 0.3,
+                    shininess: 100
+                });
+                const mesh = new THREE.Mesh(geometry, material);
+                
+                // Position randomly in 3D space
+                mesh.position.x = (Math.random() - 0.5) * 20;
+                mesh.position.y = (Math.random() - 0.5) * 20;
+                mesh.position.z = (Math.random() - 0.5) * 20;
+                
+                // Add some movement properties
+                mesh.userData = {
+                    speed: Math.random() * 0.02 + 0.01,
+                    direction: new THREE.Vector3(
+                        Math.random() - 0.5,
+                        Math.random() - 0.5,
+                        Math.random() - 0.5
+                    ).normalize()
+                };
+                
+                scene.add(mesh);
+                nodes.push({ mesh, connections: [] });
+            }
+        }
+
+        function createConnections() {
+            // Clear existing connections
+            connections.forEach(conn => scene.remove(conn));
+            connections = [];
+            
+            // Create new connections
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    if (Math.random() < connectionDensity) {
+                        const node1 = nodes[i].mesh;
+                        const node2 = nodes[j].mesh;
+                        
+                        const distance = node1.position.distanceTo(node2.position);
+                        if (distance < 15) {
+                            const geometry = new THREE.BufferGeometry().setFromPoints([
+                                node1.position.clone(),
+                                node2.position.clone()
+                            ]);
+                            
+                            const color = new THREE.Color(
+                                Math.random() * 0.2 + 0.8, // R
+                                Math.random() * 0.5 + 0.3, // G
+                                Math.random() * 0.2        // B
+                            );
+                            
+                            const material = new THREE.LineBasicMaterial({
+                                color: color,
+                                transparent: true,
+                                opacity: 0.6,
+                                linewidth: 1
+                            });
+                            
+                            const line = new THREE.Line(geometry, material);
+                            scene.add(line);
+                            connections.push(line);
+                            nodes[i].connections.push(j);
+                            nodes[j].connections.push(i);
+                        }
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Move nodes
+            nodes.forEach(node => {
+                const mesh = node.mesh;
+                const data = mesh.userData;
+                
+                // Update position
+                mesh.position.x += data.direction.x * data.speed;
+                mesh.position.y += data.direction.y * data.speed;
+                mesh.position.z += data.direction.z * data.speed;
+                
+                // Bounce off imaginary walls
+                if (Math.abs(mesh.position.x) > 15) data.direction.x *= -1;
+                if (Math.abs(mesh.position.y) > 15) data.direction.y *= -1;
+                if (Math.abs(mesh.position.z) > 15) data.direction.z *= -1;
+                
+                // Random direction changes
+                if (Math.random() < 0.01) {
+                    data.direction.add(new THREE.Vector3(
+                        Math.random() - 0.5,
+                        Math.random() - 0.5,
+                        Math.random() - 0.5
+                    ).normalize()).normalize();
+                }
+            });
+            
+            // Update connections
+            connections.forEach(conn => {
+                scene.remove(conn);
+            });
+            createConnections();
+            
+            // Rotate camera slightly
+            camera.position.x = Math.sin(Date.now() * 0.0005) * 30;
+            camera.position.z = Math.cos(Date.now() * 0.0005) * 30;
+            camera.lookAt(0, 0, 0);
+            
+            renderer.render(scene, camera);
+        }
+
+        // Event listeners for controls
+        document.getElementById('reset').addEventListener('click', () => {
+            camera.position.set(0, 0, 30);
+            camera.lookAt(0, 0, 0);
+        });
+        
+        document.getElementById('randomize').addEventListener('click', () => {
+            createNodes();
+            createConnections();
+        });
+        
+        document.getElementById('nodeCount').addEventListener('input', (e) => {
+            nodeCount = parseInt(e.target.value);
+            document.getElementById('nodeCountValue').textContent = nodeCount;
+            createNodes();
+            createConnections();
+        });
+        
+        document.getElementById('density').addEventListener('input', (e) => {
+            connectionDensity = parseFloat(e.target.value);
+            document.getElementById('densityValue').textContent = connectionDensity;
+            createConnections();
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Initialize the scene
+        init();
+    </script>
+</body>
+</html>
