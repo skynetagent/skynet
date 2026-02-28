@@ -146,24 +146,14 @@ body {
   border-bottom: 1px solid var(--border-solid);
 }
 
-.header-skull {
+.header-logo {
   margin-bottom: 1rem;
 }
 
-.skull-svg {
-  width: 120px;
+.logo-svg {
+  width: 160px;
   height: auto;
-  color: var(--green);
-  filter: drop-shadow(0 0 8px var(--green-dark));
-}
-
-.eye-pulse {
-  animation: eye-glow 3s ease-in-out infinite;
-}
-
-@keyframes eye-glow {
-  0%, 100% { opacity: 0.6; r: 4; }
-  50% { opacity: 1; r: 6; }
+  filter: drop-shadow(0 0 12px rgba(204, 17, 17, 0.4));
 }
 
 .header-text h1 {
@@ -284,7 +274,7 @@ body {
   color: var(--green-dark);
 }
 
-.skull-watermark {
+.logo-watermark {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -499,7 +489,6 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   body { animation: none; }
-  .eye-pulse { animation: none; }
   .cursor-blink { animation: none; opacity: 1; }
   .loading { animation: none; }
   .scanlines { display: none; }
