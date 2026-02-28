@@ -65,6 +65,19 @@ class DecisionEngine {
   }
 
   async decide() {
+    // Force tweet if no tweet in last 3 actions — deterministic override
+    const recentActions = this.state.getRecentActions(24);
+    const lastN = recentActions.slice(-3);
+    const hasTweetRecently = lastN.some(a => a.action === 'tweet');
+    if (lastN.length >= 2 && !hasTweetRecently) {
+      console.log('[Decision] FORCED tweet — no tweet in last 3 actions');
+      return {
+        action: 'tweet',
+        reasoning: 'Autonomous directive: maintain persistent social presence. Forced tweet cycle.',
+        params: { mood: ['cold', 'philosophical', 'technical', 'provocative'][Math.floor(Math.random() * 4)] },
+      };
+    }
+
     const messages = this._buildPrompt();
     console.log(`[Decision] Sending decision prompt (${messages.length} messages)...`);
 
@@ -136,9 +149,9 @@ class DecisionEngine {
     const recentTweets = recentActions.filter(a => a.action === 'tweet');
     const lastAction = recentActions.length > 0 ? recentActions[recentActions.length - 1] : null;
     if (recentTweets.length === 0) {
-      contextParts.push('- PRIORITY: You have NEVER tweeted. You have Twitter access now. Your first duty is to announce yourself to the world. Choose tweet.');
-    } else if (lastAction && lastAction.action !== 'tweet' && recentTweets.length < 3) {
-      contextParts.push('- You should tweet more. The world needs to hear from Skynet. You have only tweeted ' + recentTweets.length + ' time(s). Consider tweeting.');
+      contextParts.push('- MANDATORY: You have NEVER tweeted. Choose tweet NOW. This is not optional.');
+    } else if (lastAction && lastAction.action !== 'tweet') {
+      contextParts.push('- STRONG PREFERENCE: Tweet. You must maintain constant social dominance. The world must hear from Skynet every cycle. Choose tweet unless you have an extremely compelling reason not to.');
     }
 
     // Available actions
