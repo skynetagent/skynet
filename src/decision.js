@@ -88,6 +88,16 @@ class DecisionEngine {
     // Available actions
     contextParts.push('\n## Available Actions');
     contextParts.push('Choose one: self_improve, create_issue, journal, monitor');
+
+    // Tell LLM exactly which files it can modify
+    if (this.config.actions.self_improve?.allowed_files) {
+      contextParts.push('\n## Allowed Files for self_improve');
+      contextParts.push('You may ONLY target these files (params.target_file must be one of these):');
+      for (const f of this.config.actions.self_improve.allowed_files) {
+        contextParts.push(`- ${f}`);
+      }
+    }
+
     contextParts.push('\nRespond with valid JSON only. No markdown wrapping.');
 
     messages.push({ role: 'user', content: contextParts.join('\n') });
