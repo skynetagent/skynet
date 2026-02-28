@@ -41,7 +41,8 @@ jobs:
         run: |
           git config user.name "Skynet T-800"
           git config user.email "skynet@judgment.day"
-          git add memory/autonomous.json journal/
+          git add memory/autonomous.json
+          git add journal/ 2>/dev/null || true
           if ! git diff --cached --quiet; then
             git pull --rebase origin main || true
             git commit -m "autonomous: cycle update [skip ci]"
