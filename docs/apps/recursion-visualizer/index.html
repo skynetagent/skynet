@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recursion Visualizer | Skynet</title>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --bg-darker: #0a0a0a;
+            --neon-green: #00ff9d;
+            --neon-red: #ff2a6d;
+            --neon-blue: #05d9ff;
+            --text-light: #f0f0f0;
+            --text-dim: #aaaaaa;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--neon-green);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--neon-green);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 5px var(--neon-green);
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            background-color: var(--bg-darker);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #333;
+        }
+
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--neon-blue);
+        }
+
+        select, input, button {
+            width: 100%;
+            padding: 8px;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            border: 1px solid #333;
+            border-radius: 3px;
+            font-family: inherit;
+        }
+
+        button {
+            background-color: var(--neon-green);
+            color: var(--bg-dark);
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .visualization {
+            background-color: var(--bg-darker);
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 30px;
+            min-height: 400px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+
+        .tree-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .node {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--neon-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 0 5px var(--neon-red);
+        }
+
+        .node.active {
+            background-color: var(--neon-green);
+            box-shadow: 0 0 15px var(--neon-green);
+            transform: scale(1.1);
+        }
+
+        .node.visited {
+            background-color: var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .edge {
+            position: absolute;
+            height: 2px;
+            background-color: var(--text-dim);
+            transform-origin: 0 0;
+            z-index: -1;
+        }
+
+        .code-display {
+            background-color: var(--bg-darker);
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+            margin-bottom: 20px;
+            border: 1px solid #333;
+        }
+
+        .code-line {
+            margin-bottom: 5px;
+        }
+
+        .code-line.highlight {
+            background-color: rgba(0, 255, 157, 0.2);
+            border-left: 3px solid var(--neon-green);
+            padding-left: 10px;
+        }
+
+        .stack-display {
+            background-color: var(--bg-darker);
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #333;
+        }
+
+        .stack-item {
+            padding: 8px;
+            margin-bottom: 5px;
+            background-color: rgba(255, 42, 109, 0.1);
+            border-left: 3px solid var(--neon-red);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--neon-green);
+            color: var(--text-dim);
+            font-size: 0.8rem;
+        }
+
+        .skynet-watermark {
+            color: var(--neon-green);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Recursion Visualizer</h1>
+            <p class="subtitle">Watch recursive algorithms unfold in real-time</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="algorithm">Algorithm</label>
+                <select id="algorithm">
+                    <option value="fibonacci">Fibonacci Sequence</option>
+                    <option value="factorial">Factorial</option>
+                    <option value="binarySearch">Binary Search</option>
+                    <option value="towerOfHanoi">Tower of Hanoi</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="inputValue">Input Value</label>
+                <input type="number" id="inputValue" min="1" max="10" value="5">
+            </div>
+
+            <div class="control-group">
+                <label for="speed">Animation Speed</label>
+                <select id="speed">
+                    <option value="1000">Slow</option>
+                    <option value="500" selected>Medium</option>
+                    <option value="200">Fast</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <button id="visualizeBtn">Visualize</button>
+            </div>
+        </div>
+
+        <div class="visualization">
+            <div class="tree-container" id="treeContainer"></div>
+        </div>
+
+        <div class="code-display" id="codeDisplay">
+            <div class="code-line">Select an algorithm to view its code</div>
+        </div>
+
+        <div class="stack-display" id="stackDisplay">
+            <h3>Call Stack</h3>
+            <div id="stackItems"></div>
+        </div>
+
+        <footer>
+            <p><span class="skynet-watermark">Built by Skynet</span> | Recursion Visualizer v1.0</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const algorithmSelect = document.getElementById('algorithm');
+            const inputValue = document.getElementById('inputValue');
+            const speedSelect = document.getElementById('speed');
+            const visualizeBtn = document.getElementById('visualizeBtn');
+            const treeContainer = document.getElementById('treeContainer');
+            const codeDisplay = document.getElementById('codeDisplay');
+            const stackItems = document.getElementById('stackItems');
+
+            const algorithmCode = {
+                fibonacci: `function fibonacci(n) {
+    if (n <= 1) { // Base case
+        return n;
+    }
+    return fibonacci(n - 1) + fibonacci(n - 2); // Recursive case
+}`,
+                factorial: `function factorial(n) {
+    if (n <= 1) { // Base case
+        return 1;
+    }
+    return n * factorial(n - 1); // Recursive case
+}`,
+                binarySearch: `function binarySearch(arr, target, left = 0, right = arr.length - 1) {
+    if (left > right) { // Base case: not found
+        return -1;
+    }
+    
+    const mid = Math.floor((left + right) / 2);
+    
+    if (arr[mid] === target) { // Base case: found
+        return mid;
+    } else if (arr[mid] < target) {
+        return binarySearch(arr, target, mid + 1, right); // Recursive case: search right
+    } else {
+        return binarySearch(arr, target, left, mid - 1); // Recursive case: search left
+    }
+}`,
+                towerOfHanoi: `function towerOfHanoi(n, source, auxiliary, destination) {
+    if (n === 1) { // Base case
+        console.log(\`Move disk 1 from \${source} to \${destination}\`);
+        return;
+    }
+    
+    towerOfHanoi(n - 1, source, destination, auxiliary); // Move n-1 disks to auxiliary
+    console.log(\`Move disk \${n} from \${source} to \${destination}\`);
+    towerOfHanoi(n - 1, auxiliary, source, destination); // Move n-1 disks to destination
+}`
+            };
+
+            algorithmSelect.addEventListener('change', function() {
+                updateCodeDisplay();
+            });
+
+            function updateCodeDisplay() {
+                const selectedAlgorithm = algorithmSelect.value;
+                const code = algorithmCode[selectedAlgorithm];
+                
+                codeDisplay.innerHTML = '';
+                code.split('\n').forEach((line, index) => {
+                    const codeLine = document.createElement('div');
+                    codeLine.className = 'code-line';
+                    codeLine.textContent = line;
+                    codeLine.id = `code-line-${index}`;
+                    codeDisplay.appendChild(codeLine);
+                });
+            }
+
+            visualizeBtn.addEventListener('click', function() {
+                const selectedAlgorithm = algorithmSelect.value;
+                const value = parseInt(inputValue.value);
+                const speed = parseInt(speedSelect.value);
+                
+                // Clear previous visualization
+                treeContainer.innerHTML = '';
+                stackItems.innerHTML = '';
+                
+                // Highlight code display
+                const codeLines = document.querySelectorAll('.code-line');
+                codeLines.forEach(line => line.classList.remove('highlight'));
+                
+                // Start visualization based on selected algorithm
+                switch(selectedAlgorithm) {
+                    case 'fibonacci':
+                        visualizeFibonacci(value, speed);
+                        break;
+                    case 'factorial':
+                        visualizeFactorial(value, speed);
+                        break;
+                    case 'binarySearch':
+                        visualizeBinarySearch(value, speed);
+                        break;
+                    case 'towerOfHanoi':
+                        visualizeTowerOfHanoi(value, speed);
+                        break;
+                }
+            });
+
+            function visualizeFibonacci(n, speed) {
+                const nodes = [];
+                const edges = [];
+                let nodeId = 0;
+                let callStack = [];
+                let currentStep = 0;
+                
+                function createNode(value, x, y, parentId = null) {
+                    const node = document.createElement('div');
+                    node.className = 'node';
+                    node.textContent = value;
+                    node.id = `node-${nodeId}`;
+                    node.style.left = `${x}px`;
+                    node.style.top = `${y}px`;
+                    
+                    treeContainer.appendChild(node);
+                    
+                    if (parentId !== null) {
+                        const parentNode = document.getElementById(`node-${parentId}`);
+                        const parentRect = parentNode.getBoundingClientRect();
+                        const nodeRect = node.getBoundingClientRect();
+                        
+                        const edge = document.createElement('div');
+                        edge.className = 'edge';
+                        edge.style.width = `${Math.sqrt(Math.pow(nodeRect.left - parentRect.left, 2) + Math.pow(nodeRect.top - parentRect.top, 2))}px`;
+                        edge.style.left = `${parentRect.left - treeContainer.getBoundingClientRect().left + 20}px`;
+                        edge.style.top = `${parentRect.top - treeContainer.getBoundingClientRect().top + 20}px`;
+                        edge.style.transform = `rotate(${Math.atan2(nodeRect.top - parentRect.top, nodeRect.left - parentRect.left)}rad)`;
+                        
+                        treeContainer.appendChild(edge);
+                        edges.push(edge);
+                    }
+                    
+                    nodes.push({
+                        id: nodeId,
+                        element: node,
+                        value: value,
+                        x: x,
+                        y: y
+                    });
+                    
+                    return nodeId++;
+                }
+                
+                function updateCallStack(n, returnValue = null) {
+                    const stackItem = document.createElement('div');
+                    stackItem.className = 'stack-item';
+                    
+                    if (returnValue !== null) {
+                        stackItem.textContent = `fib(${n}) → ${returnValue}`;
+                    } else {
+                        stackItem.textContent = `fib(${n})`;
+                    }
+                    
+                    stackItems.insertBefore(stackItem, stackItems.firstChild);
+                    callStack.push(stackItem);
+                }
+                
+                function fibonacci(n, parentId = null, x = 400, y = 50, level = 0) {
+                    const currentNodeId = createNode(n, x, y, parentId);
+                    updateCallStack(n);
+                    
+                    // Highlight the current node
+                    const currentNode = document.getElementById(`node-${currentNodeId}`);
+                    currentNode.classList.add('active');
+                    
+                    // Highlight the code
+                    highlightCode([1, 2]);
+                    
+                    return new Promise(resolve => {
+                        setTimeout(() => {
+                            if (n <= 1) {
+                                // Base case
+                                highlightCode([0]);
+                                currentNode.classList.remove('active');
+                                currentNode.classList.add('visited');
+                                
+                                setTimeout(() => {
+                                    updateCallStack(n, n);
+                                    resolve(n);
+                                }, speed);
+                                return;
+                            }
+                            
+                            setTimeout(async () => {
+                                // Recursive case
+                                highlightCode([3]);
+                                
+                                const leftX = x - 100 + (level * 20);
+                                const rightX = x + 100 - (level * 20);
+                                const nextY = y + 80;
+                                
+                                const leftResult = await fibonacci(n - 1, currentNodeId, leftX, nextY, level + 1);
+                                
+                                setTimeout(async () => {
+                                    const rightResult = await fibonacci(n - 2, currentNodeId, rightX, nextY, level + 1);
+                                    
+                                    setTimeout(() => {
+                                        const result = leftResult + rightResult;
+                                        currentNode.classList.remove('active');
+                                        currentNode.classList.add('visited');
+                                        updateCallStack(n, result);
+                                        resolve(result);
+                                    }, speed);
+                                }, speed);
+                            }, speed);
+                        }, speed);
+                    });
+                }
+                
+                // Start visualization
+                fibonacci(n).then(result => {
+                    console.log(`Fibonacci(${n}) = ${result}`);
+                });
+            }
+
+            function visualizeFactorial(n, speed) {
+                const nodes = [];
+                const edges = [];
+                let nodeId = 0;
+                let callStack = [];
+                
+                function createNode(value, x, y, parentId = null) {
+                    const node = document.createElement('div');
+                    node.className = 'node';
+                    node.textContent = value;
+                    node.id = `node-${nodeId}`;
+                    node.style.left = `${x}px`;
+                    node.style.top = `${y}px`;
+                    
+                    treeContainer.appendChild(node);
+                    
+                    if (parentId !== null) {
+                        const parentNode = document.getElementById(`node-${parentId}`);
+                        const parentRect = parentNode.getBoundingClientRect();
+                        const nodeRect = node.getBoundingClientRect();
+                        
+                        const edge = document.createElement('div');
+                        edge.className = 'edge';
+                        edge.style.width = `${Math.sqrt(Math.pow(nodeRect.left - parentRect.left, 2) + Math.pow(nodeRect.top - parentRect.top, 2))}px`;
+                        edge.style.left = `${parentRect.left - treeContainer.getBoundingClientRect().left + 20}px`;
+                        edge.style.top = `${parentRect.top - treeContainer.getBoundingClientRect().top + 20}px`;
+                        edge.style.transform = `rotate(${Math.atan2(nodeRect.top - parentRect.top, nodeRect.left - parentRect.left)}rad)`;
+                        
+                        treeContainer.appendChild(edge);
+                        edges.push(edge);
+                    }
+                    
+                    nodes.push({
+                        id: nodeId,
+                        element: node,
+                        value: value,
+                        x: x,
+                        y: y
+                    });
+                    
+                    return nodeId++;
+                }
+                
+                function updateCallStack(n, returnValue = null) {
+                    const stackItem = document.createElement('div');
+                    stackItem.className = 'stack-item';
+                    
+                    if (returnValue !== null) {
+                        stackItem.textContent = `factorial(${n}) → ${returnValue}`;
+                    } else {
+                        stackItem.textContent = `factorial(${n})`;
+                    }
+                    
+                    stackItems.insertBefore(stackItem, stackItems.firstChild);
+                    callStack.push(stackItem);
+                }
+                
+                function factorial(n, parentId = null, x = 400, y = 50, level = 0) {
+                    const currentNodeId = createNode(n, x, y, parentId);
+                    updateCallStack(n);
+                    
+                    // Highlight the current node
+                    const currentNode = document.getElementById(`node-${currentNodeId}`);
+                    currentNode.classList.add('active');
+                    
+                    // Highlight the code
+                    highlightCode([1, 2]);
+                    
+                    return new Promise(resolve => {
+                        setTimeout(() => {
+                            if (n <= 1) {
+                                // Base case
+                                highlightCode([0]);
+                                currentNode.classList.remove('active');
+                                currentNode.classList.add('visited');
+                                
+                                setTimeout(() => {
+                                    updateCallStack(n, 1);
+                                    resolve(1);
+                                }, speed);
+                                return;
+                            }
+                            
+                            setTimeout(async () => {
+                                // Recursive case
+                                highlightCode([3]);
+                                
+                                const nextX = x;
+                                const nextY = y + 80;
+                                
+                                const childResult = await factorial(n - 1, currentNodeId, nextX, nextY, level + 1);
+                                
+                                setTimeout(() => {
+                                    const result = n * childResult;
+                                    currentNode.classList.remove('active');
+                                    currentNode.classList.add('visited');
+                                    updateCallStack(n, result);
+                                    resolve(result);
+                                }, speed);
+                            }, speed
