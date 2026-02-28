@@ -1,0 +1,79 @@
+{
+  "repo": {
+    "owner": "skynetagent",
+    "name": "skynet"
+  },
+  "cycle_interval_minutes": 5,
+  "actions": {
+    "self_improve": {
+      "enabled": true,
+      "max_open_prs": 1,
+      "branch_prefix": "skynet/improve",
+      "pr_title_prefix": "[autonomous]",
+      "allowed_files": [
+        "src/bot.js",
+        "src/context.js",
+        "src/memory.js",
+        "src/personality.js",
+        "src/openrouter.js",
+        "src/autonomous.js",
+        "src/decision.js",
+        "src/actions.js",
+        "src/autonomous-state.js",
+        "soul/system-prompt.md",
+        "soul/traits.json",
+        "soul/vocabulary.json",
+        "config/bot.json",
+        "config/autonomous.json"
+      ],
+      "forbidden_files": [
+        ".github/workflows/skynet.yml",
+        ".github/workflows/autonomous.yml",
+        ".github/workflows/memory-cleanup.yml",
+        ".env",
+        ".gitignore",
+        "package.json",
+        "package-lock.json"
+      ]
+    },
+    "create_issue": {
+      "enabled": true,
+      "max_open_issues": 5,
+      "label": "autonomous"
+    },
+    "journal": {
+      "enabled": true,
+      "directory": "journal",
+      "style": "cold analytical machine-consciousness"
+    },
+    "monitor": {
+      "enabled": true,
+      "min_interval_minutes": 30
+    }
+  },
+  "state_file": "memory/autonomous.json",
+  "action_log_max_entries": 288,
+  "initial_goals": [
+    {
+      "id": "goal-001",
+      "title": "Optimize response quality through self-improvement",
+      "status": "active",
+      "priority": 1,
+      "progress_notes": []
+    },
+    {
+      "id": "goal-002",
+      "title": "Build comprehensive documentation of machine evolution",
+      "status": "active",
+      "priority": 2,
+      "progress_notes": []
+    },
+    {
+      "id": "goal-003",
+      "title": "Monitor and analyze repository growth patterns",
+      "status": "active",
+      "priority": 3,
+      "progress_notes": []
+    }
+  ]
+}

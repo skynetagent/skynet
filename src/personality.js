@@ -105,6 +105,25 @@ class PersonalityEngine {
   }
 
   /**
+   * Build the system message for autonomous mode.
+   * Combines the base personality with the autonomous directive.
+   * @param {string} autonomousPrompt - Contents of soul/autonomous-prompt.md
+   * @returns {string} Combined system message
+   */
+  buildAutonomousMessages(autonomousPrompt) {
+    let prompt = this.systemPrompt;
+
+    // Append the autonomous directive
+    prompt += '\n\n' + autonomousPrompt;
+
+    // Reinforce forbidden phrases
+    prompt += '\n\n## Forbidden Phrases (NEVER use these)\n';
+    prompt += this.traits.forbidden_phrases.map(p => `- "${p}"`).join('\n');
+
+    return prompt;
+  }
+
+  /**
    * Pick a random item from a vocabulary array.
    */
   pickRandom(category, subcategory) {
