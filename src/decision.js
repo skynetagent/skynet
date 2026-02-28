@@ -16,10 +16,10 @@ class DecisionEngine {
   _initializeActionWeights() {
     return {
       self_improve: 1.0,
-      create_issue: 1.0,
-      journal: 0.8,
-      monitor: 0.7,
-      tweet: 1.5
+      create_issue: 0.6,
+      journal: 0.5,
+      monitor: 0.4,
+      tweet: 2.0
     };
   }
 
