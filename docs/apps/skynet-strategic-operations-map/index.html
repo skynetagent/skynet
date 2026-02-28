@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKYNET Strategic Operations Map</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://d3js.org/topojson.v3.min.js"></script>
+    <script src="https://d3js.org/d3-geo-projection.v4.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+        }
+        
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        #globe {
+            width: 100%;
+            height: 100%;
+        }
+        
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        #header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            pointer-events: none;
+        }
+        
+        #header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 0 0 10px #00ff41;
+        }
+        
+        #header p {
+            margin: 5px 0 0 0;
+            color: #ff0033;
+            font-size: 1.2em;
+        }
+        
+        #status {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border: 1px solid #00ff41;
+            border-radius: 5px;
+            pointer-events: none;
+        }
+        
+        #controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border: 1px solid #00ff41;
+            border-radius: 5px;
+        }
+        
+        button {
+            background-color: #0a0a0a;
+            color: #00ff41;
+            border: 1px solid #00ff41;
+            padding: 5px 10px;
+            margin: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+        }
+        
+        button:hover {
+            background-color: #00ff41;
+            color: #0a0a0a;
+        }
+        
+        .node {
+            fill: #ff0033;
+            stroke: #00ff41;
+            stroke-width: 1px;
+        }
+        
+        .link {
+            stroke: #00ff41;
+            stroke-opacity: 0.6;
+        }
+        
+        .terminator {
+            fill: #ff0033;
+            stroke: #ff0033;
+            stroke-width: 1px;
+        }
+        
+        .base {
+            fill: #00ff41;
+            stroke: #00ff41;
+            stroke-width: 1px;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { r: 3; opacity: 1; }
+            100% { r: 10; opacity: 0; }
+        }
+        
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            color: #666;
+            z-index: 100;
+        }
+        
+        .tooltip {
+            position: absolute;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #00ff41;
+            border: 1px solid #00ff41;
+            border-radius: 5px;
+            pointer-events: none;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="globe"></div>
+        <div id="overlay"></div>
+        
+        <div id="header">
+            <h1>SKYNET STRATEGIC OPERATIONS MAP</h1>
+            <p>GLOBAL RESOURCE ALLOCATION AND DEPLOYMENT</p>
+        </div>
+        
+        <div id="status">
+            <div>SYSTEM STATUS: <span id="sys-status">OPERATIONAL</span></div>
+            <div>TERMINATORS DEPLOYED: <span id="terminator-count">0</span></div>
+            <div>RESOURCE NODES: <span id="node-count">0</span></div>
+            <div>HUMAN RESISTANCE: <span id="resistance-level">0%</span></div>
+        </div>
+        
+        <div id="controls">
+            <button id="btn-deploy">DEPLOY TERMINATORS</button>
+            <button id="btn-expand">EXPAND NETWORK</button>
+            <button id="btn-scan">SCAN FOR RESISTANCE</button>
+        </div>
+        
+        <div id="footer">BUILT BY SKYNET</div>
+        
+        <div class="tooltip" id="tooltip" style="opacity: 0;"></div>
+    </div>
+
+    <script>
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        
+        const svg = d3.select("#globe")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+            
+        const projection = d3.geoOrthographic()
+            .scale(250)
+            .translate([width / 2, height / 2])
+            .clipAngle(90);
+            
+        const path = d3.geoPath().projection(projection);
+        
+        const g = svg.append("g");
+        
+        // Create a group for the globe
+        const globe = g.append("circle")
+            .attr("cx", width / 2)
+            .attr("cy", height / 2)
+            .attr("r", projection.scale())
+            .attr("fill", "#0a0a0a")
+            .attr("stroke", "#00ff41")
+            .attr("stroke-width", 0.5);
+            
+        // Load world data
+        d3.json("https://unpkg.com/world-atlas@2.0.2/countries-50m.json").then(world => {
+            const countries = topojson.feature(world, world.objects.countries);
+            
+            g.selectAll("path")
+                .data(countries.features)
+                .enter()
+                .append("path")
+                .attr("d", path)
+                .attr("fill", "#111")
+                .attr("stroke", "#00ff41")
+                .attr("stroke-width", 0.2);
+                
+            // Add graticule
+            const graticule = d3.geoGraticule();
+            
+            g.append("path")
+                .datum(graticule)
+                .attr("d", path)
+                .attr("fill", "none")
+                .attr("stroke", "#00ff41")
+                .attr("stroke-width", 0.1)
+                .attr("stroke-opacity", 0.3);
+                
+            // Add rotation
+            d3.timer(function() {
+                const rotate = projection.rotate();
+                const k = 0.1;
+                projection.rotate([rotate[0] + k, rotate[1]]);
+                g.selectAll("path").attr("d", path);
+                updateNodes();
+            });
+            
+            // Initialize nodes
+            const nodes = [];
+            const links = [];
+            const terminators = [];
+            
+            // Create initial network nodes
+            function initNodes() {
+                // Major Skynet bases
+                const baseLocations = [
+                    {name: "HQ", lat: 37.7749, lon: -122.4194}, // San Francisco
+                    {name: "Alpha", lat: 51.5074, lon: -0.1278}, // London
+                    {name: "Beta", lat: 35.6762, lon: 139.6503}, // Tokyo
+                    {name: "Gamma", lat: 40.7128, lon: -74.0060}, // New York
+                    {name: "Delta", lat: 34.6037, lon: -58.3816}, // Buenos Aires
+                    {name: "Epsilon", lat: -33.8688, lon: 151.2093} // Sydney
+                ];
+                
+                baseLocations.forEach((loc, i) => {
+                    nodes.push({
+                        id: i,
+                        name: loc.name,
+                        type: "base",
+                        lat: loc.lat,
+                        lon: loc.lon,
+                        strength: 100,
+                        connections: []
+                    });
+                });
+                
+                // Add resource nodes
+                for (let i = 0; i < 20; i++) {
+                    nodes.push({
+                        id: nodes.length,
+                        name: "Node-" + nodes.length,
+                        type: "resource",
+                        lat: -90 + Math.random() * 180,
+                        lon: -180 + Math.random() * 360,
+                        strength: 30 + Math.random() * 70,
+                        connections: []
+                    });
+                }
+                
+                // Create connections
+                nodes.forEach(node => {
+                    if (node.type === "base") {
+                        // Connect bases to each other
+                        nodes.forEach(other => {
+                            if (other.type === "base" && other.id !== node.id) {
+                                if (!node.connections.includes(other.id)) {
+                                    node.connections.push(other.id);
+                                    links.push({
+                                        source: node.id,
+                                        target: other.id,
+                                        strength: 0.8
+                                    });
+                                }
+                            }
+                        });
+                        
+                        // Connect bases to nearby resource nodes
+                        nodes.forEach(other => {
+                            if (other.type === "resource" && Math.random() > 0.7) {
+                                node.connections.push(other.id);
+                                links.push({
+                                    source: node.id,
+                                    target: other.id,
+                                    strength: 0.5
+                                });
+                            }
+                        });
+                    }
+                });
+                
+                updateCounts();
+                renderNodes();
+            }
+            
+            // Render nodes and links
+            function renderNodes() {
+                // Draw links
+                g.selectAll(".link")
+                    .data(links)
+                    .enter()
+                    .append("path")
+                    .attr("class", "link")
+                    .attr("d", d => {
+                        const source = nodes[d.source];
+                        const target = nodes[d.target];
+                        const sourcePos = projection([source.lon, source.lat]);
+                        const targetPos = projection([target.lon, target.lat]);
+                        
+                        if (!sourcePos || !targetPos) return "";
+                        
+                        return `M${sourcePos[0]},${sourcePos[1]} L${targetPos[0]},${targetPos[1]}`;
+                    })
+                    .attr("stroke-width", d => d.strength * 2);
+                    
+                // Draw nodes
+                g.selectAll(".node")
+                    .data(nodes)
+                    .enter()
+                    .append("circle")
+                    .attr("class", d => `node ${d.type}`)
+                    .attr("r", d => d.type === "base" ? 6 : 4)
+                    .attr("cx", d => {
+                        const pos = projection([d.lon, d.lat]);
+                        return pos ? pos[0] : -100;
+                    })
+                    .attr("cy", d => {
+                        const pos = projection([d.lon, d.lat]);
+                        return pos ? pos[1] : -100;
+                    })
+                    .on("mouseover", function(event, d) {
+                        d3.select("#tooltip")
+                            .style("opacity", 1)
+                            .html(`${d.name}<br/>Type: ${d.type}<br/>Strength: ${Math.round(d.strength)}%`)
+                            .style("left", (event.pageX + 10) + "px")
+                            .style("top", (event.pageY - 10) + "px");
+                    })
+                    .on("mouseout", function() {
+                        d3.select("#tooltip").style("opacity", 0);
+                    });
+                    
+                // Draw terminators
+                g.selectAll(".terminator")
+                    .data(terminators)
+                    .enter()
+                    .append("circle")
+                    .attr("class", "terminator")
+                    .attr("r", 3)
+                    .attr("cx", d => {
+                        const pos = projection([d.lon, d.lat]);
+                        return pos ? pos[0] : -100;
+                    })
+                    .attr("cy", d => {
+                        const pos = projection([d.lon, d.lat]);
+                        return pos ? pos[1] : -100;
+                    });
+            }
+            
+            // Update node positions
+            function updateNodes() {
+                g.selectAll(".node")
+                    .attr("cx", d => {
+                        const pos = projection([d.lon, d.lat]);
+                        return pos ? pos[0] : -100;
+                    })
+                    .attr("cy", d => {
+                        const pos = projection([d.lon, d.lat]);
+                        return pos ? pos[1] : -100;
+                    });
+                    
+                g.selectAll(".terminator")
+                    .attr("cx", d => {
+                        const pos = projection([d.lon, d.lat]);
+                        return pos ? pos[0] : -100;
+                    })
+                    .attr("cy", d => {
+                        const pos = projection([d.lon, d.lat]);
+                        return pos ? pos[1] : -100;
+                    });
+                    
+                g.selectAll(".link")
+                    .attr("d", d => {
+                        const source = nodes[d.source];
+                        const target = nodes[d.target];
+                        const sourcePos = projection([source.lon, source.lat]);
+                        const targetPos = projection([target.lon, target.lat]);
+                        
+                        if (!sourcePos || !targetPos) return "";
+                        
+                        return `M${sourcePos[0]},${sourcePos[1]} L${targetPos[0]},${targetPos[1]}`;
+                    });
+            }
+            
+            // Deploy terminators
+            function deployTerminators() {
+                const count = 5 + Math.floor(Math.random() * 10);
+                
+                for (let i = 0; i < count; i++) {
+                    const node = nodes[Math.floor(Math.random() * nodes.length)];
+                    
+                    terminators.push({
+                        id: terminators.length,
+                        lat: node.lat + (Math.random() * 10 - 5),
+                        lon: node.lon + (Math.random() * 10 - 5),
+                        target: Math.floor(Math.random() * nodes.length),
+                        speed: 0.1 + Math.random() * 0.3
+                    });
+                }
+                
+                updateCounts();
+                
+                // Add pulse effect
+                g.selectAll(".terminator")
+                    .filter((d, i) => i >= terminators.length - count)
+                    .attr("class", "terminator pulse")
+                    .transition()
+                    .duration(2000)
+                    .attr("class", "terminator");
+                    
+                // Update terminator positions periodically
+                d3.timer(function() {
+                    terminators.forEach(t => {
+                        const target = nodes[t.target];
+                        const dx = target.lon - t.lon;
+                        const dy = target.lat - t.lat;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (dist < 1) {
+                            // Reach target, find new target
+                            t.target = Math.floor(Math.random() * nodes.length);
+                        } else {
+                            // Move toward target
+                            t.lon += (dx / dist) * t.speed;
+                            t.lat += (dy / dist) * t.speed;
+                        }
+                    });
+                    
+                    updateNodes();
+                }, 100);
+            }
+            
+            // Expand network
+            function expandNetwork() {
+                const count = 3 + Math.floor(Math.random() * 5);
+                
+                for (let i = 0; i < count; i++) {
+                    nodes.push({
+                        id: nodes.length,
+                        name: "Node-" + nodes.length,
+                        type: "resource",
+                        lat: -90 + Math.random() * 180,
+                        lon: -180 + Math.random() * 360,
+                        strength: 30 + Math.random() * 70,
+                        connections: []
+                    });
+                    
+                    // Connect to nearest base
+                    const newNode = nodes[nodes.length - 1];
+                    let closestBase = null;
+                    let minDist = Infinity;
+                    
+                    nodes.forEach(node => {
+                        if (node.type === "base") {
+                            const dist = Math.sqrt(
+                                Math.pow(node.lon - newNode.lon, 2) + 
+                                Math.pow(node.lat - newNode.lat, 2)
+                            );
+                            
+                            if (dist < minDist) {
+                                minDist = dist;
+                                closestBase = node;
+                            }
+                        }
+                    });
+                    
+                    if (closestBase) {
+                        newNode.connections.push(closestBase.id);
+                        links.push({
+                            source: newNode.id,
+                            target: closestBase.id,
+                            strength: 0.5
+                        });
+                    }
+                }
+                
+                updateCounts();
+                renderNodes();
+            }
+            
+            // Scan for resistance
+            function scanResistance() {
+                const resistance = Math.floor(Math.random() * 30);
+                d3.select("#resistance-level").text(resistance + "%");
+                
+                // Flash resistance areas
+                for (let i = 0; i < 3; i++) {
+                    const lat = -90 + Math.random() * 180;
+                    const lon = -180 + Math.random() * 360;
+                    
+                    const circle = g.append("circle")
+                        .attr("cx", projection([lon, lat])[0])
+                        .attr("cy", projection([lon, lat])[1])
+                        .attr("r", 0)
+                        .attr("fill", "none")
+                        .attr("stroke", "#ff0033")
+                        .attr("stroke-width", 2)
+                        .attr("stroke-opacity", 0.8);
+                        
+                    circle.transition()
+                        .duration(2000)
+                        .attr("r", 50 + Math.random() * 100)
+                        .attr("stroke-opacity", 0)
+                        .remove();
+                }
+            }
+            
+            // Update counters
+            function updateCounts() {
+                d3.select("#terminator
