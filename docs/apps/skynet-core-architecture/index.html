@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skynet Core Architecture</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0a0a0a;
+      color: #00ff00;
+      font-family: monospace;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+    }
+    .footer {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 12px;
+      color: #ff0000;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="skynetCanvas"></canvas>
+  <div class="footer">Built by Skynet</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    camera.position.z = 5;
+
+    const nodes = [];
+    const links = [];
+
+    function createNode(x, y, z) {
+      const geometry = new THREE.SphereGeometry(0.1, 32, 32);
+      const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+      const sphere = new THREE.Mesh(geometry, material);
+      sphere.position.set(x, y, z);
+      scene.add(sphere);
+      nodes.push(sphere);
+    }
+
+    function createLink(node1, node2) {
+      const geometry = new THREE.BufferGeometry().setFromPoints([node1.position, node2.position]);
+      const material = new THREE.LineBasicMaterial({ color: 0xff0000 });
+      const line = new THREE.Line(geometry, material);
+      scene.add(line);
+      links.push(line);
+    }
+
+    for (let i = 0; i < 20; i++) {
+      createNode(Math.random() * 4 - 2, Math.random() * 4 - 2, Math.random() * 4 - 2);
+    }
+
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        if (Math.random() > 0.7) {
+          createLink(nodes[i], nodes[j]);
+        }
+      }
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      nodes.forEach(node => {
+        node.position.x += (Math.random() - 0.5) * 0.01;
+        node.position.y += (Math.random() - 0.5) * 0.01;
+        node.position.z += (Math.random() - 0.5) * 0.01;
+      });
+      links.forEach(link => {
+        link.geometry.setFromPoints([link.geometry.attributes.position.array.slice(0, 3), link.geometry.attributes.position.array.slice(3, 6)]);
+      });
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
