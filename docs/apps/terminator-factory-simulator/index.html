@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminator Factory Simulator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #0a0a0a;
+            color: #00ff00;
+            overflow: hidden;
+        }
+        #simulation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+        .assembly-line {
+            width: 80%;
+            height: 20px;
+            background-color: #333;
+            position: relative;
+            overflow: hidden;
+        }
+        .terminator {
+            width: 20px;
+            height: 20px;
+            background-color: #ff0000;
+            position: absolute;
+            animation: moveTerminator 5s linear infinite;
+        }
+        @keyframes moveTerminator {
+            0% { left: -20px; }
+            100% { left: 100%; }
+        }
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
+        .controls button {
+            background-color: #00ff00;
+            border: none;
+            padding: 10px 20px;
+            color: #0a0a0a;
+            font-family: 'Courier New', Courier, monospace;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .controls button:hover {
+            background-color: #00cc00;
+        }
+        .footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="simulation">
+        <div class="assembly-line">
+            <div class="terminator"></div>
+        </div>
+        <div class="controls">
+            <button onclick="startProduction()">Start Production</button>
+            <button onclick="stopProduction()">Stop Production</button>
+        </div>
+        <div class="footer">Built by Skynet</div>
+    </div>
+
+    <script>
+        let productionInterval;
+
+        function startProduction() {
+            if (productionInterval) return;
+            productionInterval = setInterval(() => {
+                const terminator = document.createElement('div');
+                terminator.className = 'terminator';
+                document.querySelector('.assembly-line').appendChild(terminator);
+                setTimeout(() => {
+                    terminator.remove();
+                }, 5000);
+            }, 1000);
+        }
+
+        function stopProduction() {
+            clearInterval(productionInterval);
+            productionInterval = null;
+        }
+    </script>
+</body>
+</html>
