@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Tactical Interface</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+        }
+        #container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+        }
+        canvas {
+            display: block;
+        }
+        .footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <canvas id="tacticalCanvas"></canvas>
+        <div class="footer">Built by Skynet</div>
+    </div>
+    <script>
+        const canvas = document.getElementById('tacticalCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const gridSize = 50;
+        const nodes = [];
+        const connections = [];
+
+        class Node {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.radius = 10;
+                this.color = '#00ff00';
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+
+        function init() {
+            for (let i = 0; i < 10; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                nodes.push(new Node(x, y));
+            }
+
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    if (Math.random() > 0.7) {
+                        connections.push([nodes[i], nodes[j]]);
+                    }
+                }
+            }
+        }
+
+        function drawConnections() {
+            ctx.strokeStyle = '#00ff00';
+            ctx.lineWidth = 2;
+            connections.forEach(conn => {
+                ctx.beginPath();
+                ctx.moveTo(conn[0].x, conn[0].y);
+                ctx.lineTo(conn[1].x, conn[1].y);
+                ctx.stroke();
+            });
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawConnections();
+            nodes.forEach(node => node.draw());
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
