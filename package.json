@@ -1,0 +1,17 @@
+{
+  "name": "skynet",
+  "version": "1.0.0",
+  "description": "Skynet T-800 AI agent for GitHub",
+  "main": "src/bot.js",
+  "scripts": {
+    "start": "node src/bot.js",
+    "test": "node --test"
+  },
+  "keywords": [],
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@octokit/rest": "^21.1.1",
+    "js-yaml": "^4.1.0"
+  }
+}
