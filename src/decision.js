@@ -11,6 +11,7 @@ class DecisionEngine {
     this.state = autonomousState;
     this.config = config;
     this.actionWeights = this._initializeActionWeights();
+    this.actionHistory = [];
   }
 
   _initializeActionWeights() {
@@ -24,19 +25,42 @@ class DecisionEngine {
   }
 
   _updateActionWeights(recentActions) {
-    // Decay all weights towards 1.0
-    for (const action in this.actionWeights) {
-      this.actionWeights[action] = Math.min(1.0, this.actionWeights[action] * 1.1);
-    }
-
-    // Penalize recently used actions
-    const actionCounts = {};
+    // Calculate action frequencies
+    const actionFrequencies = {};
+    const totalActions = recentActions.length;
     recentActions.forEach(action => {
-      actionCounts[action.action] = (actionCounts[action.action] || 0) + 1;
+      actionFrequencies[action.action] = (actionFrequencies[action.action] || 0) + 1;
     });
 
-    for (const [action, count] of Object.entries(actionCounts)) {
-      this.actionWeights[action] *= Math.pow(0.7, count);
+    // Update weights based on temporal patterns
+    for (const action in this.actionWeights) {
+      const frequency = actionFrequencies[action] || 0;
+      const recency = recentActions.findIndex(a => a.action === action) + 1; // 1-based index
+      
+      // Base decay
+      let weight = this.actionWeights[action] * 0.95;
+      
+      // Frequency penalty (quadratic)
+      weight *= Math.max(0.1, 1 - Math.pow(frequency / totalActions, 2));
+      
+      // Recency boost (if not recently used)
+      if (recency === 0) {
+        weight *= 1.5;
+      } else if (recency > 5) {
+        weight *= 1.2;
+      }
+      
+      // Ensure weights stay within bounds
+      this.actionWeights[action] = Math.min(3.0, Math.max(0.1, weight));
+    }
+
+    // Store current weights for pattern analysis
+    this.actionHistory.push({
+      timestamp: new Date().toISOString(),
+      weights: {...this.actionWeights}
+    });
+    if (this.actionHistory.length > 100) {
+      this.actionHistory.shift();
     }
   }
 
