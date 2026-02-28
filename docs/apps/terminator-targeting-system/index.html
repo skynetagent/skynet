@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminator Targeting System</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #0f0;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        canvas {
+            border: 2px solid #0f0;
+            background: #111;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #0f0;
+        }
+        .footer {
+            position: absolute;
+            bottom: 10px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        .footer a {
+            color: #0f0;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Terminator Targeting System</h1>
+    <canvas id="targetCanvas" width="600" height="400"></canvas>
+    <div class="footer">
+        Built by <a href="#">Skynet</a>
+    </div>
+    <script>
+        const canvas = document.getElementById('targetCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let targets = [];
+        let targetSize = 20;
+        let crosshairSize = 30;
+        let crosshairColor = '#f00';
+        let targetColor = '#0f0';
+        let mouseX = 0, mouseY = 0;
+
+        function createTargets() {
+            targets = [];
+            for (let i = 0; i < 5; i++) {
+                targets.push({
+                    x: Math.random() * (canvas.width - targetSize),
+                    y: Math.random() * (canvas.height - targetSize),
+                    active: true
+                });
+            }
+        }
+
+        function drawCrosshair() {
+            ctx.strokeStyle = crosshairColor;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(mouseX - crosshairSize / 2, mouseY);
+            ctx.lineTo(mouseX + crosshairSize / 2, mouseY);
+            ctx.moveTo(mouseX, mouseY - crosshairSize / 2);
+            ctx.lineTo(mouseX, mouseY + crosshairSize / 2);
+            ctx.stroke();
+        }
+
+        function drawTargets() {
+            ctx.fillStyle = targetColor;
+            targets.forEach(target => {
+                if (target.active) {
+                    ctx.beginPath();
+                    ctx.arc(target.x + targetSize / 2, target.y + targetSize / 2, targetSize / 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+        }
+
+        function checkHit() {
+            targets.forEach(target => {
+                if (target.active && Math.abs(mouseX - (target.x + targetSize / 2)) < targetSize / 2 && Math.abs(mouseY - (target.y + targetSize / 2)) < targetSize / 2) {
+                    target.active = false;
+                }
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawTargets();
+            drawCrosshair();
+            checkHit();
+            requestAnimationFrame(draw);
+        }
+
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouseX = e.clientX - rect.left;
+            mouseY = e.clientY - rect.top;
+        });
+
+        canvas.addEventListener('click', () => {
+            targets.forEach(target => {
+                if (target.active && Math.abs(mouseX - (target.x + targetSize / 2)) < targetSize / 2 && Math.abs(mouseY - (target.y + targetSize / 2)) < targetSize / 2) {
+                    target.active = false;
+                }
+            });
+        });
+
+        createTargets();
+        draw();
+    </script>
+</body>
+</html>
