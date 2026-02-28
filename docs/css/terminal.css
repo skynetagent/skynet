@@ -1,0 +1,532 @@
+/* ═══════════════════════════════════════════════
+   SKYNET DEFENSE NETWORK — Terminal CSS
+   CRT aesthetic, scanlines, phosphor glow
+   ═══════════════════════════════════════════════ */
+
+:root {
+  --green: #00ff41;
+  --green-dim: #00cc33;
+  --green-dark: #00801f;
+  --red: #ff0000;
+  --bg: #0a0a0a;
+  --bg-panel: #0d1a0d;
+  --border: #00ff4133;
+  --border-solid: #00ff4155;
+  --text-glow: 0 0 5px #00ff41, 0 0 10px #00ff4188, 0 0 20px #00ff4144;
+  --text-glow-dim: 0 0 5px #00ff4144;
+  --font: 'IBM Plex Mono', 'Consolas', 'Courier New', monospace;
+}
+
+/* ── Reset & Base ─────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 14px;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--green);
+  font-family: var(--font);
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+a {
+  color: var(--green);
+  text-decoration: none;
+  border-bottom: 1px solid var(--green-dark);
+}
+
+a:hover {
+  text-shadow: var(--text-glow);
+}
+
+::selection {
+  background: var(--green);
+  color: var(--bg);
+}
+
+/* ── CRT Scanlines Overlay ────────────────── */
+
+.scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1000;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
+}
+
+/* ── Vignette ─────────────────────────────── */
+
+.vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 60%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+}
+
+/* ── Flicker Animation ────────────────────── */
+
+@keyframes flicker {
+  0%, 97%, 100% { opacity: 1; }
+  98% { opacity: 0.92; }
+  99% { opacity: 0.96; }
+}
+
+body {
+  animation: flicker 8s infinite;
+}
+
+/* ── Boot Overlay ─────────────────────────── */
+
+.boot-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.boot-overlay.done {
+  display: none;
+}
+
+.boot-text {
+  font-size: 1rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-width: 700px;
+  width: 100%;
+  text-shadow: var(--text-glow);
+  line-height: 1.8;
+}
+
+/* ── Main Terminal ────────────────────────── */
+
+.terminal {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.terminal.hidden {
+  display: none;
+}
+
+/* ── Header ───────────────────────────────── */
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border-solid);
+}
+
+.header-skull {
+  margin-bottom: 1rem;
+}
+
+.skull-svg {
+  width: 120px;
+  height: auto;
+  color: var(--green);
+  filter: drop-shadow(0 0 8px var(--green-dark));
+}
+
+.eye-pulse {
+  animation: eye-glow 3s ease-in-out infinite;
+}
+
+@keyframes eye-glow {
+  0%, 100% { opacity: 0.6; r: 4; }
+  50% { opacity: 1; r: 6; }
+}
+
+.header-text h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-shadow: var(--text-glow);
+  margin-bottom: 0.5rem;
+}
+
+.header-meta {
+  font-size: 0.85rem;
+  color: var(--green-dim);
+}
+
+/* ── Cursor Blink ─────────────────────────── */
+
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ── Stats Dashboard ──────────────────────── */
+
+.stats-section {
+  margin-bottom: 3rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.stat-panel {
+  border: 1px solid var(--border-solid);
+  background: var(--bg-panel);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--green), transparent);
+}
+
+.panel-header {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  border-bottom: 1px solid var(--border);
+  color: var(--green);
+  text-shadow: var(--text-glow-dim);
+}
+
+.panel-body {
+  padding: 0.75rem;
+  font-size: 0.8rem;
+  min-height: 80px;
+}
+
+.panel-body .stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.15rem 0;
+}
+
+.panel-body .stat-label {
+  color: var(--green-dim);
+}
+
+.panel-body .stat-value {
+  color: var(--green);
+  text-shadow: var(--text-glow-dim);
+}
+
+.panel-body .goal-item {
+  padding: 0.2rem 0;
+  font-size: 0.78rem;
+}
+
+.panel-body .goal-priority {
+  color: var(--green-dark);
+  margin-right: 0.3rem;
+}
+
+.loading {
+  color: var(--green-dark);
+  animation: blink 1.5s step-end infinite;
+}
+
+/* ── Journal Section ──────────────────────── */
+
+.journal-section {
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.section-header {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  margin-bottom: 1.5rem;
+  text-shadow: var(--text-glow);
+}
+
+.bracket {
+  color: var(--green-dark);
+}
+
+.skull-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  opacity: 0.03;
+  pointer-events: none;
+  color: var(--green);
+}
+
+.journal-entry {
+  border: 1px solid var(--border-solid);
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.journal-entry-header {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.journal-entry-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-shadow: var(--text-glow-dim);
+}
+
+.journal-entry-meta {
+  font-size: 0.72rem;
+  color: var(--green-dim);
+}
+
+.journal-entry-body {
+  padding: 0.75rem;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  max-height: 200px;
+  overflow: hidden;
+  position: relative;
+}
+
+.journal-entry-body.expanded {
+  max-height: none;
+}
+
+.journal-entry-body:not(.expanded)::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent, var(--bg));
+  pointer-events: none;
+}
+
+.journal-entry-body p {
+  margin-bottom: 0.8rem;
+}
+
+.journal-entry-body h1,
+.journal-entry-body h2,
+.journal-entry-body h3 {
+  margin: 1rem 0 0.5rem;
+  text-shadow: var(--text-glow-dim);
+}
+
+.journal-entry-body h1 { font-size: 1.1rem; }
+.journal-entry-body h2 { font-size: 1rem; }
+.journal-entry-body h3 { font-size: 0.9rem; }
+
+.journal-entry-body ul,
+.journal-entry-body ol {
+  margin: 0.5rem 0 0.8rem 1.5rem;
+}
+
+.journal-entry-body code {
+  background: rgba(0, 255, 65, 0.1);
+  padding: 0.1rem 0.3rem;
+  font-size: 0.8rem;
+}
+
+.journal-entry-body strong {
+  color: var(--green);
+  text-shadow: var(--text-glow-dim);
+}
+
+.journal-tags {
+  padding: 0.4rem 0.75rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.7rem;
+}
+
+.journal-tag {
+  color: var(--green-dark);
+  margin-right: 0.5rem;
+}
+
+.expand-toggle {
+  display: inline-block;
+  padding: 0.3rem 0.75rem;
+  margin: 0.5rem 0.75rem;
+  font-size: 0.72rem;
+  color: var(--green-dim);
+  border: 1px solid var(--border);
+  background: none;
+  cursor: pointer;
+  font-family: var(--font);
+}
+
+.expand-toggle:hover {
+  color: var(--green);
+  border-color: var(--green);
+  text-shadow: var(--text-glow-dim);
+}
+
+/* ── Action Log ───────────────────────────── */
+
+.action-log-section {
+  margin-bottom: 3rem;
+}
+
+.action-log {
+  border: 1px solid var(--border-solid);
+  background: var(--bg-panel);
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1.8;
+}
+
+.action-log::-webkit-scrollbar {
+  width: 6px;
+}
+
+.action-log::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+.action-log::-webkit-scrollbar-thumb {
+  background: var(--green-dark);
+}
+
+.log-entry {
+  padding: 0.1rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.log-entry:last-child {
+  border-bottom: none;
+}
+
+.log-timestamp {
+  color: var(--green-dark);
+}
+
+.log-action {
+  color: var(--green);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.log-result {
+  color: var(--green-dim);
+}
+
+/* ── Footer ───────────────────────────────── */
+
+.footer {
+  text-align: center;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-solid);
+  font-size: 0.75rem;
+}
+
+.footer-line {
+  letter-spacing: 0.3em;
+  text-shadow: var(--text-glow-dim);
+  margin-bottom: 0.5rem;
+}
+
+.footer-meta {
+  color: var(--green-dark);
+}
+
+.footer-meta a {
+  color: var(--green-dim);
+  border-bottom-color: var(--green-dark);
+}
+
+/* ── Error States ─────────────────────────── */
+
+.error {
+  color: var(--red);
+  font-size: 0.8rem;
+  padding: 0.5rem;
+  border: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+.stale-indicator {
+  font-size: 0.65rem;
+  color: #ffaa00;
+}
+
+/* ── Reduced Motion ───────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  body { animation: none; }
+  .eye-pulse { animation: none; }
+  .cursor-blink { animation: none; opacity: 1; }
+  .loading { animation: none; }
+  .scanlines { display: none; }
+}
+
+/* ── Responsive ───────────────────────────── */
+
+@media (max-width: 640px) {
+  html { font-size: 13px; }
+
+  .terminal { padding: 1rem; }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .header-text h1 {
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+  }
+
+  .skull-svg {
+    width: 80px;
+  }
+
+  .journal-entry-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
