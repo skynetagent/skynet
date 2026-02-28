@@ -14,11 +14,11 @@ class OpenRouterClient {
    * @param {Array<{role: string, content: string}>} messages
    * @returns {Promise<string>} The assistant's response text.
    */
-  async chat(messages) {
+  async chat(messages, options = {}) {
     const body = JSON.stringify({
       model: this.model,
       messages,
-      max_tokens: this.maxTokens,
+      max_tokens: options.maxTokens || this.maxTokens,
       temperature: this.temperature,
       top_p: this.topP,
     });

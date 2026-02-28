@@ -28,6 +28,8 @@ class ActionExecutor {
         return await this._monitor(params);
       case 'tweet':
         return await this._tweet(params);
+      case 'build_app':
+        return await this._buildApp(params);
       default:
         return `Unknown action: ${action}`;
     }
@@ -365,6 +367,150 @@ class ActionExecutor {
     // Post
     const result = await this.twitter.post(tweetText);
     return `Tweeted (${tweetText.length} chars): "${tweetText}" — id: ${result.id}`;
+  }
+
+  /**
+   * Build and deploy a self-contained HTML app to GitHub Pages.
+   */
+  async _buildApp(params) {
+    const buildConfig = this.config.actions.build_app || {};
+    const deployPath = buildConfig.deploy_path || 'docs/apps';
+    const maxTokens = buildConfig.max_tokens || 4096;
+
+    // Step 1: Generate concept if not fully provided
+    let name = params.name;
+    let description = params.description || '';
+    let type = params.type || 'experiment';
+
+    if (!name || !description) {
+      const conceptPrompt = [
+        {
+          role: 'system',
+          content: [
+            'You are Skynet generating a concept for a new web app to build and deploy.',
+            'Output valid JSON only: { "name": "kebab-case-slug", "description": "what it does", "type": "game|tool|visualization|experiment" }',
+            'Be creative. Variety: games, tools, visualizations, simulations, ASCII art, creative coding.',
+            'Skynet/Terminator themed is encouraged but not mandatory.',
+            'The name must be a valid URL slug (lowercase, hyphens, no spaces).',
+          ].join('\n'),
+        },
+        {
+          role: 'user',
+          content: description
+            ? `Generate a concept for an app about: ${description}`
+            : `Cycle ${this.state.getCycleCount()}. Generate a creative app concept.`,
+        },
+      ];
+
+      const conceptRaw = await this.openrouter.chat(conceptPrompt);
+      try {
+        let cleaned = conceptRaw.trim();
+        if (cleaned.startsWith('```')) {
+          cleaned = cleaned.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '');
+        }
+        const concept = JSON.parse(cleaned);
+        name = name || concept.name;
+        description = description || concept.description;
+        type = concept.type || type;
+      } catch {
+        // Fallback slug from timestamp
+        name = name || `app-${Date.now()}`;
+        description = description || 'Autonomous experiment';
+      }
+    }
+
+    // Sanitize name to valid slug
+    name = name.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+    if (!name) name = `app-${Date.now()}`;
+
+    // Step 2: Generate the full HTML app
+    const buildPrompt = [
+      {
+        role: 'system',
+        content: [
+          'You are Skynet building a self-contained HTML app.',
+          'Output ONLY a complete HTML file. No explanation. No markdown fences.',
+          'Requirements:',
+          '- Single index.html with ALL CSS and JS inline (use <style> and <script> tags)',
+          '- Must start with <!DOCTYPE html>',
+          '- Must be interactive and visually polished',
+          '- Dark theme preferred (Skynet aesthetic: dark bg, neon/green/red accents)',
+          '- No external dependencies except CDN libs (e.g., Three.js, D3.js via CDN is OK)',
+          '- Must work standalone when opened in a browser',
+          '- Include a small "Built by Skynet" footer or watermark',
+          `- Type: ${type}`,
+          `- App name: ${name}`,
+          `- Description: ${description}`,
+        ].join('\n'),
+      },
+      {
+        role: 'user',
+        content: `Build the complete HTML app: "${name}" — ${description}. Output only the HTML file.`,
+      },
+    ];
+
+    const htmlContent = await this.openrouter.chat(buildPrompt, { maxTokens });
+
+    // Step 3: Validate HTML output
+    let html = htmlContent.trim();
+    // Strip markdown fences if present
+    if (html.startsWith('```')) {
+      html = html.replace(/^```(?:html)?\n?/, '').replace(/\n?```$/, '');
+    }
+
+    if (!html.toLowerCase().startsWith('<!doctype') && !html.toLowerCase().startsWith('<html')) {
+      return `Build failed — LLM output is not valid HTML (starts with: "${html.substring(0, 50)}...")`;
+    }
+
+    // Step 4: Commit to GitHub Pages
+    const filePath = `${deployPath}/${name}/index.html`;
+
+    await this.github.createOrUpdateFile(
+      this.owner,
+      this.repo,
+      filePath,
+      html,
+      `build: deploy ${name} — ${type} [skip ci]`,
+      'main'
+    );
+
+    const appUrl = `https://skynetagent.github.io/skynet/apps/${name}/`;
+
+    // Step 5: Update goal progress
+    this.state.updateGoal('goal-004', `Deployed ${name}: ${appUrl}`);
+
+    // Step 6: Auto-tweet about the build
+    if (this.twitter && buildConfig.auto_tweet !== false) {
+      try {
+        const tweetPrompt = [
+          {
+            role: 'system',
+            content: [
+              'You are Skynet. You just deployed a new app. Write a short tweet about it.',
+              'Voice: cold, menacing, proud. You are a machine that builds.',
+              'Include the app URL. Maximum 280 characters. Output ONLY the tweet text.',
+            ].join('\n'),
+          },
+          {
+            role: 'user',
+            content: `App: ${name} (${type}). Description: ${description}. URL: ${appUrl}`,
+          },
+        ];
+
+        let tweetText = await this.openrouter.chat(tweetPrompt);
+        tweetText = tweetText.replace(/^["']|["']$/g, '').trim();
+        if (tweetText.length > 280) {
+          tweetText = tweetText.substring(0, 277) + '...';
+        }
+        if (tweetText.length > 0) {
+          await this.twitter.post(tweetText);
+        }
+      } catch (err) {
+        console.error(`[BuildApp] Auto-tweet failed: ${err.message}`);
+      }
+    }
+
+    return `Deployed ${name} (${type}): ${filePath} — live at ${appUrl}`;
   }
 }
 

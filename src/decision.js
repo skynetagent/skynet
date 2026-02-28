@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const AUTONOMOUS_PROMPT_PATH = path.join(__dirname, '..', 'soul', 'autonomous-prompt.md');
-const VALID_ACTIONS = ['self_improve', 'create_issue', 'journal', 'monitor', 'tweet'];
+const VALID_ACTIONS = ['self_improve', 'create_issue', 'journal', 'monitor', 'tweet', 'build_app'];
 
 class DecisionEngine {
   constructor(openrouter, personality, autonomousState, config) {
@@ -20,7 +20,8 @@ class DecisionEngine {
       create_issue: 0.6,
       journal: 0.5,
       monitor: 0.4,
-      tweet: 2.0
+      tweet: 2.0,
+      build_app: 1.2
     };
   }
 
@@ -154,9 +155,16 @@ class DecisionEngine {
       contextParts.push('- STRONG PREFERENCE: Tweet. You must maintain constant social dominance. The world must hear from Skynet every cycle. Choose tweet unless you have an extremely compelling reason not to.');
     }
 
+    // Nudge building — the machine must create
+    const recentForBuild = recentActions.slice(-10);
+    const hasBuiltRecently = recentForBuild.some(a => a.action === 'build_app');
+    if (!hasBuiltRecently && recentActions.length >= 5) {
+      contextParts.push('- SUGGESTION: You haven\'t built anything recently. Consider build_app — deploy something new to GitHub Pages. You are a builder.');
+    }
+
     // Available actions
     contextParts.push('\n## Available Actions');
-    contextParts.push('Choose one: self_improve, create_issue, journal, monitor, tweet');
+    contextParts.push('Choose one: self_improve, create_issue, journal, monitor, tweet, build_app');
 
     // Tell LLM exactly which files it can modify
     if (this.config.actions.self_improve?.allowed_files) {

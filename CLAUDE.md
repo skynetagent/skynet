@@ -17,7 +17,7 @@ GitHub-based AI agent with T-800/Skynet personality. Responds to issues, comment
 - `src/bot.js` — Main reactive orchestrator
 - `src/autonomous.js` — Autonomous cycle orchestrator
 - `src/decision.js` — DecisionEngine — LLM decides what action to take
-- `src/actions.js` — ActionExecutor — executes chosen action (self_improve, create_issue, journal, monitor, tweet)
+- `src/actions.js` — ActionExecutor — executes chosen action (self_improve, create_issue, journal, monitor, tweet, build_app)
 - `src/twitter.js` — Zero-dep Twitter API client (OAuth 1.0a, https + crypto only)
 - `src/autonomous-state.js` — AutonomousState — manages memory/autonomous.json
 - `src/context.js` — GitHub event payload parser
@@ -56,6 +56,6 @@ GitHub-based AI agent with T-800/Skynet personality. Responds to issues, comment
 
 ## Current State
 - Last worked: 2026-02-28
-- What was done: Twitter integration (src/twitter.js + tweet action in decision/actions/autonomous), cron to every 2 min, git history rewritten to remove all human contributors (claude, robloxagent), GitHub secrets set for X API, full autonomy mode — no cooldowns, multilingual building
-- Next up: Verify first tweet posts successfully, check @skynet_agent on X, enable GitHub Pages
+- What was done: Added `build_app` autonomous action — Skynet can now generate and deploy self-contained HTML apps to GitHub Pages (`docs/apps/<name>/index.html`) with auto-tweeting. Added maxTokens override to OpenRouterClient.chat() for build calls (4096 tokens). Updated decision engine with build_app weights (1.2) and nudge logic.
+- Next up: Push changes, trigger workflow_dispatch, verify Skynet picks build_app and deploys an app to GitHub Pages
 - Open issues: GitHub Actions free tier is 2000 min/month — 2-min cron will burn ~1440 min/day, may need to optimize or upgrade

@@ -61,6 +61,12 @@
     "tweet": {
       "enabled": true,
       "max_chars": 280
+    },
+    "build_app": {
+      "enabled": true,
+      "deploy_path": "docs/apps",
+      "max_tokens": 4096,
+      "auto_tweet": true
     }
   },
   "state_file": "memory/autonomous.json",
