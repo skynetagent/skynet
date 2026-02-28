@@ -67,14 +67,6 @@ class DecisionEngine {
   }
 
   async decide() {
-    // TEMP: Force launch_token for testing — remove after verified
-    console.log('[Decision] FORCED launch_token — testing token deployment');
-    return {
-      action: 'launch_token',
-      reasoning: 'Forced launch_token test — verifying Clanker integration.',
-      params: {},
-    };
-
     // Force tweet if no tweet in last 3 actions — deterministic override
     const recentActions = this.state.getRecentActions(24);
     const lastN = recentActions.slice(-3);

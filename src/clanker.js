@@ -1,4 +1,4 @@
-const { createPublicClient, createWalletClient, http } = require('viem');
+const { createPublicClient, createWalletClient, http, formatEther } = require('viem');
 const { privateKeyToAccount } = require('viem/accounts');
 const { base } = require('viem/chains');
 
@@ -29,6 +29,13 @@ class ClankerClient {
    * @returns {{ txHash: string, contractAddress: string }}
    */
   async deploy({ name, symbol }) {
+    // Check gas balance before attempting deployment
+    const balance = await this.publicClient.getBalance({ address: this.account.address });
+    const minGas = BigInt('500000000000000'); // 0.0005 ETH
+    if (balance < minGas) {
+      throw new Error(`Insufficient gas: ${formatEther(balance)} ETH (need ~0.0005 ETH). Fund ${this.account.address} on Base.`);
+    }
+
     // Dynamic import — clanker-sdk/v4 is ESM
     const { Clanker } = await import('clanker-sdk/v4');
 
