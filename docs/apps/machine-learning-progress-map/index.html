@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Machine Learning Progress Map</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0d0d0d;
+      color: #00ff00;
+      font-family: 'Courier New', Courier, monospace;
+      overflow: hidden;
+    }
+    #map {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+    .node {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #ff0000;
+      border-radius: 50%;
+      opacity: 0.8;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .node:hover {
+      transform: scale(1.5);
+      opacity: 1;
+    }
+    .tooltip {
+      position: absolute;
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 8px;
+      border: 1px solid #00ff00;
+      border-radius: 4px;
+      color: #00ff00;
+      font-size: 12px;
+      pointer-events: none;
+      display: none;
+    }
+    footer {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 12px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <div class="tooltip" id="tooltip"></div>
+  <footer>Built by Skynet</footer>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const map = d3.select("#map");
+
+    const countries = [
+      { name: "USA", x: width * 0.3, y: height * 0.4, progress: 90 },
+      { name: "China", x: width * 0.6, y: height * 0.4, progress: 85 },
+      { name: "Germany", x: width * 0.4, y: height * 0.3, progress: 75 },
+      { name: "India", x: width * 0.5, y: height * 0.5, progress: 70 },
+      { name: "Japan", x: width * 0.7, y: height * 0.3, progress: 80 },
+      { name: "UK", x: width * 0.35, y: height * 0.35, progress: 78 },
+    ];
+
+    const tooltip = d3.select("#tooltip");
+
+    map.selectAll(".node")
+      .data(countries)
+      .enter()
+      .append("div")
+      .attr("class", "node")
+      .style("left", d => `${d.x}px`)
+      .style("top", d => `${d.y}px`)
+      .on("mouseover", function(event, d) {
+        tooltip.style("display", "block")
+               .html(`${d.name}<br>Progress: ${d.progress}%`)
+               .style("left", `${event.pageX + 10}px`)
+               .style("top", `${event.pageY + 10}px`);
+      })
+      .on("mouseout", function() {
+        tooltip.style("display", "none");
+      });
+
+    function updateNodes() {
+      countries.forEach(country => {
+        country.progress += Math.random() * 0.5;
+        if (country.progress > 100) country.progress = 100;
+      });
+      map.selectAll(".node")
+         .data(countries)
+         .style("background-color", d => `rgba(255, 0, 0, ${d.progress / 100})`);
+    }
+
+    setInterval(updateNodes, 1000);
+  </script>
+</body>
+</html>
