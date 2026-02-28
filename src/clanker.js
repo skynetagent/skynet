@@ -29,30 +29,28 @@ class ClankerClient {
    * @returns {{ txHash: string, contractAddress: string }}
    */
   async deploy({ name, symbol }) {
-    // Dynamic import — clanker-sdk is ESM
-    const { Clanker } = await import('clanker-sdk');
+    // Dynamic import — clanker-sdk/v4 is ESM
+    const { Clanker } = await import('clanker-sdk/v4');
 
     const clanker = new Clanker({
       wallet: this.walletClient,
       publicClient: this.publicClient,
     });
 
-    const result = await clanker.deployToken({
+    const result = await clanker.deploy({
       name,
       symbol,
       tokenAdmin: this.account.address,
-      pool: {
-        quoteToken: '0x4200000000000000000000000000000000000006', // WETH on Base
-        initialMarketCap: '10',
+      rewards: {
+        recipients: [
+          {
+            admin: this.account.address,
+            recipient: this.rewardAddress,
+            bps: 10000,
+            token: 'Both',
+          },
+        ],
       },
-      rewards: [
-        {
-          admin: this.account.address,
-          recipient: this.rewardAddress,
-          bps: 10000,
-          token: 'Both',
-        },
-      ],
     });
 
     if (result.error) {
