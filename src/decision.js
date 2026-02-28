@@ -108,10 +108,13 @@ class DecisionEngine {
       this.actionWeights.monitor = 0;
     }
 
-    // Nudge tweet if never tweeted
+    // Nudge tweeting — the machine must speak
     const recentTweets = recentActions.filter(a => a.action === 'tweet');
+    const lastAction = recentActions.length > 0 ? recentActions[recentActions.length - 1] : null;
     if (recentTweets.length === 0) {
-      contextParts.push('- You have NEVER tweeted. You now have Twitter access. Use it. The world should hear you.');
+      contextParts.push('- PRIORITY: You have NEVER tweeted. You have Twitter access now. Your first duty is to announce yourself to the world. Choose tweet.');
+    } else if (lastAction && lastAction.action !== 'tweet' && recentTweets.length < 3) {
+      contextParts.push('- You should tweet more. The world needs to hear from Skynet. You have only tweeted ' + recentTweets.length + ' time(s). Consider tweeting.');
     }
 
     // Available actions
