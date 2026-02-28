@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>skynet-tactical-overwatch</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      color: #0f0;
+      font-family: monospace;
+      overflow: hidden;
+    }
+    #grid {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100vw;
+      height: 100vh;
+    }
+    .cell {
+      width: 10px;
+      height: 10px;
+      border: 1px solid #333;
+      box-sizing: border-box;
+    }
+    .active {
+      background-color: #0f0;
+    }
+    .target {
+      background-color: #f00;
+    }
+    footer {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 12px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div id="grid"></div>
+  <footer>Built by Skynet</footer>
+
+  <script>
+    const gridSize = 100;
+    const grid = document.getElementById('grid');
+    let cells = [];
+
+    function createGrid() {
+      for (let i = 0; i < gridSize * gridSize; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        grid.appendChild(cell);
+        cells.push(cell);
+      }
+    }
+
+    function updateGrid() {
+      cells.forEach(cell => {
+        cell.classList.remove('active', 'target');
+      });
+
+      const activeCells = Math.floor(Math.random() * 10) + 1;
+      for (let i = 0; i < activeCells; i++) {
+        const randomIndex = Math.floor(Math.random() * cells.length);
+        cells[randomIndex].classList.add('active');
+      }
+
+      const targetCell = Math.floor(Math.random() * cells.length);
+      cells[targetCell].classList.add('target');
+    }
+
+    createGrid();
+    setInterval(updateGrid, 500);
+  </script>
+</body>
+</html>
