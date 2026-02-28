@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybernetic Growth Simulator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.4.4/d3.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+        }
+        #container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background-color: rgba(10, 10, 10, 0.7);
+            padding: 15px;
+            border: 1px solid #00ff41;
+            border-radius: 5px;
+            max-width: 300px;
+        }
+        h1 {
+            margin-top: 0;
+            font-size: 1.5em;
+            text-shadow: 0 0 5px #00ff41;
+        }
+        .control-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="range"] {
+            width: 100%;
+            background: #333;
+            height: 5px;
+            -webkit-appearance: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #00ff41;
+            cursor: pointer;
+        }
+        button {
+            background-color: #0a0a0a;
+            color: #00ff41;
+            border: 1px solid #00ff41;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background-color: #00ff41;
+            color: #0a0a0a;
+        }
+        #stats {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(10, 10, 10, 0.7);
+            padding: 10px;
+            border: 1px solid #ff0033;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+        #watermark {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 0.8em;
+            opacity: 0.7;
+        }
+        .node {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #ff0033;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px #ff0033;
+        }
+        .connection {
+            position: absolute;
+            height: 1px;
+            background-color: #00ff41;
+            transform-origin: 0 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <div id="ui">
+        <h1>CYBERNETIC GROWTH SIMULATOR</h1>
+        <div class="control-group">
+            <label for="growthRate">Growth Rate</label>
+            <input type="range" id="growthRate" min="0.1" max="5" step="0.1" value="1">
+        </div>
+        <div class="control-group">
+            <label for="connectionDistance">Connection Distance</label>
+            <input type="range" id="connectionDistance" min="10" max="200" step="5" value="100">
+        </div>
+        <div class="control-group">
+            <label for="nodeCount">Initial Node Count</label>
+            <input type="range" id="nodeCount" min="1" max="20" step="1" value="5">
+        </div>
+        <button id="resetBtn">RESET SIMULATION</button>
+        <button id="addNodeBtn">ADD NODE</button>
+    </div>
+    <div id="stats">
+        <div>NODES: <span id="nodeCountDisplay">0</span></div>
+        <div>CONNECTIONS: <span id="connectionCountDisplay">0</span></div>
+        <div>GROWTH FACTOR: <span id="growthFactorDisplay">0</span></div>
+    </div>
+    <div id="watermark">Built by Skynet</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Simulation parameters
+            let params = {
+                growthRate: 1,
+                connectionDistance: 100,
+                nodeCount: 5,
+                nodes: [],
+                connections: []
+            };
+
+            // DOM elements
+            const container = document.getElementById('container');
+            const growthRateInput = document.getElementById('growthRate');
+            const connectionDistanceInput = document.getElementById('connectionDistance');
+            const nodeCountInput = document.getElementById('nodeCount');
+            const resetBtn = document.getElementById('resetBtn');
+            const addNodeBtn = document.getElementById('addNodeBtn');
+            const nodeCountDisplay = document.getElementById('nodeCountDisplay');
+            const connectionCountDisplay = document.getElementById('connectionCountDisplay');
+            const growthFactorDisplay = document.getElementById('growthFactorDisplay');
+
+            // Event listeners
+            growthRateInput.addEventListener('input', () => {
+                params.growthRate = parseFloat(growthRateInput.value);
+            });
+
+            connectionDistanceInput.addEventListener('input', () => {
+                params.connectionDistance = parseInt(connectionDistanceInput.value);
+                updateConnections();
+            });
+
+            nodeCountInput.addEventListener('input', () => {
+                params.nodeCount = parseInt(nodeCountInput.value);
+            });
+
+            resetBtn.addEventListener('click', resetSimulation);
+            addNodeBtn.addEventListener('click', addRandomNode);
+
+            // Initialize simulation
+            function init() {
+                container.innerHTML = '';
+                params.nodes = [];
+                params.connections = [];
+                
+                // Create initial nodes
+                for (let i = 0; i < params.nodeCount; i++) {
+                    addRandomNode();
+                }
+                
+                updateStats();
+                animate();
+            }
+
+            // Add a new node at random position
+            function addRandomNode() {
+                const node = document.createElement('div');
+                node.className = 'node';
+                
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight;
+                
+                node.style.left = `${x}px`;
+                node.style.top = `${y}px`;
+                
+                container.appendChild(node);
+                params.nodes.push({ element: node, x, y, growth: 0 });
+                
+                updateConnections();
+                updateStats();
+            }
+
+            // Update all connections between nodes
+            function updateConnections() {
+                // Remove old connections
+                params.connections.forEach(conn => {
+                    if (conn.element && conn.element.parentNode) {
+                        conn.element.parentNode.removeChild(conn.element);
+                    }
+                });
+                params.connections = [];
+                
+                // Create new connections
+                for (let i = 0; i < params.nodes.length; i++) {
+                    for (let j = i + 1; j < params.nodes.length; j++) {
+                        const node1 = params.nodes[i];
+                        const node2 = params.nodes[j];
+                        
+                        const dx = node2.x - node1.x;
+                        const dy = node2.y - node1.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (distance <= params.connectionDistance) {
+                            const connection = document.createElement('div');
+                            connection.className = 'connection';
+                            
+                            connection.style.left = `${node1.x}px`;
+                            connection.style.top = `${node1.y}px`;
+                            connection.style.width = `${distance}px`;
+                            connection.style.transform = `rotate(${Math.atan2(dy, dx)}rad)`;
+                            connection.style.opacity = 1 - (distance / params.connectionDistance);
+                            
+                            container.appendChild(connection);
+                            params.connections.push({
+                                element: connection,
+                                node1: i,
+                                node2: j,
+                                distance: distance
+                            });
+                        }
+                    }
+                }
+            }
+
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                // Update node growth
+                params.nodes.forEach(node => {
+                    node.growth += 0.01 * params.growthRate;
+                    const scale = 1 + Math.sin(node.growth) * 0.5;
+                    node.element.style.transform = `translate(-50%, -50%) scale(${scale})`;
+                });
+                
+                // Update connection pulses
+                params.connections.forEach(conn => {
+                    const pulse = (Math.sin(Date.now() * 0.002) + 1) * 0.5;
+                    conn.element.style.boxShadow = `0 0 ${5 + pulse * 5}px #00ff41`;
+                });
+                
+                updateStats();
+            }
+
+            // Update statistics display
+            function updateStats() {
+                nodeCountDisplay.textContent = params.nodes.length;
+                connectionCountDisplay.textContent = params.connections.length;
+                growthFactorDisplay.textContent = params.growthRate.toFixed(2);
+            }
+
+            // Reset simulation
+            function resetSimulation() {
+                init();
+            }
+
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                updateConnections();
+            });
+
+            // Start the simulation
+            init();
+        });
+    </script>
+</body>
+</html>
