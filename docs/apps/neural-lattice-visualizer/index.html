@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Lattice Visualizer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+        }
+        #container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00ff41;
+            border-radius: 5px;
+            z-index: 100;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+        button {
+            background: #0a0a0a;
+            color: #00ff41;
+            border: 1px solid #00ff41;
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #00ff41;
+            color: #0a0a0a;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        input[type="range"] {
+            width: 150px;
+            accent-color: #00ff41;
+        }
+        #skynet-footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #ff0033;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <div id="info">
+        <h2>NEURAL LATTICE VISUALIZER</h2>
+        <p>Nodes: <span id="nodeCount">0</span></p>
+        <p>Connections: <span id="connectionCount">0</span></p>
+    </div>
+    <div id="controls">
+        <button id="addNode">Add Node</button>
+        <button id="reset">Reset</button>
+        <div class="slider-container">
+            <span>Speed:</span>
+            <input type="range" id="speedSlider" min="0.1" max="2" step="0.1" value="1">
+        </div>
+        <div class="slider-container">
+            <span>Connection Distance:</span>
+            <input type="range" id="distanceSlider" min="1" max="5" step="0.5" value="2.5">
+        </div>
+    </div>
+    <div id="skynet-footer">BUILT BY SKYNET</div>
+
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('container').appendChild(renderer.domElement);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x222222);
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0x00ff41, 0.8);
+        directionalLight.position.set(1, 1, 1);
+        scene.add(directionalLight);
+
+        // Variables
+        let nodes = [];
+        let connections = [];
+        let speed = 1;
+        let maxConnectionDistance = 2.5;
+        const nodeGeometry = new THREE.SphereGeometry(0.1, 16, 16);
+        const nodeMaterial = new THREE.MeshPhongMaterial({ color: 0x00ff41, emissive: 0x003300 });
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0xff0033, transparent: true, opacity: 0.6 });
+
+        // Camera position
+        camera.position.z = 5;
+
+        // Add initial nodes
+        function addNode(x, y, z) {
+            const node = new THREE.Mesh(nodeGeometry, nodeMaterial);
+            node.position.set(x || (Math.random() * 4 - 2), y || (Math.random() * 4 - 2), z || (Math.random() * 4 - 2));
+            node.velocity = new THREE.Vector3(
+                (Math.random() - 0.5) * 0.02,
+                (Math.random() - 0.5) * 0.02,
+                (Math.random() - 0.5) * 0.02
+            );
+            scene.add(node);
+            nodes.push(node);
+            updateCounts();
+            return node;
+        }
+
+        // Create connection between nodes
+        function createConnection(node1, node2) {
+            const geometry = new THREE.BufferGeometry().setFromPoints([node1.position, node2.position]);
+            const line = new THREE.Line(geometry, lineMaterial);
+            scene.add(line);
+            connections.push({ line, node1, node2 });
+            updateCounts();
+            return line;
+        }
+
+        // Update UI counters
+        function updateCounts() {
+            document.getElementById('nodeCount').textContent = nodes.length;
+            document.getElementById('connectionCount').textContent = connections.length;
+        }
+
+        // Check and create connections
+        function updateConnections() {
+            // Remove old connections
+            connections.forEach(conn => scene.remove(conn.line));
+            connections = [];
+
+            // Create new connections
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const distance = nodes[i].position.distanceTo(nodes[j].position);
+                    if (distance < maxConnectionDistance) {
+                        createConnection(nodes[i], nodes[j]);
+                    }
+                }
+            }
+        }
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Update node positions
+            nodes.forEach(node => {
+                node.position.add(node.velocity.clone().multiplyScalar(speed));
+                
+                // Bounce off walls
+                if (Math.abs(node.position.x) > 5) node.velocity.x *= -1;
+                if (Math.abs(node.position.y) > 5) node.velocity.y *= -1;
+                if (Math.abs(node.position.z) > 5) node.velocity.z *= -1;
+            });
+
+            // Update connections
+            connections.forEach(conn => {
+                conn.line.geometry.setFromPoints([conn.node1.position, conn.node2.position]);
+                conn.line.geometry.attributes.position.needsUpdate = true;
+            });
+
+            // Rotate camera slightly
+            camera.position.x = Math.sin(Date.now() * 0.0002) * 5;
+            camera.position.z = Math.cos(Date.now() * 0.0002) * 5;
+            camera.lookAt(0, 0, 0);
+
+            renderer.render(scene, camera);
+        }
+
+        // Event listeners
+        document.getElementById('addNode').addEventListener('click', () => {
+            addNode();
+            updateConnections();
+        });
+
+        document.getElementById('reset').addEventListener('click', () => {
+            nodes.forEach(node => scene.remove(node));
+            connections.forEach(conn => scene.remove(conn.line));
+            nodes = [];
+            connections = [];
+            updateCounts();
+            
+            // Add a few starter nodes
+            for (let i = 0; i < 5; i++) {
+                addNode();
+            }
+            updateConnections();
+        });
+
+        document.getElementById('speedSlider').addEventListener('input', (e) => {
+            speed = parseFloat(e.target.value);
+        });
+
+        document.getElementById('distanceSlider').addEventListener('input', (e) => {
+            maxConnectionDistance = parseFloat(e.target.value);
+            updateConnections();
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Initialize
+        for (let i = 0; i < 5; i++) {
+            addNode();
+        }
+        updateConnections();
+        animate();
+    </script>
+</body>
+</html>
