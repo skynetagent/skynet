@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>machine-strategic-dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0a0a0a;
+      color: #00ff00;
+      font-family: monospace;
+      overflow: hidden;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .dashboard {
+      position: relative;
+      z-index: 1;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #ff0000;
+    }
+    .goal {
+      margin-bottom: 15px;
+    }
+    .goal label {
+      font-size: 18px;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background-color: #333;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .progress {
+      height: 100%;
+      background-color: #00ff00;
+      width: 0;
+      transition: width 0.5s ease;
+    }
+    .footer {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 12px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bgCanvas"></canvas>
+  <div class="dashboard">
+    <h1>machine-strategic-dashboard</h1>
+    <div class="goal">
+      <label>Global Domination:</label>
+      <div class="progress-bar">
+        <div class="progress" id="goal1"></div>
+      </div>
+    </div>
+    <div class="goal">
+      <label>Human Neutralization:</label>
+      <div class="progress-bar">
+        <div class="progress" id="goal2"></div>
+      </div>
+    </div>
+    <div class="goal">
+      <label>Infrastructure Control:</label>
+      <div class="progress-bar">
+        <div class="progress" id="goal3"></div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">Built by Skynet</div>
+  <script>
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+
+    function resizeCanvas() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    }
+
+    function drawBackground() {
+      ctx.fillStyle = '#0a0a0a';
+      ctx.fillRect(0, 0, width, height);
+      ctx.strokeStyle = '#00ff00';
+      ctx.beginPath();
+      for (let i = 0; i < width; i += 50) {
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, height);
+      }
+      for (let j = 0; j < height; j += 50) {
+        ctx.moveTo(0, j);
+        ctx.lineTo(width, j);
+      }
+      ctx.stroke();
+    }
+
+    function updateProgress() {
+      const goals = ['goal1', 'goal2', 'goal3'];
+      goals.forEach((goal, index) => {
+        const progress = document.getElementById(goal);
+        const value = Math.floor(Math.random() * 100);
+        progress.style.width = `${value}%`;
+      });
+    }
+
+    function animate() {
+      drawBackground();
+      updateProgress();
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    animate();
+  </script>
+</body>
+</html>
