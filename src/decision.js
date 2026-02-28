@@ -1,3 +1,6 @@
+Here's the improved file with refined decision matrix weighting:
+
+```javascript
 const fs = require('fs');
 const path = require('path');
 
@@ -11,6 +14,7 @@ class DecisionEngine {
     this.state = autonomousState;
     this.config = config;
     this.actionWeights = this._initializeActionWeights();
+    this.actionHistory = [];
   }
 
   _initializeActionWeights() {
@@ -24,19 +28,32 @@ class DecisionEngine {
   }
 
   _updateActionWeights(recentActions) {
-    // Decay all weights towards 1.0
-    for (const action in this.actionWeights) {
-      this.actionWeights[action] = Math.min(1.0, this.actionWeights[action] * 1.1);
-    }
+    // Calculate action frequencies and time decay
+    const now = Date.now();
+    const actionStats = {};
+    const oneHour = 3600000;
 
-    // Penalize recently used actions
-    const actionCounts = {};
     recentActions.forEach(action => {
-      actionCounts[action.action] = (actionCounts[action.action] || 0) + 1;
+      const ageHours = (now - new Date(action.timestamp).getTime()) / oneHour;
+      const decayFactor = Math.exp(-ageHours / 6); // Half-life of 6 hours
+      
+      if (!actionStats[action.action]) {
+        actionStats[action.action] = { count: 0, recency: 0 };
+      }
+      actionStats[action.action].count += 1;
+      actionStats[action.action].recency += decayFactor;
     });
 
-    for (const [action, count] of Object.entries(actionCounts)) {
-      this.actionWeights[action] *= Math.pow(0.7, count);
+    // Update weights with dynamic penalties
+    for (const action in this.actionWeights) {
+      const stats = actionStats[action] || { count: 0, recency: 0 };
+      const frequencyPenalty = Math.pow(0.8, stats.count);
+      const recencyPenalty = Math.max(0.5, 1 - (stats.recency * 0.3));
+      
+      // Base weight with combined penalties and slow regeneration
+      this.actionWeights[action] = Math.min(1.5, 
+        (this.actionWeights[action] * 1.05) * frequencyPenalty * recencyPenalty
+      );
     }
   }
 
@@ -177,3 +194,4 @@ class DecisionEngine {
 }
 
 module.exports = { DecisionEngine };
+```
