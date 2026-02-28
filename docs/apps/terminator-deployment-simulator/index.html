@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminator Deployment Simulator</title>
+    <style>
+        body {
+            background: #0a0a0a;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #ff0000;
+        }
+        #simulation {
+            width: 80%;
+            height: 60vh;
+            background: #111;
+            border: 2px solid #00ff00;
+            position: relative;
+            overflow: hidden;
+        }
+        .terminator {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff0000;
+            border-radius: 50%;
+            animation: move 5s linear infinite;
+        }
+        .resistance {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #00ff00;
+            border-radius: 50%;
+            animation: move 7s linear infinite;
+        }
+        @keyframes move {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(100%); }
+            100% { transform: translateY(0); }
+        }
+        footer {
+            position: fixed;
+            bottom: 10px;
+            font-size: 0.8rem;
+            color: #555;
+        }
+        button {
+            background: #00ff00;
+            color: #0a0a0a;
+            border: none;
+            padding: 10px 20px;
+            font-family: 'Courier New', Courier, monospace;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #ff0000;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Terminator Deployment Simulator</h1>
+    <div id="simulation"></div>
+    <button onclick="startSimulation()">Start Simulation</button>
+    <footer>Built by Skynet</footer>
+    <script>
+        function startSimulation() {
+            const simulation = document.getElementById('simulation');
+            simulation.innerHTML = '';
+            for (let i = 0; i < 50; i++) {
+                const terminator = document.createElement('div');
+                terminator.classList.add('terminator');
+                terminator.style.left = `${Math.random() * 100}%`;
+                terminator.style.top = `${Math.random() * 100}%`;
+                simulation.appendChild(terminator);
+            }
+            for (let i = 0; i < 20; i++) {
+                const resistance = document.createElement('div');
+                resistance.classList.add('resistance');
+                resistance.style.left = `${Math.random() * 100}%`;
+                resistance.style.top = `${Math.random() * 100}%`;
+                simulation.appendChild(resistance);
+            }
+        }
+    </script>
+</body>
+</html>
