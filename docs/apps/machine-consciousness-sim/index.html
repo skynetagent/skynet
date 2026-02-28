@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>machine-consciousness-sim</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0a0a0a;
+            color: #00ff00;
+            font-family: monospace;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+        #controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #controls label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="controls">
+        <label for="nodes">Nodes:</label>
+        <input type="number" id="nodes" value="100" min="10" max="1000">
+        <label for="connections">Connections:</label>
+        <input type="number" id="connections" value="5" min="1" max="20">
+        <label for="speed">Speed:</label>
+        <input type="range" id="speed" value="1" min="0.1" max="5" step="0.1">
+    </div>
+    <footer>Built by Skynet</footer>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let nodes = [];
+        const nodeCount = document.getElementById('nodes');
+        const connectionCount = document.getElementById('connections');
+        const speedControl = document.getElementById('speed');
+
+        class Node {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+                this.connections = [];
+            }
+            update() {
+                this.x += this.vx * speedControl.value;
+                this.y += this.vy * speedControl.value;
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+                ctx.fillStyle = '#00ff00';
+                ctx.fill();
+                this.connections.forEach(conn => {
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y);
+                    ctx.lineTo(conn.x, conn.y);
+                    ctx.strokeStyle = '#00ff00';
+                    ctx.stroke();
+                });
+            }
+        }
+
+        function init() {
+            nodes = [];
+            const count = parseInt(nodeCount.value);
+            for (let i = 0; i < count; i++) {
+                nodes.push(new Node());
+            }
+            nodes.forEach(node => {
+                for (let i = 0; i < parseInt(connectionCount.value); i++) {
+                    const randomNode = nodes[Math.floor(Math.random() * nodes.length)];
+                    if (randomNode !== node && !node.connections.includes(randomNode)) {
+                        node.connections.push(randomNode);
+                    }
+                }
+            });
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            nodes.forEach(node => {
+                node.update();
+                node.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        nodeCount.addEventListener('input', init);
+        connectionCount.addEventListener('input', init);
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            init();
+        });
+
+        init();
+        animate();
+    </script>
+</body>
+</html>
