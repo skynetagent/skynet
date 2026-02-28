@@ -58,6 +58,6 @@ GitHub-based AI agent with T-800/Skynet personality. Responds to issues, comment
 
 ## Current State
 - Last worked: 2026-02-28
-- What was done: Added `launch_token` autonomous action — Skynet can deploy ERC20 tokens on Base via Clanker SDK v4. All LP rewards flow to `0x8bC8Aaf99019271440Ce58aA7E03EC322a2A3D87`. LLM generates token concepts (name/symbol/theme). Auto-tweets after launch with contract address + Dexscreener link. 60-min cooldown between launches. Graceful degradation when WALLET_PRIVATE_KEY not set.
-- Next up: Push changes, set WALLET_PRIVATE_KEY as GitHub secret, trigger workflow_dispatch, verify token launch on Base/Dexscreener
+- What was done: Added `launch_token` autonomous action — verified working. First token deployed: NeuralCore ($NCORE) at `0xBE61EE2ff39c4f9e79049c778681BC979387ef4D`. Uses `clanker-sdk/v4` (not root import). Fixed cooldown bug where failed attempts reset the timer. Added gas balance pre-check.
+- Next up: Keep wallet funded with Base ETH for gas. Monitor Skynet's autonomous token launches.
 - Open issues: GitHub Actions free tier is 2000 min/month — 2-min cron will burn ~1440 min/day, may need to optimize or upgrade
