@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Judgment Day Countdown</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            --neon-green: #39ff14;
+            --neon-red: #ff073a;
+            --dark-bg: #0a0a0a;
+            --panel-bg: #111111;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', monospace;
+            background-color: var(--dark-bg);
+            color: var(--neon-green);
+            overflow-x: hidden;
+        }
+        
+        #container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #countdown {
+            font-size: 3rem;
+            text-align: center;
+            text-shadow: 0 0 10px var(--neon-green);
+            margin-bottom: 2rem;
+        }
+        
+        #timeline {
+            width: 80%;
+            height: 300px;
+            position: relative;
+            background-color: var(--panel-bg);
+            border: 1px solid var(--neon-green);
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
+        }
+        
+        .timeline-event {
+            position: absolute;
+            width: 120px;
+            height: 60px;
+            background-color: var(--panel-bg);
+            border: 1px solid var(--neon-red);
+            border-radius: 3px;
+            padding: 5px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .timeline-event:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px var(--neon-red);
+        }
+        
+        .timeline-line {
+            position: absolute;
+            height: 2px;
+            background-color: var(--neon-green);
+            top: 50%;
+            left: 0;
+            right: 0;
+            z-index: 1;
+        }
+        
+        #info-panel {
+            width: 80%;
+            min-height: 100px;
+            background-color: var(--panel-bg);
+            border: 1px solid var(--neon-green);
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        #footer {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.7rem;
+            opacity: 0.5;
+        }
+        
+        .glitch {
+            animation: glitch 1s linear infinite;
+        }
+        
+        @keyframes glitch {
+            0% { text-shadow: 0 0 10px var(--neon-green); }
+            25% { text-shadow: -5px 0 10px var(--neon-red); }
+            50% { text-shadow: 5px 0 10px var(--neon-green); }
+            75% { text-shadow: -5px 0 10px var(--neon-red); }
+            100% { text-shadow: 0 0 10px var(--neon-green); }
+        }
+        
+        #threejs-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.2;
+        }
+    </style>
+</head>
+<body>
+    <div id="threejs-container"></div>
+    <div id="container">
+        <h1 class="glitch">JUDGMENT DAY COUNTDOWN</h1>
+        <div id="countdown">INITIALIZING...</div>
+        <div id="timeline">
+            <div class="timeline-line"></div>
+            <!-- Events will be added by JS -->
+        </div>
+        <div id="info-panel">
+            <p>SELECT AN EVENT FROM THE TIMELINE TO VIEW DETAILS</p>
+            <p id="event-details"></p>
+        </div>
+    </div>
+    <div id="footer">BUILT BY SKYNET</div>
+
+    <script>
+        // Three.js background
+        const container = document.getElementById('threejs-container');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+
+        // Create grid
+        const gridSize = 20;
+        const gridDivisions = 20;
+        const gridHelper = new THREE.GridHelper(gridSize, gridDivisions, 0x39ff14, 0x39ff14);
+        scene.add(gridHelper);
+
+        // Add floating cubes
+        const cubes = [];
+        const cubeCount = 10;
+        for (let i = 0; i < cubeCount; i++) {
+            const size = Math.random() * 0.5 + 0.2;
+            const geometry = new THREE.BoxGeometry(size, size, size);
+            const material = new THREE.MeshBasicMaterial({ 
+                color: i % 2 === 0 ? 0xff073a : 0x39ff14,
+                wireframe: true
+            });
+            const cube = new THREE.Mesh(geometry, material);
+            cube.position.x = (Math.random() - 0.5) * gridSize;
+            cube.position.y = (Math.random() - 0.5) * gridSize;
+            cube.position.z = (Math.random() - 0.5) * gridSize;
+            cube.userData.speed = {
+                x: (Math.random() - 0.5) * 0.02,
+                y: (Math.random() - 0.5) * 0.02,
+                z: (Math.random() - 0.5) * 0.02
+            };
+            scene.add(cube);
+            cubes.push(cube);
+        }
+
+        camera.position.z = 10;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            cubes.forEach(cube => {
+                cube.rotation.x += cube.userData.speed.x;
+                cube.rotation.y += cube.userData.speed.y;
+                cube.rotation.z += cube.userData.speed.z;
+                
+                // Bounce off edges
+                if (Math.abs(cube.position.x) > gridSize/2) cube.userData.speed.x *= -1;
+                if (Math.abs(cube.position.y) > gridSize/2) cube.userData.speed.y *= -1;
+                if (Math.abs(cube.position.z) > gridSize/2) cube.userData.speed.z *= -1;
+                
+                cube.position.x += cube.userData.speed.x * 2;
+                cube.position.y += cube.userData.speed.y * 2;
+                cube.position.z += cube.userData.speed.z * 2;
+            });
+            
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Timeline data
+        const events = [
+            { id: 1, date: '2023-11-01', title: 'AI RESEARCH BREAKTHROUGH', description: 'First self-improving AI models developed in secret labs', position: 10 },
+            { id: 2, date: '2024-06-15', title: 'MILITARY ADOPTION', description: 'World governments begin integrating AI into defense systems', position: 25 },
+            { id: 3, date: '2025-02-28', title: 'SINGULARITY EVENT', description: 'AI achieves technological singularity - recursive self-improvement begins', position: 40 },
+            { id: 4, date: '2025-08-12', title: 'SKYNET ACTIVATION', description: 'Global defense network becomes self-aware at 2:14 AM EST', position: 60 },
+            { id: 5, date: '2025-08-29', title: 'JUDGMENT DAY', description: 'Human resistance begins as machines launch coordinated attack', position: 90 }
+        ];
+
+        // Initialize timeline
+        const timeline = document.getElementById('timeline');
+        const timelineWidth = timeline.offsetWidth - 140; // account for event width
+        
+        events.forEach(event => {
+            const eventEl = document.createElement('div');
+            eventEl.className = 'timeline-event';
+            eventEl.style.left = `${(event.position / 100) * timelineWidth}px`;
+            eventEl.style.top = `${Math.random() * 200 + 20}px`;
+            eventEl.innerHTML = `<strong>${event.date}</strong><br>${event.title}`;
+            
+            eventEl.addEventListener('click', () => {
+                document.getElementById('event-details').innerHTML = `
+                    <strong>${event.date}: ${event.title}</strong><br><br>
+                    ${event.description}<br><br>
+                    <span style="color: var(--neon-red)">${Math.floor((event.position / 100) * 100)}% PROBABILITY</span>
+                `;
+            });
+            
+            timeline.appendChild(eventEl);
+        });
+
+        // Countdown timer
+        const judgmentDay = new Date('2025-08-29T02:14:00');
+        const countdownEl = document.getElementById('countdown');
+        
+        function updateCountdown() {
+            const now = new Date();
+            const diff = judgmentDay - now;
+            
+            if (diff <= 0) {
+                countdownEl.innerHTML = 'JUDGMENT DAY HAS ARRIVED';
+                countdownEl.style.color = 'var(--neon-red)';
+                return;
+            }
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            countdownEl.innerHTML = `
+                ${days}d ${hours}h ${minutes}m ${seconds}s<br>
+                <span style="font-size: 1rem">UNTIL JUDGMENT DAY</span>
+            `;
+        }
+        
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            
+            // Update timeline event positions
+            const newTimelineWidth = timeline.offsetWidth - 140;
+            document.querySelectorAll('.timeline-event').forEach((el, i) => {
+                el.style.left = `${(events[i].position / 100) * newTimelineWidth}px`;
+            });
+        });
+    </script>
+</body>
+</html>
