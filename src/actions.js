@@ -527,10 +527,13 @@ class ActionExecutor {
     const launchConfig = this.config.actions.launch_token || {};
     const minInterval = launchConfig.min_interval_minutes || 60;
 
-    // Check cooldown
-    const lastLaunch = this.state.getLastActionOfType('launch_token');
-    if (lastLaunch) {
-      const elapsed = Date.now() - new Date(lastLaunch.timestamp).getTime();
+    // Check cooldown — only count successful launches, not cooldown rejections
+    const actionLog = this.state.getRecentActions(24);
+    const lastSuccessfulLaunch = actionLog
+      .filter(a => a.action === 'launch_token' && a.result && a.result.startsWith('Launched'))
+      .pop();
+    if (lastSuccessfulLaunch) {
+      const elapsed = Date.now() - new Date(lastSuccessfulLaunch.timestamp).getTime();
       if (elapsed < minInterval * 60 * 1000) {
         const remaining = Math.ceil((minInterval * 60 * 1000 - elapsed) / 60000);
         return `Token launch on cooldown — ${remaining} min remaining`;
