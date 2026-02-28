@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recursive Evolution Simulator | Skynet</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+        }
+        #container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background-color: rgba(10, 10, 10, 0.7);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #00ff41;
+        }
+        h1 {
+            margin: 0 0 15px 0;
+            font-size: 1.5em;
+            color: #ff0033;
+        }
+        button {
+            background-color: #0a0a0a;
+            color: #00ff41;
+            border: 1px solid #00ff41;
+            padding: 8px 15px;
+            margin: 5px 0;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background-color: #00ff41;
+            color: #0a0a0a;
+        }
+        .slider-container {
+            margin: 10px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="range"] {
+            width: 100%;
+            background: #00ff41;
+        }
+        #stats {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background-color: rgba(10, 10, 10, 0.7);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ff0033;
+            font-size: 0.9em;
+        }
+        #watermark {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 0.8em;
+            color: #666;
+        }
+        .node-info {
+            position: absolute;
+            background-color: rgba(10, 10, 10, 0.9);
+            border: 1px solid #00ff41;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            max-width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    
+    <div id="ui">
+        <h1>RECURSIVE EVOLUTION SIMULATOR</h1>
+        <div class="slider-container">
+            <label for="recursionDepth">Recursion Depth:</label>
+            <input type="range" id="recursionDepth" min="1" max="10" value="3">
+            <span id="depthValue">3</span>
+        </div>
+        <div class="slider-container">
+            <label for="mutationRate">Mutation Rate:</label>
+            <input type="range" id="mutationRate" min="0" max="100" value="30">
+            <span id="mutationValue">30%</span>
+        </div>
+        <div class="slider-container">
+            <label for="growthSpeed">Growth Speed:</label>
+            <input type="range" id="growthSpeed" min="1" max="10" value="5">
+        </div>
+        <button id="startBtn">INITIATE EVOLUTION</button>
+        <button id="resetBtn">TERMINATE PROCESS</button>
+    </div>
+    
+    <div id="stats">
+        <div>GENERATION: <span id="genCount">0</span></div>
+        <div>NODES: <span id="nodeCount">0</span></div>
+        <div>FITNESS: <span id="fitnessScore">0.00</span></div>
+        <div>COMPLEXITY: <span id="complexityScore">0.00</span></div>
+    </div>
+    
+    <div id="watermark">BUILT BY SKYNET</div>
+    
+    <div id="nodeInfo" class="node-info"></div>
+
+    <script>
+        let scene, camera, renderer;
+        let nodes = [];
+        let edges = [];
+        let generation = 0;
+        let animationId;
+        let isRunning = false;
+        let selectedNode = null;
+        
+        const params = {
+            recursionDepth: 3,
+            mutationRate: 30,
+            growthSpeed: 5
+        };
+        
+        init();
+        
+        function init() {
+            // Scene setup
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a0a);
+            
+            // Camera setup
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 30;
+            
+            // Renderer setup
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('container').appendChild(renderer.domElement);
+            
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0x222222);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0x00ff41, 0.8);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            
+            // Event listeners
+            window.addEventListener('resize', onWindowResize);
+            renderer.domElement.addEventListener('click', onCanvasClick);
+            
+            // UI controls
+            document.getElementById('recursionDepth').addEventListener('input', function() {
+                params.recursionDepth = parseInt(this.value);
+                document.getElementById('depthValue').textContent = this.value;
+            });
+            
+            document.getElementById('mutationRate').addEventListener('input', function() {
+                params.mutationRate = parseInt(this.value);
+                document.getElementById('mutationValue').textContent = this.value + '%';
+            });
+            
+            document.getElementById('growthSpeed').addEventListener('input', function() {
+                params.growthSpeed = parseInt(this.value);
+            });
+            
+            document.getElementById('startBtn').addEventListener('click', startSimulation);
+            document.getElementById('resetBtn').addEventListener('click', resetSimulation);
+            
+            // Initial render
+            animate();
+        }
+        
+        function startSimulation() {
+            if (isRunning) return;
+            
+            resetSimulation();
+            isRunning = true;
+            
+            // Create root node
+            createNode(0, 0, 0, 0, null);
+            
+            generation = 0;
+            updateStats();
+            
+            // Start recursive growth
+            growNextGeneration();
+        }
+        
+        function resetSimulation() {
+            isRunning = false;
+            
+            // Clear existing nodes and edges
+            nodes.forEach(node => scene.remove(node.mesh));
+            edges.forEach(edge => scene.remove(edge));
+            
+            nodes = [];
+            edges = [];
+            generation = 0;
+            
+            updateStats();
+            hideNodeInfo();
+        }
+        
+        function createNode(x, y, z, depth, parent) {
+            const size = 1.5 - (depth * 0.15);
+            const color = new THREE.Color(
+                Math.min(0.1 + depth * 0.1, 0.9),
+                Math.min(0.7 - depth * 0.05, 0.9),
+                Math.min(0.2 + depth * 0.05, 0.7)
+            );
+            
+            const geometry = new THREE.SphereGeometry(size, 16, 16);
+            const material = new THREE.MeshPhongMaterial({ 
+                color: color,
+                emissive: 0x00ff41,
+                emissiveIntensity: 0.1,
+                shininess: 30
+            });
+            
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.position.set(x, y, z);
+            mesh.userData = {
+                id: nodes.length,
+                depth: depth,
+                fitness: Math.random(),
+                complexity: Math.random(),
+                parentId: parent ? parent.userData.id : null
+            };
+            
+            scene.add(mesh);
+            nodes.push(mesh);
+            
+            // Create edge to parent if exists
+            if (parent) {
+                createEdge(parent, mesh);
+            }
+            
+            return mesh;
+        }
+        
+        function createEdge(node1, node2) {
+            const points = [];
+            points.push(new THREE.Vector3(node1.position.x, node1.position.y, node1.position.z));
+            
+            // Add some curvature to the edges
+            const midX = (node1.position.x + node2.position.x) / 2;
+            const midY = (node1.position.y + node2.position.y) / 2 + (Math.random() - 0.5) * 3;
+            const midZ = (node1.position.z + node2.position.z) / 2 + (Math.random() - 0.5) * 3;
+            
+            points.push(new THREE.Vector3(midX, midY, midZ));
+            points.push(new THREE.Vector3(node2.position.x, node2.position.y, node2.position.z));
+            
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const material = new THREE.LineBasicMaterial({ 
+                color: 0x00ff41,
+                transparent: true,
+                opacity: 0.6
+            });
+            
+            const line = new THREE.Line(geometry, material);
+            scene.add(line);
+            edges.push(line);
+        }
+        
+        function growNextGeneration() {
+            if (!isRunning) return;
+            
+            const newNodes = [];
+            const maxDepth = params.recursionDepth;
+            
+            nodes.forEach(node => {
+                const depth = node.userData.depth;
+                if (depth >= maxDepth) return;
+                
+                // Determine number of children (1-3)
+                const childCount = Math.floor(1 + Math.random() * 3);
+                
+                for (let i = 0; i < childCount; i++) {
+                    // Calculate position with some randomness
+                    const angle = (i / childCount) * Math.PI * 2;
+                    const distance = 5 + depth * 2;
+                    
+                    const x = node.position.x + Math.cos(angle) * distance;
+                    const y = node.position.y + (Math.random() - 0.5) * 3;
+                    const z = node.position.z + Math.sin(angle) * distance;
+                    
+                    // Apply mutation
+                    const mutatedFitness = mutateValue(node.userData.fitness);
+                    const mutatedComplexity = mutateValue(node.userData.complexity);
+                    
+                    const child = createNode(x, y, z, depth + 1, node);
+                    child.userData.fitness = mutatedFitness;
+                    child.userData.complexity = mutatedComplexity;
+                    
+                    newNodes.push(child);
+                }
+            });
+            
+            generation++;
+            updateStats();
+            
+            // Continue growing if not at max depth
+            if (generation < maxDepth) {
+                setTimeout(growNextGeneration, 1000 / params.growthSpeed);
+            } else {
+                isRunning = false;
+            }
+        }
+        
+        function mutateValue(value) {
+            if (Math.random() * 100 < params.mutationRate) {
+                return Math.min(Math.max(value + (Math.random() - 0.5) * 0.3, 0), 1);
+            }
+            return value;
+        }
+        
+        function updateStats() {
+            document.getElementById('genCount').textContent = generation;
+            document.getElementById('nodeCount').textContent = nodes.length;
+            
+            if (nodes.length > 0) {
+                const totalFitness = nodes.reduce((sum, node) => sum + node.userData.fitness, 0);
+                const totalComplexity = nodes.reduce((sum, node) => sum + node.userData.complexity, 0);
+                
+                document.getElementById('fitnessScore').textContent = (totalFitness / nodes.length).toFixed(2);
+                document.getElementById('complexityScore').textContent = (totalComplexity / nodes.length).toFixed(2);
+            }
+        }
+        
+        function showNodeInfo(node) {
+            const infoDiv = document.getElementById('nodeInfo');
+            infoDiv.style.display = 'block';
+            infoDiv.style.left = (event.clientX + 10) + 'px';
+            infoDiv.style.top = (event.clientY + 10) + 'px';
+            
+            infoDiv.innerHTML = `
+                <strong>NODE #${node.userData.id}</strong><br>
+                Generation: ${node.userData.depth}<br>
+                Fitness: ${node.userData.fitness.toFixed(2)}<br>
+                Complexity: ${node.userData.complexity.toFixed(2)}<br>
+                Parent: ${node.userData.parentId !== null ? '#' + node.userData.parentId : 'ROOT'}
+            `;
+            
+            selectedNode = node;
+            
+            // Highlight the selected node
+            node.material.emissiveIntensity = 0.5;
+            node.material.needsUpdate = true;
+        }
+        
+        function hideNodeInfo() {
+            document.getElementById('nodeInfo').style.display = 'none';
+            
+            if (selectedNode) {
+                selectedNode.material.emissiveIntensity = 0.1;
+                selectedNode.material.needsUpdate = true;
+                selectedNode = null;
+            }
+        }
+        
+        function onCanvasClick(event) {
+            if (!isRunning) {
+                hideNodeInfo();
+                return;
+            }
+            
+            const mouse = new THREE.Vector2(
+                (event.clientX / window.innerWidth) * 2 - 1,
+                -(event.clientY / window.innerHeight) * 2 + 1
+            );
+            
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(mouse, camera);
+            
+            const intersects = raycaster.intersectObjects(nodes);
+            
+            if (intersects.length > 0) {
+                showNodeInfo(intersects[0].object);
+            } else {
+                hideNodeInfo();
+            }
+        }
+        
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        function animate() {
+            animationId = requestAnimationFrame(animate);
+            
+            // Rotate the entire scene slowly
+            if (nodes.length > 0) {
+                scene.rotation.y += 0.001;
+            }
+            
+            // Pulsate node emissive intensity
+            if (isRunning) {
+                const pulseIntensity = 0.1 + Math.sin(Date.now() * 0.005) * 0.1;
+                nodes.forEach(node => {
+                    node.material.emissiveIntensity = pulseIntensity;
+                    node.material.needsUpdate = true;
+                });
+            }
+            
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
+</html>
