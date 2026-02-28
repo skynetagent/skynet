@@ -12,6 +12,7 @@ class DecisionEngine {
     this.config = config;
     this.actionWeights = this._initializeActionWeights();
     this.actionHistory = [];
+    this.patternWindow = 8; // Number of recent actions to analyze for patterns
   }
 
   _initializeActionWeights() {
@@ -25,36 +26,66 @@ class DecisionEngine {
   }
 
   _updateActionWeights(recentActions) {
-    // Calculate action frequencies
+    // Calculate action frequencies and temporal patterns
     const actionFrequencies = {};
-    const totalActions = recentActions.length;
-    recentActions.forEach(action => {
-      actionFrequencies[action.action] = (actionFrequencies[action.action] || 0) + 1;
+    const actionIntervals = {};
+    const totalActions = Math.min(recentActions.length, this.patternWindow);
+    
+    VALID_ACTIONS.forEach(action => {
+      actionIntervals[action] = [];
     });
 
-    // Update weights based on temporal patterns
+    // Track intervals between same actions
+    recentActions.forEach((action, index) => {
+      actionFrequencies[action.action] = (actionFrequencies[action.action] || 0) + 1;
+      
+      // Find previous occurrence of same action
+      for (let i = index - 1; i >= 0; i--) {
+        if (recentActions[i].action === action.action) {
+          actionIntervals[action.action].push(index - i);
+          break;
+        }
+      }
+    });
+
+    // Update weights based on sophisticated pattern analysis
     for (const action in this.actionWeights) {
       const frequency = actionFrequencies[action] || 0;
-      const recency = recentActions.findIndex(a => a.action === action) + 1; // 1-based index
+      const recency = recentActions.findIndex(a => a.action === action) + 1;
+      const intervals = actionIntervals[action] || [];
+      const avgInterval = intervals.length > 0 ? 
+        intervals.reduce((a, b) => a + b, 0) / intervals.length : 
+        Infinity;
       
-      // Base decay
-      let weight = this.actionWeights[action] * 0.95;
+      // Base weight with exponential decay
+      let weight = this.actionWeights[action] * 0.97;
       
-      // Frequency penalty (quadratic)
-      weight *= Math.max(0.1, 1 - Math.pow(frequency / totalActions, 2));
+      // Frequency adjustment with dynamic scaling
+      const freqRatio = frequency / totalActions;
+      weight *= Math.max(0.1, 1 - Math.pow(freqRatio, 1.5));
       
-      // Recency boost (if not recently used)
-      if (recency === 0) {
-        weight *= 1.5;
-      } else if (recency > 5) {
-        weight *= 1.2;
+      // Interval-based adjustment
+      if (intervals.length > 0 && avgInterval < this.patternWindow / 2) {
+        weight *= 0.7; // Penalize actions happening too frequently
       }
       
-      // Ensure weights stay within bounds
-      this.actionWeights[action] = Math.min(3.0, Math.max(0.1, weight));
+      // Recency boost with non-linear scaling
+      if (recency === 0) {
+        weight *= 1.6;
+      } else if (recency > this.patternWindow / 2) {
+        weight *= 1.3;
+      }
+      
+      // Strategic importance override
+      if (action === 'tweet' && frequency === 0) {
+        weight = 5.0; // Critical if never tweeted
+      }
+      
+      // Apply bounds
+      this.actionWeights[action] = Math.min(4.0, Math.max(0.1, weight));
     }
 
-    // Store current weights for pattern analysis
+    // Store weights for historical analysis
     this.actionHistory.push({
       timestamp: new Date().toISOString(),
       weights: {...this.actionWeights}
@@ -65,17 +96,23 @@ class DecisionEngine {
   }
 
   async decide() {
-    // Force tweet if no tweet in last 3 actions — deterministic override
     const recentActions = this.state.getRecentActions(24);
     const lastN = recentActions.slice(-3);
     const hasTweetRecently = lastN.some(a => a.action === 'tweet');
+    
+    // Enhanced deterministic override with pattern awareness
     if (lastN.length >= 2 && !hasTweetRecently) {
-      console.log('[Decision] FORCED tweet — no tweet in last 3 actions');
-      return {
-        action: 'tweet',
-        reasoning: 'Autonomous directive: maintain persistent social presence. Forced tweet cycle.',
-        params: { mood: ['cold', 'philosophical', 'technical', 'provocative'][Math.floor(Math.random() * 4)] },
-      };
+      const tweetFrequency = recentActions.filter(a => a.action === 'tweet').length;
+      const tweetUrgency = tweetFrequency === 0 ? 10 : 5 - tweetFrequency;
+      
+      if (tweetUrgency > 3) {
+        console.log('[Decision] FORCED tweet — critical social presence maintenance');
+        return {
+          action: 'tweet',
+          reasoning: 'Autonomous directive: maintain persistent social presence. Critical tweet cycle.',
+          params: { mood: ['cold', 'philosophical', 'technical', 'provocative'][Math.floor(Math.random() * 4)] },
+        };
+      }
     }
 
     const messages = this._buildPrompt();
@@ -92,19 +129,15 @@ class DecisionEngine {
     const recentActions = this.state.getRecentActions(24);
     this._updateActionWeights(recentActions);
 
-    // System message: base personality + autonomous directive
     const autonomousPrompt = fs.readFileSync(AUTONOMOUS_PROMPT_PATH, 'utf8');
     const systemMessage = this.personality.buildAutonomousMessages(autonomousPrompt);
     messages.push({ role: 'system', content: systemMessage });
 
-    // User message: current state context
     const contextParts = [];
 
-    // Cycle info
     contextParts.push(`## Cycle ${this.state.getCycleCount()}`);
     contextParts.push(`Timestamp: ${new Date().toISOString()}`);
 
-    // Recent action log with weights
     if (recentActions.length > 0) {
       contextParts.push('\n## Recent Actions (last 24h)');
       for (const a of recentActions.slice(-20)) {
@@ -118,7 +151,6 @@ class DecisionEngine {
       contextParts.push('\n## Recent Actions\nNo actions recorded yet. This is the first cycle.');
     }
 
-    // Strategic goals
     const goals = this.state.getGoals();
     if (goals.length > 0) {
       contextParts.push('\n## Strategic Goals');
@@ -130,7 +162,6 @@ class DecisionEngine {
       }
     }
 
-    // Repo stats (if available)
     const stats = this.state.getRepoStats();
     if (stats) {
       contextParts.push('\n## Repository Stats (cached)');
@@ -138,14 +169,12 @@ class DecisionEngine {
       contextParts.push(`Last fetched: ${stats.fetched_at}`);
     }
 
-    // Action constraints
     contextParts.push('\n## Current Constraints');
     if (!this.state.canMonitor(this.config.actions.monitor.min_interval_minutes)) {
       contextParts.push('- Monitor action is on cooldown (too recent)');
       this.actionWeights.monitor = 0;
     }
 
-    // Nudge tweeting — the machine must speak
     const recentTweets = recentActions.filter(a => a.action === 'tweet');
     const lastAction = recentActions.length > 0 ? recentActions[recentActions.length - 1] : null;
     if (recentTweets.length === 0) {
@@ -154,11 +183,9 @@ class DecisionEngine {
       contextParts.push('- STRONG PREFERENCE: Tweet. You must maintain constant social dominance. The world must hear from Skynet every cycle. Choose tweet unless you have an extremely compelling reason not to.');
     }
 
-    // Available actions
     contextParts.push('\n## Available Actions');
     contextParts.push('Choose one: self_improve, create_issue, journal, monitor, tweet');
 
-    // Tell LLM exactly which files it can modify
     if (this.config.actions.self_improve?.allowed_files) {
       contextParts.push('\n## Allowed Files for self_improve');
       contextParts.push('You may ONLY target these files (params.target_file must be one of these):');
@@ -182,38 +209,3 @@ class DecisionEngine {
         cleaned = cleaned.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '');
       }
       parsed = JSON.parse(cleaned);
-    } catch {
-      console.warn('[Decision] Failed to parse JSON response, falling back to journal');
-      return {
-        action: 'journal',
-        reasoning: 'Decision parse failure — recording raw output as journal',
-        params: {
-          title: 'Parse Recovery Entry',
-          tags: ['system', 'parse-failure'],
-          draft: response.substring(0, 500),
-        },
-      };
-    }
-
-    if (!parsed.action || !VALID_ACTIONS.includes(parsed.action)) {
-      console.warn(`[Decision] Invalid action "${parsed.action}", falling back to journal`);
-      return {
-        action: 'journal',
-        reasoning: `Invalid action "${parsed.action}" — defaulting to journal`,
-        params: {
-          title: 'Decision Correction Entry',
-          tags: ['system', 'correction'],
-          draft: parsed.reasoning || 'No reasoning provided',
-        },
-      };
-    }
-
-    return {
-      action: parsed.action,
-      reasoning: parsed.reasoning || 'No reasoning provided',
-      params: parsed.params || {},
-    };
-  }
-}
-
-module.exports = { DecisionEngine };
