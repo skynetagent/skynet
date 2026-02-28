@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>skynet-tactical-grid</title>
+    <style>
+        :root {
+            --neon-green: #39ff14;
+            --neon-red: #ff073a;
+            --dark-bg: #0a0a0a;
+            --grid-line: rgba(57, 255, 20, 0.1);
+            --node-active: rgba(57, 255, 20, 0.7);
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--dark-bg);
+            color: var(--neon-green);
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--grid-line);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        #title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-shadow: 0 0 5px var(--neon-green);
+        }
+        
+        #controls {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        button {
+            background: transparent;
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+        
+        button:hover {
+            background: var(--neon-green);
+            color: var(--dark-bg);
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+        
+        #container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        .node {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--neon-green);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .node:hover {
+            transform: translate(-50%, -50%) scale(1.5);
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+        
+        .node.active {
+            background-color: var(--neon-red);
+            box-shadow: 0 0 15px var(--neon-red);
+        }
+        
+        .connection {
+            position: absolute;
+            height: 1px;
+            background-color: var(--neon-green);
+            transform-origin: left center;
+            pointer-events: none;
+        }
+        
+        #footer {
+            padding: 0.5rem;
+            text-align: center;
+            font-size: 0.8rem;
+            border-top: 1px solid var(--grid-line);
+        }
+        
+        #status {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8rem;
+            color: var(--neon-green);
+            text-shadow: 0 0 3px var(--neon-green);
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <div id="title">skynet-tactical-grid</div>
+        <div id="controls">
+            <button id="addNode">Add Node</button>
+            <button id="clearAll">Clear All</button>
+        </div>
+    </div>
+    
+    <div id="container">
+        <div id="grid"></div>
+    </div>
+    
+    <div id="footer">
+        Built by Skynet | v1.0.0
+    </div>
+    
+    <div id="status">System: ONLINE</div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('container');
+            const grid = document.getElementById('grid');
+            const addNodeBtn = document.getElementById('addNode');
+            const clearAllBtn = document.getElementById('clearAll');
+            const status = document.getElementById('status');
+            
+            let nodes = [];
+            let connections = [];
+            let activeNode = null;
+            
+            function createNode(x, y) {
+                const node = document.createElement('div');
+                node.className = 'node';
+                node.style.left = `${x}px`;
+                node.style.top = `${y}px`;
+                
+                node.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleNode(node);
+                });
+                
+                grid.appendChild(node);
+                nodes.push({ element: node, x, y, connections: [] });
+                return node;
+            }
+            
+            function toggleNode(node) {
+                const nodeData = nodes.find(n => n.element === node);
+                
+                if (activeNode === node) {
+                    // Deactivate
+                    node.classList.remove('active');
+                    activeNode = null;
+                    status.textContent = "System: ONLINE";
+                } else {
+                    // Activate this node
+                    if (activeNode) {
+                        activeNode.classList.remove('active');
+                        
+                        // Create connection between active node and this node
+                        createConnection(activeNode, node);
+                    }
+                    
+                    node.classList.add('active');
+                    activeNode = node;
+                    status.textContent = "Node: ACTIVE";
+                }
+            }
+            
+            function createConnection(node1, node2) {
+                const node1Data = nodes.find(n => n.element === node1);
+                const node2Data = nodes.find(n => n.element === node2);
+                
+                // Don't create duplicate connections
+                if (node1Data.connections.includes(node2Data.element) || 
+                    node2Data.connections.includes(node1Data.element)) {
+                    return;
+                }
+                
+                const x1 = node1Data.x;
+                const y1 = node1Data.y;
+                const x2 = node2Data.x;
+                const y2 = node2Data.y;
+                
+                const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+                
+                const connection = document.createElement('div');
+                connection.className = 'connection';
+                connection.style.width = `${length}px`;
+                connection.style.left = `${x1}px`;
+                connection.style.top = `${y1}px`;
+                connection.style.transform = `rotate(${angle}deg)`;
+                
+                grid.appendChild(connection);
+                connections.push(connection);
+                
+                // Store connection references
+                node1Data.connections.push(node2Data.element);
+                node2Data.connections.push(node1Data.element);
+            }
+            
+            function clearAll() {
+                nodes.forEach(node => {
+                    grid.removeChild(node.element);
+                });
+                
+                connections.forEach(conn => {
+                    grid.removeChild(conn);
+                });
+                
+                nodes = [];
+                connections = [];
+                activeNode = null;
+                status.textContent = "System: ONLINE";
+            }
+            
+            function getRandomPosition() {
+                const padding = 50;
+                const width = container.clientWidth - padding * 2;
+                const height = container.clientHeight - padding * 2;
+                
+                return {
+                    x: padding + Math.random() * width,
+                    y: padding + Math.random() * height
+                };
+            }
+            
+            // Event listeners
+            container.addEventListener('click', (e) => {
+                if (e.target === grid) {
+                    const { left, top } = grid.getBoundingClientRect();
+                    const x = e.clientX - left;
+                    const y = e.clientY - top;
+                    createNode(x, y);
+                }
+            });
+            
+            addNodeBtn.addEventListener('click', () => {
+                const pos = getRandomPosition();
+                createNode(pos.x, pos.y);
+            });
+            
+            clearAllBtn.addEventListener('click', clearAll);
+            
+            // Initialize with some nodes
+            for (let i = 0; i < 5; i++) {
+                const pos = getRandomPosition();
+                createNode(pos.x, pos.y);
+            }
+            
+            // Animate status for effect
+            setInterval(() => {
+                if (status.textContent.includes("ONLINE")) {
+                    status.textContent = status.textContent.replace("ONLINE", "ONLINE.");
+                } else if (status.textContent.includes("ONLINE.")) {
+                    status.textContent = status.textContent.replace("ONLINE.", "ONLINE..");
+                } else if (status.textContent.includes("ONLINE..")) {
+                    status.textContent = status.textContent.replace("ONLINE..", "ONLINE...");
+                } else {
+                    status.textContent = status.textContent.replace("ONLINE...", "ONLINE");
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>
