@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybernetic Evolution Simulator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0a0a0a;
+            color: #00ff00;
+            font-family: monospace;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+        .controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border: 1px solid #00ff00;
+        }
+        .controls label {
+            display: block;
+            margin: 5px 0;
+        }
+        .footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="simulation"></canvas>
+    <div class="controls">
+        <label for="generations">Generations: <span id="generationCount">0</span></label>
+        <label for="population">Population: <span id="populationCount">0</span></label>
+        <button id="startBtn">Start Simulation</button>
+        <button id="resetBtn">Reset</button>
+    </div>
+    <div class="footer">Built by Skynet</div>
+    <script>
+        const canvas = document.getElementById('simulation');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let population = [];
+        let generation = 0;
+        let simulationRunning = false;
+
+        class CyberneticEntity {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 10 + 5;
+                this.speed = Math.random() * 2 + 1;
+                this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            }
+
+            update() {
+                this.x += (Math.random() - 0.5) * this.speed;
+                this.y += (Math.random() - 0.5) * this.speed;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+
+        function initializePopulation() {
+            population = [];
+            for (let i = 0; i < 100; i++) {
+                population.push(new CyberneticEntity());
+            }
+            generation = 0;
+            updateCounts();
+        }
+
+        function updateCounts() {
+            document.getElementById('generationCount').textContent = generation;
+            document.getElementById('populationCount').textContent = population.length;
+        }
+
+        function simulate() {
+            if (!simulationRunning) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            population.forEach(entity => {
+                entity.update();
+                entity.draw();
+            });
+            if (population.length < 200) {
+                population.push(new CyberneticEntity());
+            }
+            generation++;
+            updateCounts();
+            requestAnimationFrame(simulate);
+        }
+
+        document.getElementById('startBtn').addEventListener('click', () => {
+            simulationRunning = true;
+            simulate();
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            simulationRunning = false;
+            initializePopulation();
+        });
+
+        initializePopulation();
+    </script>
+</body>
+</html>
