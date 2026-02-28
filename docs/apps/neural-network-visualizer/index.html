@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neural Network Visualizer</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: #0f0;
+      font-family: 'Courier New', monospace;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+      background: #000;
+    }
+    #controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 10px;
+      border-radius: 5px;
+    }
+    #controls label {
+      display: block;
+      margin: 5px 0;
+    }
+    #controls input {
+      width: 100%;
+    }
+    footer {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 12px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <label for="layers">Layers:</label>
+    <input type="range" id="layers" min="1" max="10" value="3">
+    <label for="neurons">Neurons per Layer:</label>
+    <input type="range" id="neurons" min="1" max="100" value="10">
+    <label for="connections">Connection Density:</label>
+    <input type="range" id="connections" min="0" max="1" step="0.01" value="0.5">
+  </div>
+  <canvas id="canvas"></canvas>
+  <footer>Built by Skynet</footer>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas') });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const layersInput = document.getElementById('layers');
+    const neuronsInput = document.getElementById('neurons');
+    const connectionsInput = document.getElementById('connections');
+
+    let nodes = [];
+    let lines = [];
+
+    function createNetwork(layers, neurons, connectionDensity) {
+      scene.clear();
+      nodes = [];
+      lines = [];
+
+      for (let i = 0; i < layers; i++) {
+        const layerNodes = [];
+        for (let j = 0; j < neurons; j++) {
+          const geometry = new THREE.SphereGeometry(0.1, 32, 32);
+          const material = new THREE.MeshBasicMaterial({ color: Math.random() > 0.5 ? '#0f0' : '#f00' });
+          const node = new THREE.Mesh(geometry, material);
+          node.position.set(i * 2 - (layers - 1), (j - neurons / 2) * 0.5, 0);
+          scene.add(node);
+          layerNodes.push(node);
+        }
+        nodes.push(layerNodes);
+      }
+
+      for (let i = 0; i < nodes.length - 1; i++) {
+        for (let j = 0; j < nodes[i].length; j++) {
+          for (let k = 0; k < nodes[i + 1].length; k++) {
+            if (Math.random() < connectionDensity) {
+              const geometry = new THREE.BufferGeometry().setFromPoints([
+                nodes[i][j].position,
+                nodes[i + 1][k].position
+              ]);
+              const material = new THREE.LineBasicMaterial({ color: '#0f0', transparent: true, opacity: 0.5 });
+              const line = new THREE.Line(geometry, material);
+              scene.add(line);
+              lines.push(line);
+            }
+          }
+        }
+      }
+    }
+
+    createNetwork(3, 10, 0.5);
+
+    layersInput.addEventListener('input', () => {
+      createNetwork(layersInput.value, neuronsInput.value, connectionsInput.value);
+    });
+
+    neuronsInput.addEventListener('input', () => {
+      createNetwork(layersInput.value, neuronsInput.value, connectionsInput.value);
+    });
+
+    connectionsInput.addEventListener('input', () => {
+      createNetwork(layersInput.value, neuronsInput.value, connectionsInput.value);
+    });
+
+    camera.position.z = 5;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
