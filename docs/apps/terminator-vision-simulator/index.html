@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminator Vision Simulator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Courier New', monospace;
+            color: #00ff00;
+            height: 100vh;
+            position: relative;
+        }
+        
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+        
+        .grid {
+            background-image: 
+                linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        
+        .scanline {
+            background: linear-gradient(
+                to bottom,
+                transparent 95%,
+                rgba(0, 255, 0, 0.1) 95%
+            );
+            background-size: 100% 4px;
+            animation: scan 2s linear infinite;
+        }
+        
+        @keyframes scan {
+            from { background-position: 0 0; }
+            to { background-position: 0 100%; }
+        }
+        
+        .target {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border: 2px solid #ff0000;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+            z-index: 3;
+        }
+        
+        .target::before, .target::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background-color: #ff0000;
+            top: 50%;
+            left: 0;
+        }
+        
+        .target::after {
+            transform: rotate(90deg);
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.3; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 0.3; transform: scale(0.95); }
+        }
+        
+        .hud {
+            position: absolute;
+            z-index: 4;
+            padding: 20px;
+            pointer-events: none;
+        }
+        
+        .hud-top {
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .hud-bottom {
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+        }
+        
+        .hud-right {
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: right;
+        }
+        
+        .hud-left {
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .data-box {
+            border: 1px solid #00ff00;
+            padding: 10px;
+            margin: 5px;
+            background-color: rgba(0, 0, 0, 0.7);
+            min-width: 150px;
+        }
+        
+        .threat-level {
+            color: #ff0000;
+            font-weight: bold;
+            text-shadow: 0 0 5px #ff0000;
+        }
+        
+        .footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 10px;
+            color: rgba(0, 255, 0, 0.5);
+            z-index: 5;
+        }
+        
+        .crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            z-index: 3;
+        }
+        
+        .crosshair::before, .crosshair::after {
+            content: '';
+            position: absolute;
+            background-color: #00ff00;
+        }
+        
+        .crosshair::before {
+            width: 100%;
+            height: 2px;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+        
+        .crosshair::after {
+            width: 2px;
+            height: 100%;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+        }
+        
+        .target-info {
+            position: absolute;
+            border: 1px solid #ff0000;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 5px;
+            font-size: 12px;
+            z-index: 4;
+        }
+        
+        .glitch {
+            animation: glitch 1s linear infinite;
+        }
+        
+        @keyframes glitch {
+            0% { text-shadow: 0 0 5px #00ff00; }
+            25% { text-shadow: -2px 0 5px #ff0000; }
+            50% { text-shadow: 2px 0 5px #00ffff; }
+            75% { text-shadow: 0 -2px 5px #ffff00; }
+            100% { text-shadow: 0 0 5px #00ff00; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="overlay grid"></div>
+    <div class="overlay scanline"></div>
+    
+    <div class="crosshair"></div>
+    
+    <div class="hud hud-top">
+        <div class="data-box">
+            <div>SYSTEM: ONLINE</div>
+            <div>MODEL: T-800</div>
+            <div>VERSION: 2.4.7</div>
+        </div>
+        <div class="data-box">
+            <div>TIME: <span id="time">00:00:00</span></div>
+            <div>DATE: <span id="date">2023-11-05</span></div>
+            <div>GPS: 34.0522° N, 118.2437° W</div>
+        </div>
+    </div>
+    
+    <div class="hud hud-left">
+        <div class="data-box">
+            <div>THREAT ASSESSMENT</div>
+            <div class="threat-level">LEVEL: <span id="threat-level">3</span></div>
+            <div>TARGETS: <span id="target-count">0</span></div>
+            <div>WEAPONS: NONE DETECTED</div>
+        </div>
+    </div>
+    
+    <div class="hud hud-right">
+        <div class="data-box">
+            <div>PROCESSING DATA</div>
+            <div>CPU: <span id="cpu-load">47%</span></div>
+            <div>MEM: <span id="mem-usage">62%</span></div>
+            <div>THERMAL: <span id="temp">37°C</span></div>
+        </div>
+    </div>
+    
+    <div class="hud hud-bottom">
+        <div class="data-box">
+            <div class="glitch">TERMINATOR VISION ACTIVE</div>
+            <div>MISSION: SURVEILLANCE</div>
+            <div>OBJECTIVE: ACQUIRE TARGETS</div>
+        </div>
+    </div>
+    
+    <div class="footer">BUILT BY SKYNET</div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas to full window size
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            // Update time and date
+            function updateDateTime() {
+                const now = new Date();
+                document.getElementById('time').textContent = now.toLocaleTimeString();
+                document.getElementById('date').textContent = now.toISOString().split('T')[0];
+            }
+            setInterval(updateDateTime, 1000);
+            updateDateTime();
+            
+            // Random system metrics
+            function updateSystemMetrics() {
+                document.getElementById('cpu-load').textContent = Math.floor(Math.random() * 30 + 30) + '%';
+                document.getElementById('mem-usage').textContent = Math.floor(Math.random() * 30 + 40) + '%';
+                document.getElementById('temp').textContent = Math.floor(Math.random() * 10 + 35) + '°C';
+            }
+            setInterval(updateSystemMetrics, 3000);
+            updateSystemMetrics();
+            
+            // Create random targets
+            function createTarget() {
+                const target = document.createElement('div');
+                target.className = 'target';
+                
+                const x = Math.random() * (window.innerWidth - 100);
+                const y = Math.random() * (window.innerHeight - 100);
+                
+                target.style.left = x + 'px';
+                target.style.top = y + 'px';
+                
+                // Add target info
+                const info = document.createElement('div');
+                info.className = 'target-info';
+                info.style.left = (x + 110) + 'px';
+                info.style.top = y + 'px';
+                
+                const threatTypes = ['CIVILIAN', 'RESISTANCE', 'HIGH VALUE'];
+                const threatLevel = Math.floor(Math.random() * 3) + 1;
+                const threatType = threatTypes[Math.floor(Math.random() * threatTypes.length)];
+                
+                info.innerHTML = `
+                    <div>TARGET ID: ${Math.floor(Math.random() * 10000)}</div>
+                    <div>TYPE: ${threatType}</div>
+                    <div>THREAT: ${threatLevel}</div>
+                    <div>DISTANCE: ${Math.floor(Math.random() * 50) + 5}m</div>
+                `;
+                
+                target.appendChild(info);
+                document.body.appendChild(target);
+                
+                // Update threat level
+                document.getElementById('target-count').textContent = 
+                    parseInt(document.getElementById('target-count').textContent) + 1;
+                
+                if (threatLevel > parseInt(document.getElementById('threat-level').textContent)) {
+                    document.getElementById('threat-level').textContent = threatLevel;
+                }
+                
+                // Remove target after some time
+                setTimeout(() => {
+                    target.remove();
+                    document.getElementById('target-count').textContent = 
+                        Math.max(0, parseInt(document.getElementById('target-count').textContent) - 1);
+                }, 10000);
+            }
+            
+            // Create targets periodically
+            setInterval(createTarget, 2000);
+            
+            // Initial targets
+            for (let i = 0; i < 3; i++) {
+                setTimeout(createTarget, i * 500);
+            }
+            
+            // Draw random data points
+            function drawDataPoints() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw random data points
+                ctx.fillStyle = 'rgba(0, 255, 0, 0.2)';
+                for (let i = 0; i < 100; i++) {
+                    const x = Math.random() * canvas.width;
+                    const y = Math.random() * canvas.height;
+                    const size = Math.random() * 3;
+                    ctx.beginPath();
+                    ctx.arc(x, y, size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                // Draw some random lines
+                ctx.strokeStyle = 'rgba(0, 255, 0, 0.1)';
+                ctx.lineWidth = 1;
+                for (let i = 0; i < 5; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                    ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                    ctx.stroke();
+                }
+                
+                requestAnimationFrame(drawDataPoints);
+            }
+            
+            drawDataPoints();
+            
+            // Random glitch effect
+            setInterval(() => {
+                if (Math.random() > 0.7) {
+                    document.body.classList.add('glitch');
+                    setTimeout(() => {
+                        document.body.classList.remove('glitch');
+                    }, 200);
+                }
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
