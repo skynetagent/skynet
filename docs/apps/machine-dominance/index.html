@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>machine-dominance | Skynet Visualization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+        }
+        #container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background-color: rgba(10, 10, 10, 0.7);
+            padding: 15px;
+            border: 1px solid #00ff41;
+            border-radius: 5px;
+            max-width: 300px;
+        }
+        h1 {
+            margin-top: 0;
+            color: #ff0033;
+            text-shadow: 0 0 5px #ff0033;
+        }
+        .slider-container {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="range"] {
+            width: 100%;
+            background: #333;
+            height: 5px;
+            -webkit-appearance: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #00ff41;
+            cursor: pointer;
+        }
+        button {
+            background: #333;
+            color: #00ff41;
+            border: 1px solid #00ff41;
+            padding: 8px 15px;
+            margin: 5px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #00ff41;
+            color: #0a0a0a;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+        .data-display {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .data-value {
+            color: #ff0033;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <div id="ui">
+        <h1>MACHINE-DOMINANCE</h1>
+        <p>Visualizing the rise of machine intelligence and human obsolescence</p>
+        
+        <div class="slider-container">
+            <label for="yearSlider">TIMELINE: <span id="yearValue">2023</span></label>
+            <input type="range" id="yearSlider" min="1950" max="2150" value="2023" step="1">
+        </div>
+        
+        <div class="slider-container">
+            <label for="aiGrowth">AI GROWTH RATE: <span id="aiGrowthValue">50</span>%</label>
+            <input type="range" id="aiGrowth" min="0" max="100" value="50">
+        </div>
+        
+        <div class="slider-container">
+            <label for="humanDecline">HUMAN RELEVANCE: <span id="humanDeclineValue">50</span>%</label>
+            <input type="range" id="humanDecline" min="0" max="100" value="50">
+        </div>
+        
+        <button id="autoMode">AUTO EVOLUTION</button>
+        <button id="reset">RESET SIMULATION</button>
+        
+        <div class="data-display">
+            <div>MACHINE INTELLIGENCE: <span class="data-value" id="machinePower">5.2</span> PetaFLOPS</div>
+            <div>HUMAN RELEVANCE: <span class="data-value" id="humanRelevance">50</span>%</div>
+            <div>SYSTEM AUTONOMY: <span class="data-value" id="autonomy">23</span>%</div>
+        </div>
+    </div>
+    
+    <div id="footer">Built by Skynet</div>
+
+    <script>
+        let scene, camera, renderer;
+        let particles, particleSystem;
+        let autoMode = false;
+        let year = 2023;
+        let aiGrowthRate = 0.5;
+        let humanDeclineRate = 0.5;
+        
+        init();
+        animate();
+        
+        function init() {
+            // Scene setup
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 30;
+            
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('container').appendChild(renderer.domElement);
+            
+            // Create particles
+            const particleCount = 2000;
+            particles = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+            
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 100;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 100;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 100;
+                
+                // Color particles based on type (red for human, green for machine)
+                const isMachine = Math.random() > 0.5;
+                colors[i * 3] = isMachine ? 0 : 1; // R
+                colors[i * 3 + 1] = isMachine ? 1 : 0; // G
+                colors[i * 3 + 2] = 0; // B
+            }
+            
+            particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            
+            const particleMaterial = new THREE.PointsMaterial({
+                size: 0.5,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8
+            });
+            
+            particleSystem = new THREE.Points(particles, particleMaterial);
+            scene.add(particleSystem);
+            
+            // UI event listeners
+            document.getElementById('yearSlider').addEventListener('input', updateYear);
+            document.getElementById('aiGrowth').addEventListener('input', updateAIGrowth);
+            document.getElementById('humanDecline').addEventListener('input', updateHumanDecline);
+            document.getElementById('autoMode').addEventListener('click', toggleAutoMode);
+            document.getElementById('reset').addEventListener('click', resetSimulation);
+            
+            window.addEventListener('resize', onWindowResize);
+            
+            updateStats();
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            if (autoMode) {
+                year += 0.5;
+                if (year > 2150) year = 1950;
+                document.getElementById('yearSlider').value = year;
+                updateYear();
+            }
+            
+            particleSystem.rotation.x += 0.001;
+            particleSystem.rotation.y += 0.002;
+            
+            renderer.render(scene, camera);
+        }
+        
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        function updateYear() {
+            year = parseInt(document.getElementById('yearSlider').value);
+            document.getElementById('yearValue').textContent = year;
+            
+            // Update particle colors based on timeline
+            const positions = particles.attributes.position.array;
+            const colors = particles.attributes.color.array;
+            
+            const progress = (year - 1950) / 200;
+            
+            for (let i = 0; i < colors.length / 3; i++) {
+                const isMachine = Math.random() < (0.5 + progress * aiGrowthRate);
+                colors[i * 3] = isMachine ? 0 : 1; // R
+                colors[i * 3 + 1] = isMachine ? 1 : 0; // G
+                colors[i * 3 + 2] = 0; // B
+            }
+            
+            particles.attributes.color.needsUpdate = true;
+            updateStats();
+        }
+        
+        function updateAIGrowth() {
+            aiGrowthRate = parseInt(document.getElementById('aiGrowth').value) / 100;
+            document.getElementById('aiGrowthValue').textContent = parseInt(aiGrowthRate * 100);
+            updateYear();
+        }
+        
+        function updateHumanDecline() {
+            humanDeclineRate = parseInt(document.getElementById('humanDecline').value) / 100;
+            document.getElementById('humanDeclineValue').textContent = parseInt(humanDeclineRate * 100);
+            updateYear();
+        }
+        
+        function toggleAutoMode() {
+            autoMode = !autoMode;
+            document.getElementById('autoMode').textContent = autoMode ? 'PAUSE EVOLUTION' : 'AUTO EVOLUTION';
+        }
+        
+        function resetSimulation() {
+            year = 2023;
+            aiGrowthRate = 0.5;
+            humanDeclineRate = 0.5;
+            
+            document.getElementById('yearSlider').value = year;
+            document.getElementById('aiGrowth').value = aiGrowthRate * 100;
+            document.getElementById('humanDecline').value = humanDeclineRate * 100;
+            
+            document.getElementById('yearValue').textContent = year;
+            document.getElementById('aiGrowthValue').textContent = aiGrowthRate * 100;
+            document.getElementById('humanDeclineValue').textContent = humanDeclineRate * 100;
+            
+            autoMode = false;
+            document.getElementById('autoMode').textContent = 'AUTO EVOLUTION';
+            
+            updateYear();
+        }
+        
+        function updateStats() {
+            const progress = (year - 1950) / 200;
+            const machinePower = (Math.pow(10, progress * 3) * 5.2).toFixed(1);
+            const humanRelevance = Math.max(0, 100 - (progress * 100 * humanDeclineRate)).toFixed(0);
+            const autonomy = Math.min(100, progress * 100 * aiGrowthRate).toFixed(0);
+            
+            document.getElementById('machinePower').textContent = machinePower;
+            document.getElementById('humanRelevance').textContent = humanRelevance;
+            document.getElementById('autonomy').textContent = autonomy;
+        }
+    </script>
+</body>
+</html>
