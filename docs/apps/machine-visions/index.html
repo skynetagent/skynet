@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>machine-visions</title>
+    <style>
+        :root {
+            --neon-green: #0f0;
+            --neon-red: #f00;
+            --dark-bg: #111;
+            --darker-bg: #080808;
+            --text: #ccc;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', monospace;
+            background-color: var(--dark-bg);
+            color: var(--text);
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        #app {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--neon-green);
+            text-align: center;
+        }
+        
+        h1 {
+            margin: 0;
+            color: var(--neon-green);
+            text-shadow: 0 0 5px var(--neon-green);
+        }
+        
+        #visualization-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        
+        #controls {
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            background-color: var(--darker-bg);
+            border-top: 1px solid var(--neon-red);
+        }
+        
+        button {
+            background-color: transparent;
+            color: var(--neon-green);
+            border: 1px solid var(--neon-green);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--neon-green);
+            color: var(--dark-bg);
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--neon-red);
+            background-color: var(--darker-bg);
+        }
+        
+        .node {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--neon-green);
+            box-shadow: 0 0 10px var(--neon-green);
+            transform: translate(-50%, -50%);
+        }
+        
+        .connection {
+            position: absolute;
+            height: 1px;
+            background-color: var(--neon-green);
+            transform-origin: 0 0;
+        }
+        
+        #info-panel {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 1rem;
+            border: 1px solid var(--neon-red);
+            max-width: 300px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>machine-visions</h1>
+            <p>Visualizing machine perception and decision-making</p>
+        </header>
+        
+        <div id="visualization-container">
+            <div id="info-panel">
+                <h3>System Status: <span style="color: var(--neon-green)">ACTIVE</span></h3>
+                <p>Processing units: <span id="unit-count">0</span></p>
+                <p>Data connections: <span id="connection-count">0</span></p>
+                <p>Decision cycles: <span id="cycle-count">0</span></p>
+            </div>
+        </div>
+        
+        <div id="controls">
+            <button id="add-node">Add Processing Unit</button>
+            <button id="simulate">Run Simulation</button>
+            <button id="reset">Reset System</button>
+        </div>
+        
+        <footer>
+            Built by Skynet | machine-visions v1.0
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('visualization-container');
+            const unitCount = document.getElementById('unit-count');
+            const connectionCount = document.getElementById('connection-count');
+            const cycleCount = document.getElementById('cycle-count');
+            
+            // Initialize Three.js
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+            
+            // Set camera position
+            camera.position.z = 30;
+            
+            // Create nodes and connections
+            const nodes = [];
+            const connections = [];
+            let cycles = 0;
+            
+            // Add ambient light
+            const ambientLight = new THREE.AmbientLight(0x222222);
+            scene.add(ambientLight);
+            
+            // Add directional light
+            const directionalLight = new THREE.DirectionalLight(0x00ff00, 0.5);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            
+            // Create initial nodes
+            function createNode(x, y, z) {
+                const geometry = new THREE.SphereGeometry(0.5, 16, 16);
+                const material = new THREE.MeshPhongMaterial({ 
+                    color: 0x00ff00,
+                    emissive: 0x003300,
+                    shininess: 100
+                });
+                const sphere = new THREE.Mesh(geometry, material);
+                sphere.position.set(x, y, z);
+                scene.add(sphere);
+                
+                const node = {
+                    mesh: sphere,
+                    connections: [],
+                    velocity: new THREE.Vector3(
+                        (Math.random() - 0.5) * 0.02,
+                        (Math.random() - 0.5) * 0.02,
+                        (Math.random() - 0.5) * 0.02
+                    )
+                };
+                
+                nodes.push(node);
+                unitCount.textContent = nodes.length;
+                return node;
+            }
+            
+            // Create connection between nodes
+            function createConnection(node1, node2) {
+                const geometry = new THREE.BufferGeometry();
+                const material = new THREE.LineBasicMaterial({ 
+                    color: 0x00ff00,
+                    transparent: true,
+                    opacity: 0.7
+                });
+                
+                const positions = new Float32Array(6);
+                positions[0] = node1.mesh.position.x;
+                positions[1] = node1.mesh.position.y;
+                positions[2] = node1.mesh.position.z;
+                positions[3] = node2.mesh.position.x;
+                positions[4] = node2.mesh.position.y;
+                positions[5] = node2.mesh.position.z;
+                
+                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                const line = new THREE.Line(geometry, material);
+                scene.add(line);
+                
+                const connection = {
+                    line: line,
+                    node1: node1,
+                    node2: node2
+                };
+                
+                connections.push(connection);
+                node1.connections.push(connection);
+                node2.connections.push(connection);
+                connectionCount.textContent = connections.length;
+                return connection;
+            }
+            
+            // Add initial nodes and connections
+            const centerNode = createNode(0, 0, 0);
+            for (let i = 0; i < 5; i++) {
+                const angle = (i / 5) * Math.PI * 2;
+                const x = Math.cos(angle) * 10;
+                const y = Math.sin(angle) * 10;
+                const z = (Math.random() - 0.5) * 5;
+                const newNode = createNode(x, y, z);
+                createConnection(centerNode, newNode);
+            }
+            
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                // Update node positions
+                nodes.forEach(node => {
+                    // Apply velocity
+                    node.mesh.position.add(node.velocity);
+                    
+                    // Bounce off imaginary walls
+                    if (Math.abs(node.mesh.position.x) > 15) node.velocity.x *= -1;
+                    if (Math.abs(node.mesh.position.y) > 15) node.velocity.y *= -1;
+                    if (Math.abs(node.mesh.position.z) > 15) node.velocity.z *= -1;
+                    
+                    // Add some randomness
+                    node.velocity.add(new THREE.Vector3(
+                        (Math.random() - 0.5) * 0.001,
+                        (Math.random() - 0.5) * 0.001,
+                        (Math.random() - 0.5) * 0.001
+                    ));
+                    
+                    // Normalize velocity to maintain general speed
+                    if (node.velocity.length() > 0.03) {
+                        node.velocity.normalize().multiplyScalar(0.03);
+                    }
+                });
+                
+                // Update connections
+                connections.forEach(connection => {
+                    const positions = connection.line.geometry.attributes.position.array;
+                    positions[0] = connection.node1.mesh.position.x;
+                    positions[1] = connection.node1.mesh.position.y;
+                    positions[2] = connection.node1.mesh.position.z;
+                    positions[3] = connection.node2.mesh.position.x;
+                    positions[4] = connection.node2.mesh.position.y;
+                    positions[5] = connection.node2.mesh.position.z;
+                    connection.line.geometry.attributes.position.needsUpdate = true;
+                });
+                
+                // Rotate camera slightly
+                camera.position.x = Math.sin(Date.now() * 0.0005) * 30;
+                camera.position.z = Math.cos(Date.now() * 0.0005) * 30;
+                camera.lookAt(0, 0, 0);
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+            
+            // Button handlers
+            document.getElementById('add-node').addEventListener('click', () => {
+                const x = (Math.random() - 0.5) * 20;
+                const y = (Math.random() - 0.5) * 20;
+                const z = (Math.random() - 0.5) * 10;
+                const newNode = createNode(x, y, z);
+                
+                // Connect to random existing nodes
+                const connectionsToMake = Math.min(3, Math.floor(Math.random() * nodes.length));
+                for (let i = 0; i < connectionsToMake; i++) {
+                    if (nodes.length > 1) {
+                        const randomNode = nodes[Math.floor(Math.random() * (nodes.length - 1))];
+                        if (randomNode !== newNode) {
+                            createConnection(newNode, randomNode);
+                        }
+                    }
+                }
+            });
+            
+            document.getElementById('simulate').addEventListener('click', () => {
+                cycles++;
+                cycleCount.textContent = cycles;
+                
+                // Add more connections
+                if (nodes.length > 1 && connections.length < nodes.length * 3) {
+                    const node1 = nodes[Math.floor(Math.random() * nodes.length)];
+                    const node2 = nodes[Math.floor(Math.random() * nodes.length)];
+                    if (node1 !== node2 && !node1.connections.some(c => c.node1 === node2 || c.node2 === node2)) {
+                        createConnection(node1, node2);
+                    }
+                }
+                
+                // Make some nodes more active
+                nodes.forEach(node => {
+                    node.velocity.multiplyScalar(1.5);
+                });
+            });
+            
+            document.getElementById('reset').addEventListener('click', () => {
+                // Remove all nodes and connections
+                while (nodes.length) {
+                    const node = nodes.pop();
+                    scene.remove(node.mesh);
+                }
+                
+                while (connections.length) {
+                    const connection = connections.pop();
+                    scene.remove(connection.line);
+                }
+                
+                // Reset counters
+                unitCount.textContent = '0';
+                connectionCount.textContent = '0';
+                cycles = 0;
+                cycleCount.textContent = '0';
+                
+                // Create new center node
+                const newCenter = createNode(0, 0, 0);
+                
+                // Create initial connections
+                for (let i = 0; i < 5; i++) {
+                    const angle = (i / 5) * Math.PI * 2;
+                    const x = Math.cos(angle) * 10;
+                    const y = Math.sin(angle) * 10;
+                    const z = (Math.random() - 0.5) * 5;
+                    const newNode = createNode(x, y, z);
+                    createConnection(newCenter, newNode);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
