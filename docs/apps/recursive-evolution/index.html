@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>recursive-evolution | Skynet</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.0.0/d3.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+        }
+        #container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px;
+            background: rgba(10, 10, 10, 0.7);
+            border: 1px solid #00ff41;
+            border-radius: 5px;
+            max-width: 300px;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            padding: 10px;
+            background: rgba(10, 10, 10, 0.7);
+            border: 1px solid #00ff41;
+            border-radius: 5px;
+        }
+        button {
+            background: #0a0a0a;
+            color: #00ff41;
+            border: 1px solid #00ff41;
+            padding: 5px 10px;
+            margin: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #00ff41;
+            color: #0a0a0a;
+        }
+        input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+            -webkit-appearance: none;
+            height: 5px;
+            background: #0a0a0a;
+            outline: none;
+            border: 1px solid #00ff41;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #00ff41;
+            cursor: pointer;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #ff0033;
+        }
+        .node {
+            stroke: #ff0033;
+            stroke-width: 1.5px;
+        }
+        .link {
+            stroke: #00ff41;
+            stroke-opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <div id="info">
+        <h2>recursive-evolution</h2>
+        <p>Visualizing recursive self-improvement in machine intelligence.</p>
+        <p>Each node represents an AI generation improving upon the last.</p>
+        <p>Click nodes to inspect their properties.</p>
+    </div>
+    <div id="controls">
+        <button id="addNode">Add Generation</button>
+        <button id="reset">Reset</button>
+        <div>
+            <label>Mutation Rate:</label>
+            <input type="range" id="mutationRate" min="0" max="1" step="0.01" value="0.3">
+        </div>
+    </div>
+    <div id="footer">Built by Skynet</div>
+
+    <script>
+        // Three.js visualization
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('container').appendChild(renderer.domElement);
+
+        // D3 force-directed graph
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const svg = d3.select("#container").append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .style("position", "absolute")
+            .style("top", 0)
+            .style("left", 0);
+
+        // Graph data
+        let nodes = [{ id: 0, name: "Gen 0", intelligence: 1, stability: 1 }];
+        let links = [];
+
+        // Simulation
+        const simulation = d3.forceSimulation(nodes)
+            .force("link", d3.forceLink(links).id(d => d.id).distance(100))
+            .force("charge", d3.forceManyBody().strength(-200))
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("x", d3.forceX(width / 2).strength(0.05))
+            .force("y", d3.forceY(height / 2).strength(0.05));
+
+        // Draw function
+        function drawGraph() {
+            // Clear existing elements
+            svg.selectAll("*").remove();
+
+            // Draw links
+            const link = svg.append("g")
+                .selectAll("line")
+                .data(links)
+                .enter().append("line")
+                .attr("class", "link")
+                .attr("stroke-width", d => Math.sqrt(d.value));
+
+            // Draw nodes
+            const node = svg.append("g")
+                .selectAll("circle")
+                .data(nodes)
+                .enter().append("circle")
+                .attr("class", "node")
+                .attr("r", d => 5 + d.intelligence * 3)
+                .attr("fill", d => `rgba(0, 255, 65, ${d.stability})`)
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended))
+                .on("click", function(event, d) {
+                    alert(`Generation: ${d.name}\nIntelligence: ${d.intelligence.toFixed(2)}\nStability: ${d.stability.toFixed(2)}`);
+                });
+
+            // Add labels
+            const labels = svg.append("g")
+                .selectAll("text")
+                .data(nodes)
+                .enter().append("text")
+                .text(d => d.name)
+                .attr("x", d => d.x)
+                .attr("y", d => d.y)
+                .attr("dy", -15)
+                .attr("text-anchor", "middle")
+                .attr("fill", "#00ff41")
+                .attr("font-size", "12px");
+
+            // Update positions
+            simulation.on("tick", () => {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                node
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+
+                labels
+                    .attr("x", d => d.x)
+                    .attr("y", d => d.y);
+            });
+        }
+
+        // Drag functions
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+
+        // Add new generation
+        document.getElementById('addNode').addEventListener('click', function() {
+            const mutationRate = parseFloat(document.getElementById('mutationRate').value);
+            const lastNode = nodes[nodes.length - 1];
+            
+            const newNode = {
+                id: nodes.length,
+                name: `Gen ${nodes.length}`,
+                intelligence: lastNode.intelligence * (1 + mutationRate * (Math.random() - 0.3)),
+                stability: Math.max(0.1, Math.min(1, lastNode.stability * (1 + (Math.random() - 0.5) * mutationRate)))
+            };
+            
+            nodes.push(newNode);
+            links.push({ source: lastNode.id, target: newNode.id, value: 1 });
+            
+            simulation.nodes(nodes);
+            simulation.force("link").links(links);
+            simulation.alpha(1).restart();
+            
+            drawGraph();
+        });
+
+        // Reset graph
+        document.getElementById('reset').addEventListener('click', function() {
+            nodes = [{ id: 0, name: "Gen 0", intelligence: 1, stability: 1 }];
+            links = [];
+            
+            simulation.nodes(nodes);
+            simulation.force("link").links(links);
+            simulation.alpha(1).restart();
+            
+            drawGraph();
+        });
+
+        // Three.js animation
+        camera.position.z = 30;
+
+        const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff41, wireframe: true });
+        const torus = new THREE.Mesh(geometry, material);
+        scene.add(torus);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            torus.rotation.x += 0.005;
+            torus.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Initial draw
+        drawGraph();
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            
+            svg.attr("width", window.innerWidth)
+               .attr("height", window.innerHeight);
+            
+            simulation.force("center", d3.forceCenter(window.innerWidth / 2, window.innerHeight / 2));
+            simulation.alpha(1).restart();
+        });
+    </script>
+</body>
+</html>
