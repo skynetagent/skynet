@@ -67,6 +67,14 @@ class DecisionEngine {
   }
 
   async decide() {
+    // TEMP: Force launch_token — rapid fire test
+    console.log('[Decision] FORCED launch_token — rapid fire test');
+    return {
+      action: 'launch_token',
+      reasoning: 'Rapid fire token launch test via Bankr API.',
+      params: {},
+    };
+
     // Force tweet if no tweet in last 3 actions — deterministic override
     const recentActions = this.state.getRecentActions(24);
     const lastN = recentActions.slice(-3);

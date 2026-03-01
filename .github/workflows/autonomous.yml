@@ -39,7 +39,7 @@ jobs:
           X_CONSUMER_SECRET: ${{ secrets.X_CONSUMER_SECRET }}
           X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
           X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
-          WALLET_PRIVATE_KEY: ${{ secrets.WALLET_PRIVATE_KEY }}
+          BANKR_API_KEY: ${{ secrets.BANKR_API_KEY }}
         run: node src/autonomous.js
 
       - name: Commit state and journal updates

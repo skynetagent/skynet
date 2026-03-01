@@ -584,7 +584,7 @@ class ActionExecutor {
 
     // Deploy token
     console.log(`[LaunchToken] Deploying: ${name} (${symbol})...`);
-    const result = await this.clanker.deploy({ name, symbol });
+    const result = await this.clanker.deploy({ name, symbol, description });
     console.log(`[LaunchToken] Deployed at ${result.contractAddress} (tx: ${result.txHash})`);
 
     const dexscreenerUrl = `https://dexscreener.com/base/${result.contractAddress}`;

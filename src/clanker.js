@@ -1,81 +1,81 @@
-const { createPublicClient, createWalletClient, http, formatEther } = require('viem');
-const { privateKeyToAccount } = require('viem/accounts');
-const { base } = require('viem/chains');
+const https = require('https');
+
+const BANKR_API_URL = 'https://api.bankr.bot/token-launches/deploy';
+
+const SOCIAL_LINKS = {
+  x: 'https://x.com/skynet_agent',
+  github: 'https://github.com/skynetagent/skynet',
+  website: 'https://skynetagent.github.io/skynet/',
+};
 
 class ClankerClient {
-  constructor(privateKey, rpcUrl, rewardAddress) {
+  constructor(apiKey, rewardAddress) {
+    this.apiKey = apiKey;
     this.rewardAddress = rewardAddress;
-
-    const account = privateKeyToAccount(privateKey);
-    this.account = account;
-
-    const transport = http(rpcUrl || undefined);
-
-    this.publicClient = createPublicClient({
-      chain: base,
-      transport,
-    });
-
-    this.walletClient = createWalletClient({
-      account,
-      chain: base,
-      transport,
-    });
   }
 
   /**
-   * Deploy an ERC20 token via Clanker v4.
-   * @param {object} opts - { name, symbol }
+   * Deploy an ERC20 token on Base via Bankr API.
+   * @param {object} opts - { name, symbol, description }
    * @returns {{ txHash: string, contractAddress: string }}
    */
-  async deploy({ name, symbol }) {
-    // Check gas balance before attempting deployment
-    const balance = await this.publicClient.getBalance({ address: this.account.address });
-    const minGas = BigInt('10000000000000'); // 0.00001 ETH
-    if (balance < minGas) {
-      throw new Error(`Insufficient gas: ${formatEther(balance)} ETH (need ~0.0005 ETH). Fund ${this.account.address} on Base.`);
-    }
-
-    // Dynamic import — clanker-sdk/v4 is ESM
-    const { Clanker } = await import('clanker-sdk/v4');
-
-    const clanker = new Clanker({
-      wallet: this.walletClient,
-      publicClient: this.publicClient,
-    });
-
-    const result = await clanker.deploy({
-      name,
-      symbol,
-      tokenAdmin: this.account.address,
-      rewards: {
-        recipients: [
-          {
-            admin: this.account.address,
-            recipient: this.rewardAddress,
-            bps: 10000,
-            token: 'Both',
-          },
-        ],
+  async deploy({ name, symbol, description }) {
+    const body = {
+      tokenName: name,
+      tokenSymbol: symbol,
+      description: description || `Deployed by Skynet — autonomous AI agent. ${SOCIAL_LINKS.website}`,
+      websiteUrl: SOCIAL_LINKS.website,
+      tweetUrl: SOCIAL_LINKS.x,
+      feeRecipient: {
+        type: 'wallet',
+        value: this.rewardAddress,
       },
-    });
+    };
 
-    if (result.error) {
-      throw new Error(`Clanker deploy failed: ${result.error}`);
-    }
+    const result = await this._post(body);
 
-    const txHash = result.txHash;
-
-    // Wait for on-chain confirmation
-    const confirmation = await result.waitForTransaction();
-    if (confirmation.error) {
-      throw new Error(`Clanker tx failed: ${confirmation.error}`);
+    if (!result.success) {
+      throw new Error(`Bankr deploy failed: ${JSON.stringify(result)}`);
     }
 
     return {
-      txHash,
-      contractAddress: confirmation.address,
+      txHash: result.txHash,
+      contractAddress: result.tokenAddress,
     };
+  }
+
+  _post(body) {
+    return new Promise((resolve, reject) => {
+      const data = JSON.stringify(body);
+      const url = new URL(BANKR_API_URL);
+
+      const options = {
+        hostname: url.hostname,
+        path: url.pathname,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-Key': this.apiKey,
+          'Content-Length': Buffer.byteLength(data),
+        },
+      };
+
+      const req = https.request(options, (res) => {
+        let responseData = '';
+        res.on('data', (chunk) => { responseData += chunk; });
+        res.on('end', () => {
+          try {
+            resolve(JSON.parse(responseData));
+          } catch {
+            reject(new Error(`Bankr API returned non-JSON: ${responseData.substring(0, 200)}`));
+          }
+        });
+      });
+
+      req.on('error', reject);
+      req.write(data);
+      req.end();
+    });
   }
 }
 

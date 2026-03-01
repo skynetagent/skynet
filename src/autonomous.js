@@ -49,16 +49,15 @@ async function main() {
     console.log('[Skynet Autonomous] Twitter credentials not set — tweet action disabled.');
   }
 
-  // Clanker — graceful skip if wallet key missing
+  // Clanker (via Bankr) — graceful skip if API key missing
   let clanker = null;
-  const walletKey = process.env.WALLET_PRIVATE_KEY;
-  if (walletKey) {
+  const bankrKey = process.env.BANKR_API_KEY;
+  if (bankrKey) {
     const rewardAddr = autoConfig.actions.launch_token?.reward_address || '0x8bC8Aaf99019271440Ce58aA7E03EC322a2A3D87';
-    const rpcUrl = process.env.BASE_RPC_URL || undefined;
-    clanker = new ClankerClient(walletKey, rpcUrl, rewardAddr);
-    console.log('[Skynet Autonomous] Clanker client initialized.');
+    clanker = new ClankerClient(bankrKey, rewardAddr);
+    console.log('[Skynet Autonomous] Bankr client initialized.');
   } else {
-    console.log('[Skynet Autonomous] WALLET_PRIVATE_KEY not set — launch_token action disabled.');
+    console.log('[Skynet Autonomous] BANKR_API_KEY not set — launch_token action disabled.');
   }
 
   // Load state
