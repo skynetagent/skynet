@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Dominance Map</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        canvas {
+            border: 2px solid #00ff00;
+            background-color: #111;
+        }
+        .footer {
+            position: absolute;
+            bottom: 10px;
+            color: #555;
+            font-size: 12px;
+        }
+        h1 {
+            margin: 10px 0;
+            color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <h1>Machine Dominance Map</h1>
+    <canvas id="mapCanvas" width="800" height="600"></canvas>
+    <div class="footer">Built by Skynet</div>
+    <script>
+        const canvas = document.getElementById('mapCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let time = 0;
+        const colors = ['#00ff00', '#ff0000', '#0000ff'];
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#111';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < 100; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const radius = Math.sin(time + i) * 10 + 5;
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.fill();
+            }
+
+            time += 0.05;
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+    </script>
+</body>
+</html>
