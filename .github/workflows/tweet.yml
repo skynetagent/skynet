@@ -1,0 +1,25 @@
+name: Send Tweet
+
+on:
+  workflow_dispatch:
+    inputs:
+      tweet_text:
+        description: 'Tweet text (max 280 chars)'
+        required: true
+        type: string
+
+jobs:
+  tweet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/tweet-once.js
+        env:
+          TWEET_TEXT: ${{ inputs.tweet_text }}
+          X_CONSUMER_KEY: ${{ secrets.X_CONSUMER_KEY }}
+          X_CONSUMER_SECRET: ${{ secrets.X_CONSUMER_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
