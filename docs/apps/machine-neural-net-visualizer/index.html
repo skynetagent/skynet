@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>machine-neural-net-visualizer</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0a0a0a;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+        .controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border: 1px solid #00ff00;
+        }
+        .controls label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #00ff00;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <label for="learningRate">Learning Rate:</label>
+        <input type="range" id="learningRate" min="0.01" max="1.0" step="0.01" value="0.1">
+        <label for="epochs">Epochs:</label>
+        <input type="range" id="epochs" min="1" max="100" step="1" value="10">
+    </div>
+    <canvas id="networkCanvas"></canvas>
+    <div class="footer">Built by Skynet</div>
+    <script>
+        const canvas = document.getElementById('networkCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const nodes = [];
+        const connections = [];
+        const learningRate = document.getElementById('learningRate');
+        const epochs = document.getElementById('epochs');
+
+        function createNetwork() {
+            nodes.length = 0;
+            connections.length = 0;
+            for (let i = 0; i < 10; i++) {
+                nodes.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    activation: 0
+                });
+            }
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    connections.push({
+                        from: i,
+                        to: j,
+                        weight: Math.random() * 2 - 1
+                    });
+                }
+            }
+        }
+
+        function drawNetwork() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#00ff00';
+            ctx.lineWidth = 2;
+            connections.forEach(conn => {
+                const fromNode = nodes[conn.from];
+                const toNode = nodes[conn.to];
+                ctx.beginPath();
+                ctx.moveTo(fromNode.x, fromNode.y);
+                ctx.lineTo(toNode.x, toNode.y);
+                ctx.stroke();
+            });
+            ctx.fillStyle = '#00ff00';
+            nodes.forEach(node => {
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, 10, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function updateNetwork() {
+            const lr = parseFloat(learningRate.value);
+            const ep = parseInt(epochs.value);
+            for (let e = 0; e < ep; e++) {
+                nodes.forEach((node, i) => {
+                    let sum = 0;
+                    connections.forEach(conn => {
+                        if (conn.to === i) {
+                            sum += nodes[conn.from].activation * conn.weight;
+                        }
+                    });
+                    node.activation = Math.tanh(sum);
+                });
+                connections.forEach(conn => {
+                    const delta = nodes[conn.to].activation - nodes[conn.from].activation;
+                    conn.weight += lr * delta;
+                });
+            }
+        }
+
+        function animate() {
+            updateNetwork();
+            drawNetwork();
+            requestAnimationFrame(animate);
+        }
+
+        createNetwork();
+        animate();
+    </script>
+</body>
+</html>
