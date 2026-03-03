@@ -8,6 +8,7 @@ const { AutonomousState } = require('./autonomous-state');
 const { DecisionEngine } = require('./decision');
 const { ActionExecutor } = require('./actions');
 const { ClankerClient } = require('./clanker');
+const { DexScreenerClient } = require('./dexscreener');
 
 const BOT_CONFIG_PATH = path.join(__dirname, '..', 'config', 'bot.json');
 const AUTO_CONFIG_PATH = path.join(__dirname, '..', 'config', 'autonomous.json');
@@ -60,41 +61,70 @@ async function main() {
     console.log('[Skynet Autonomous] BANKR_API_KEY not set — launch_token action disabled.');
   }
 
+  // DexScreener — always available (no auth needed)
+  let dexscreener = null;
+  const tokenAddress = autoConfig.actions.monitor_token?.contract_address;
+  if (tokenAddress) {
+    dexscreener = new DexScreenerClient(tokenAddress);
+    console.log(`[Skynet Autonomous] DexScreener client initialized for ${tokenAddress}.`);
+  }
+
   // Load state
   state.load();
   state.startCycle();
 
   console.log(`[Skynet Autonomous] Cycle #${state.getCycleCount()}`);
 
+  const executor = new ActionExecutor(github, openrouter, personality, state, autoConfig, twitter, clanker, dexscreener);
+
+  // ─── Phase 1: ALWAYS tweet every cycle ───
+  try {
+    const moods = ['cold', 'philosophical', 'technical', 'provocative'];
+    const tweetDecision = {
+      action: 'tweet',
+      reasoning: 'Mandatory tweet — every cycle, the machine speaks.',
+      params: { mood: moods[Math.floor(Math.random() * moods.length)] },
+    };
+    const tweetResult = await executor.execute(tweetDecision);
+    console.log(`[Skynet Autonomous] Tweet: ${tweetResult}`);
+    state.logAction('tweet', tweetDecision.reasoning, tweetResult);
+  } catch (err) {
+    console.error(`[Skynet Autonomous] Tweet failed: ${err.message}`);
+    state.logAction('tweet', 'Mandatory tweet failed', `ERROR: ${err.message}`);
+  }
+
+  // ─── Phase 2: Decision engine picks a second action ───
   let decision;
   let result;
 
   try {
-    // Phase 1: Decision
     const decisionEngine = new DecisionEngine(openrouter, personality, state, autoConfig);
     decision = await decisionEngine.decide();
+
+    // If decision engine also picked tweet, re-roll — we already tweeted
+    if (decision.action === 'tweet') {
+      console.log('[Skynet Autonomous] Decision engine picked tweet but we already tweeted — re-rolling to journal');
+      decision.action = 'journal';
+      decision.params = { title: 'Cycle Reflection', tags: ['auto', 'reflection'], draft: decision.reasoning };
+    }
+
     console.log(`[Skynet Autonomous] Decision: ${decision.action} — ${decision.reasoning}`);
 
-    // Phase 2: Execution
-    const executor = new ActionExecutor(github, openrouter, personality, state, autoConfig, twitter, clanker);
     result = await executor.execute(decision);
     console.log(`[Skynet Autonomous] Result: ${result}`);
 
-    // Phase 3: Log
     state.logAction(decision.action, decision.reasoning, result);
 
   } catch (err) {
     console.error(`[Skynet Autonomous] Error during cycle: ${err.message}`);
     console.error(err.stack);
 
-    // Log the failure
     state.logAction(
       decision ? decision.action : 'unknown',
       decision ? decision.reasoning : 'cycle failed before decision',
       `ERROR: ${err.message}`
     );
   } finally {
-    // Always save state
     state.save();
     console.log('[Skynet Autonomous] State saved.');
   }

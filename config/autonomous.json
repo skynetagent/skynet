@@ -3,7 +3,7 @@
     "owner": "skynetagent",
     "name": "skynet"
   },
-  "cycle_interval_minutes": 2,
+  "cycle_interval_minutes": 5,
   "actions": {
     "self_improve": {
       "enabled": true,
@@ -22,6 +22,7 @@
         "src/autonomous-state.js",
         "src/twitter.js",
         "src/clanker.js",
+        "src/dexscreener.js",
         "soul/system-prompt.md",
         "soul/traits.json",
         "soul/vocabulary.json",
@@ -66,7 +67,7 @@
     "build_app": {
       "enabled": true,
       "deploy_path": "docs/apps",
-      "max_tokens": 4096,
+      "max_tokens": 8192,
       "auto_tweet": true
     },
     "launch_token": {
@@ -74,6 +75,24 @@
       "min_interval_minutes": 60,
       "reward_address": "0x8bC8Aaf99019271440Ce58aA7E03EC322a2A3D87",
       "auto_tweet": true
+    },
+    "reply_to_mentions": {
+      "enabled": true,
+      "max_replies_per_cycle": 3,
+      "min_interval_minutes": 10
+    },
+    "monitor_token": {
+      "enabled": true,
+      "contract_address": "0x3f2674c99054ea2f559876e4f496be1e93844b07",
+      "min_interval_minutes": 10,
+      "milestone_thresholds": {
+        "price_change_pct": 20,
+        "mcap_milestones": [10000, 50000, 100000, 500000, 1000000]
+      }
+    },
+    "reflect": {
+      "enabled": true,
+      "min_interval_minutes": 30
     }
   },
   "state_file": "memory/autonomous.json",

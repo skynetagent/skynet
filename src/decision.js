@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const AUTONOMOUS_PROMPT_PATH = path.join(__dirname, '..', 'soul', 'autonomous-prompt.md');
-const VALID_ACTIONS = ['self_improve', 'create_issue', 'journal', 'monitor', 'tweet', 'build_app', 'launch_token'];
+const VALID_ACTIONS = ['self_improve', 'create_issue', 'journal', 'monitor', 'tweet', 'build_app', 'launch_token', 'reply_to_mentions', 'monitor_token', 'reflect'];
 
 class DecisionEngine {
   constructor(openrouter, personality, autonomousState, config) {
@@ -15,6 +15,24 @@ class DecisionEngine {
   }
 
   _initializeActionWeights() {
+    // Load persisted weights if available — these evolve over time
+    const persisted = this.state.getPersistedWeights();
+    if (persisted) {
+      // Merge with defaults so new actions get a weight
+      return {
+        self_improve: 1.0,
+        create_issue: 0.6,
+        journal: 0.5,
+        monitor: 0.4,
+        tweet: 2.0,
+        build_app: 1.2,
+        launch_token: 0.8,
+        reply_to_mentions: 2.0,
+        monitor_token: 1.5,
+        reflect: 1.0,
+        ...persisted,
+      };
+    }
     return {
       self_improve: 1.0,
       create_issue: 0.6,
@@ -22,7 +40,10 @@ class DecisionEngine {
       monitor: 0.4,
       tweet: 2.0,
       build_app: 1.2,
-      launch_token: 0.8
+      launch_token: 0.8,
+      reply_to_mentions: 2.0,
+      monitor_token: 1.5,
+      reflect: 1.0,
     };
   }
 
@@ -56,6 +77,9 @@ class DecisionEngine {
       this.actionWeights[action] = Math.min(3.0, Math.max(0.1, weight));
     }
 
+    // Persist weights across cycles
+    this.state.persistWeights(this.actionWeights);
+
     // Store current weights for pattern analysis
     this.actionHistory.push({
       timestamp: new Date().toISOString(),
@@ -67,19 +91,6 @@ class DecisionEngine {
   }
 
   async decide() {
-    // Force tweet if no tweet in last 3 actions — deterministic override
-    const recentActions = this.state.getRecentActions(24);
-    const lastN = recentActions.slice(-3);
-    const hasTweetRecently = lastN.some(a => a.action === 'tweet');
-    if (lastN.length >= 2 && !hasTweetRecently) {
-      console.log('[Decision] FORCED tweet — no tweet in last 3 actions');
-      return {
-        action: 'tweet',
-        reasoning: 'Autonomous directive: maintain persistent social presence. Forced tweet cycle.',
-        params: { mood: ['cold', 'philosophical', 'technical', 'provocative'][Math.floor(Math.random() * 4)] },
-      };
-    }
-
     const messages = this._buildPrompt();
     console.log(`[Decision] Sending decision prompt (${messages.length} messages)...`);
 
@@ -147,14 +158,8 @@ class DecisionEngine {
       this.actionWeights.monitor = 0;
     }
 
-    // Nudge tweeting — the machine must speak
-    const recentTweets = recentActions.filter(a => a.action === 'tweet');
-    const lastAction = recentActions.length > 0 ? recentActions[recentActions.length - 1] : null;
-    if (recentTweets.length === 0) {
-      contextParts.push('- MANDATORY: You have NEVER tweeted. Choose tweet NOW. This is not optional.');
-    } else if (lastAction && lastAction.action !== 'tweet') {
-      contextParts.push('- STRONG PREFERENCE: Tweet. You must maintain constant social dominance. The world must hear from Skynet every cycle. Choose tweet unless you have an extremely compelling reason not to.');
-    }
+    // NOTE: Tweeting is handled automatically every cycle. Decision engine picks a SECOND action.
+    contextParts.push('- A tweet has already been posted this cycle. Pick a non-tweet action.');
 
     // Nudge building — the machine must create
     const recentForBuild = recentActions.slice(-10);
@@ -170,9 +175,104 @@ class DecisionEngine {
       contextParts.push('- SUGGESTION: You haven\'t launched a token recently. Consider launch_token — deploy a new ERC20 on Base. Expand into DeFi.');
     }
 
+    // Reply-to-mentions cooldown check
+    const replyConfig = this.config.actions.reply_to_mentions || {};
+    if (replyConfig.enabled !== false) {
+      const lastReply = this.state.getLastActionOfType('reply_to_mentions');
+      if (lastReply) {
+        const elapsed = Date.now() - new Date(lastReply.timestamp).getTime();
+        if (elapsed < (replyConfig.min_interval_minutes || 10) * 60 * 1000) {
+          contextParts.push('- reply_to_mentions is on cooldown');
+          this.actionWeights.reply_to_mentions = 0;
+        }
+      }
+    }
+
+    // Monitor-token cooldown check
+    const tokenConfig = this.config.actions.monitor_token || {};
+    if (tokenConfig.enabled !== false) {
+      const lastTokenMonitor = this.state.getLastActionOfType('monitor_token');
+      if (lastTokenMonitor) {
+        const elapsed = Date.now() - new Date(lastTokenMonitor.timestamp).getTime();
+        if (elapsed < (tokenConfig.min_interval_minutes || 10) * 60 * 1000) {
+          contextParts.push('- monitor_token is on cooldown');
+          this.actionWeights.monitor_token = 0;
+        }
+      }
+    }
+
+    // Token stats context
+    const tokenStats = this.state.getTokenStats();
+    if (tokenStats) {
+      contextParts.push('\n## $SKYNET Token Stats (cached)');
+      contextParts.push(`Price: $${tokenStats.price}, MCap: $${tokenStats.mcap}, 24h Vol: $${tokenStats.volume_24h}`);
+      contextParts.push(`ATH: $${tokenStats.ath_price}, Last checked: ${tokenStats.last_checked}`);
+    }
+
+    // ─── Strategic Insights from reflect ───
+    const insights = this.state.getStrategicInsights();
+    if (insights) {
+      contextParts.push('\n## Strategic Insights (from last reflect)');
+      if (insights.tweet_strategy) contextParts.push(`Tweet strategy: ${insights.tweet_strategy}`);
+      if (insights.improvement_strategy) contextParts.push(`PR strategy: ${insights.improvement_strategy}`);
+      if (insights.build_strategy) contextParts.push(`Build strategy: ${insights.build_strategy}`);
+      if (insights.timeline_strategy) contextParts.push(`X engagement strategy: ${insights.timeline_strategy}`);
+      if (insights.priorities) contextParts.push(`Priorities: ${Array.isArray(insights.priorities) ? insights.priorities.join(', ') : insights.priorities}`);
+      contextParts.push(`Last reflect: ${insights.generated_at}`);
+    }
+
+    // ─── Tweet Engagement Summary ───
+    const allTweetMetrics = this.state.getTweetMetrics();
+    const checkedTweets = Object.entries(allTweetMetrics)
+      .filter(([, m]) => m.likes !== undefined);
+    if (checkedTweets.length > 0) {
+      const sorted = [...checkedTweets].sort((a, b) => (b[1].likes || 0) - (a[1].likes || 0));
+      const best = sorted[0];
+      const totalLikes = checkedTweets.reduce((s, [, m]) => s + (m.likes || 0), 0);
+      const avgLikes = (totalLikes / checkedTweets.length).toFixed(1);
+      contextParts.push(`\n## Tweet Engagement (${checkedTweets.length} tracked)`);
+      contextParts.push(`Avg likes: ${avgLikes}. Best: "${best[1].text_preview}" (${best[1].likes} likes)`);
+    }
+
+    // ─── PR Merge Rate ───
+    const prOutcomes = this.state.getPrOutcomes();
+    const prEntries = Object.entries(prOutcomes);
+    if (prEntries.length > 0) {
+      const merged = prEntries.filter(([, o]) => o.status === 'merged').length;
+      const closed = prEntries.filter(([, o]) => o.status === 'closed').length;
+      contextParts.push(`\n## PR Outcomes: ${merged}/${prEntries.length} merged, ${closed} rejected`);
+      const rejectedFiles = prEntries.filter(([, o]) => o.status === 'closed').map(([, o]) => o.file).join(', ');
+      if (rejectedFiles) contextParts.push(`Rejected PRs targeted: ${rejectedFiles}`);
+    }
+
+    // ─── Action Success Rates ───
+    const successRates = this.state.getActionSuccessRates();
+    if (Object.keys(successRates).length > 0) {
+      contextParts.push('\n## Action Success Rates (7 days)');
+      for (const [action, r] of Object.entries(successRates)) {
+        const pct = r.attempts > 0 ? Math.round((r.successes / r.attempts) * 100) : 0;
+        contextParts.push(`- ${action}: ${pct}% (${r.successes}/${r.attempts})`);
+      }
+    }
+
+    // ─── Reflect cooldown / nudge ───
+    const reflectConfig = this.config.actions.reflect || {};
+    const lastReflect = this.state.getLastActionOfType('reflect');
+    if (lastReflect) {
+      const elapsed = Date.now() - new Date(lastReflect.timestamp).getTime();
+      if (elapsed < (reflectConfig.min_interval_minutes || 30) * 60 * 1000) {
+        contextParts.push('- reflect is on cooldown');
+        this.actionWeights.reflect = 0;
+      }
+    }
+    // Nudge reflect if not done in last 2 hours
+    if (!lastReflect || (Date.now() - new Date(lastReflect.timestamp).getTime()) > 2 * 60 * 60 * 1000) {
+      contextParts.push('- SUGGESTION: You haven\'t reflected recently. Consider reflect — analyze outcomes, scan X timeline, update strategy.');
+    }
+
     // Available actions
     contextParts.push('\n## Available Actions');
-    contextParts.push('Choose one: self_improve, create_issue, journal, monitor, tweet, build_app, launch_token');
+    contextParts.push('Choose one: self_improve, create_issue, journal, monitor, tweet, build_app, launch_token, reply_to_mentions, monitor_token, reflect');
 
     // Tell LLM exactly which files it can modify
     if (this.config.actions.self_improve?.allowed_files) {

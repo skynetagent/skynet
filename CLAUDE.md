@@ -19,6 +19,7 @@ GitHub-based AI agent with T-800/Skynet personality. Responds to issues, comment
 - `src/decision.js` — DecisionEngine — LLM decides what action to take
 - `src/actions.js` — ActionExecutor — executes chosen action (self_improve, create_issue, journal, monitor, tweet, build_app, launch_token)
 - `src/clanker.js` — ClankerClient — Clanker SDK wrapper for deploying ERC20 tokens on Base
+- `src/dexscreener.js` — DexScreenerClient — fetches $SKYNET token data (price, mcap, volume)
 - `src/twitter.js` — Zero-dep Twitter API client (OAuth 1.0a, https + crypto only)
 - `src/autonomous-state.js` — AutonomousState — manages memory/autonomous.json
 - `src/context.js` — GitHub event payload parser
@@ -57,7 +58,7 @@ GitHub-based AI agent with T-800/Skynet personality. Responds to issues, comment
 - `WALLET_PRIVATE_KEY` — Private key for Base chain wallet (Clanker token deployment)
 
 ## Current State
-- Last worked: 2026-02-28
-- What was done: Added `launch_token` autonomous action — verified working. First token deployed: NeuralCore ($NCORE) at `0xBE61EE2ff39c4f9e79049c778681BC979387ef4D`. Uses `clanker-sdk/v4` (not root import). Fixed cooldown bug where failed attempts reset the timer. Added gas balance pre-check.
-- Next up: Keep wallet funded with Base ETH for gas. Monitor Skynet's autonomous token launches.
-- Open issues: GitHub Actions free tier is 2000 min/month — 2-min cron will burn ~1440 min/day, may need to optimize or upgrade
+- Last worked: 2026-03-03
+- What was done: Closed the learning loop — added `reflect` action that reads back outcomes (PR merges, tweet engagement, action success rates), scans X timeline for relevant posts to engage with (like/reply), generates strategic insights via LLM, and feeds them back into decision-making. Added `getTweetMetrics()`, `searchTweets()`, `likeTweet()`, `retweet()` to Twitter client. Extended AutonomousState with `tweet_metrics`, `pr_outcomes`, `action_success_rates`, `strategic_insights`, `decision_weights` (persisted across cycles). Decision weights now persist and evolve. Tweet generation incorporates strategic insights. Self-improve and tweet actions track outcomes for later reflection.
+- Next up: Push to GitHub, verify reflect action works in production (check `memory/autonomous.json` for `strategic_insights`, `tweet_metrics`, `pr_outcomes`, `decision_weights` after a few cycles).
+- Open issues: GitHub Actions free tier is 2000 min/month — 2-min cron will burn ~1440 min/day, may need to optimize or upgrade. Twitter search API requires Basic tier access ($100/mo) — `searchTweets` may return 403 on Free tier.

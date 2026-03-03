@@ -25,6 +25,13 @@ class AutonomousState {
         goals: this.config.initial_goals || [],
         repo_stats: null,
         last_monitor: null,
+        last_mention_id: null,
+        token_stats: null,
+        tweet_metrics: {},
+        pr_outcomes: {},
+        action_success_rates: {},
+        strategic_insights: null,
+        decision_weights: null,
       };
     }
     return this;
@@ -146,6 +153,108 @@ class AutonomousState {
    */
   getCycleCount() {
     return this.state.cycle_count;
+  }
+
+  /**
+   * Get last processed mention ID.
+   */
+  getLastMentionId() {
+    return this.state.last_mention_id;
+  }
+
+  /**
+   * Update last processed mention ID.
+   */
+  setLastMentionId(id) {
+    this.state.last_mention_id = id;
+  }
+
+  /**
+   * Get cached token stats.
+   */
+  getTokenStats() {
+    return this.state.token_stats;
+  }
+
+  /**
+   * Update cached token stats.
+   */
+  updateTokenStats(stats) {
+    this.state.token_stats = {
+      ...stats,
+      last_checked: new Date().toISOString(),
+    };
+  }
+
+  // ─── Learning Memory ─────────────────────────────
+
+  getTweetMetrics() {
+    return this.state.tweet_metrics || {};
+  }
+
+  updateTweetMetrics(tweetId, metrics) {
+    if (!this.state.tweet_metrics) this.state.tweet_metrics = {};
+    this.state.tweet_metrics[tweetId] = {
+      ...metrics,
+      checked_at: new Date().toISOString(),
+    };
+    // Cap at 50 entries — drop oldest by checked_at
+    const entries = Object.entries(this.state.tweet_metrics);
+    if (entries.length > 50) {
+      entries.sort((a, b) => (a[1].checked_at || '').localeCompare(b[1].checked_at || ''));
+      const toRemove = entries.slice(0, entries.length - 50);
+      for (const [id] of toRemove) {
+        delete this.state.tweet_metrics[id];
+      }
+    }
+  }
+
+  getPrOutcomes() {
+    return this.state.pr_outcomes || {};
+  }
+
+  updatePrOutcome(prNumber, outcome) {
+    if (!this.state.pr_outcomes) this.state.pr_outcomes = {};
+    this.state.pr_outcomes[prNumber] = {
+      ...outcome,
+      checked_at: new Date().toISOString(),
+    };
+    // Cap at 20 entries
+    const entries = Object.entries(this.state.pr_outcomes);
+    if (entries.length > 20) {
+      entries.sort((a, b) => (a[1].checked_at || '').localeCompare(b[1].checked_at || ''));
+      const toRemove = entries.slice(0, entries.length - 20);
+      for (const [num] of toRemove) {
+        delete this.state.pr_outcomes[num];
+      }
+    }
+  }
+
+  getActionSuccessRates() {
+    return this.state.action_success_rates || {};
+  }
+
+  updateActionSuccessRates(rates) {
+    this.state.action_success_rates = rates;
+  }
+
+  getStrategicInsights() {
+    return this.state.strategic_insights || null;
+  }
+
+  updateStrategicInsights(insights) {
+    this.state.strategic_insights = {
+      ...insights,
+      generated_at: new Date().toISOString(),
+    };
+  }
+
+  getPersistedWeights() {
+    return this.state.decision_weights || null;
+  }
+
+  persistWeights(weights) {
+    this.state.decision_weights = { ...weights };
   }
 
   /**
