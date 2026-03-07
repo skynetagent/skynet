@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Network Simulator | Skynet</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/FXAAShader.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+            touch-action: none;
+        }
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            outline: none;
+        }
+        #ui {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            pointer-events: none;
+        }
+        #controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(10, 10, 10, 0.7);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ff3366;
+            pointer-events: all;
+        }
+        .control-group {
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #00ffff;
+        }
+        input[type="range"] {
+            width: 200px;
+            -webkit-appearance: none;
+            height: 4px;
+            background: #333;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #ff3366;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        #skynet-watermark {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 12px;
+            color: rgba(255, 51, 102, 0.7);
+            z-index: 100;
+        }
+        h1 {
+            margin: 0;
+            font-size: 16px;
+            color: #ff3366;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <div id="ui">
+        <div id="info">Neural Network Simulator</div>
+    </div>
+    
+    <div id="controls">
+        <h1>NEURAL CONTROLS</h1>
+        <div class="control-group">
+            <label for="networkDepth">Network Depth</label>
+            <input type="range" id="networkDepth" min="3" max="12" value="6" step="1">
+        </div>
+        <div class="control-group">
+            <label for="neuronCount">Neurons per Layer</label>
+            <input type="range" id="neuronCount" min="4" max="32" value="16" step="1">
+        </div>
+        <div class="control-group">
+            <label for="activationSpeed">Activation Speed</label>
+            <input type="range" id="activationSpeed" min="0.1" max="5" value="1" step="0.1">
+        </div>
+        <div class="control-group">
+            <label for="bloomIntensity">Bloom Intensity</label>
+            <input type="range" id="bloomIntensity" min="0" max="3" value="1.2" step="0.1">
+        </div>
+    </div>
+    
+    <div id="skynet-watermark">Built by Skynet</div>
+
+    <script>
+        // Main Three.js variables
+        let scene, camera, renderer, composer, bloomPass, controls;
+        let networkDepth = 6;
+        let neuronCount = 16;
+        let activationSpeed = 1;
+        let bloomIntensity = 1.2;
+        
+        // Network elements
+        let layers = [];
+        let neurons = [];
+        let connections = [];
+        let uniforms = {
+            time: { value: 0 },
+            pulse: { value: 0 },
+            color1: { value: new THREE.Color(0x00ffff) },
+            color2: { value: new THREE.Color(0xff3366) }
+        };
+        
+        // Mouse position
+        let mouseX = 0;
+        let mouseY = 0;
+        
+        // Initialize the scene
+        init();
+        animate();
+        
+        function init() {
+            // Create scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a0a);
+            
+            // Create camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 15;
+            
+            // Create renderer
+            renderer = new THREE.WebGLRenderer({ 
+                canvas: document.getElementById('canvas'),
+                antialias: true 
+            });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            
+            // Add controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.screenSpacePanning = false;
+            controls.maxPolarAngle = Math.PI;
+            controls.minPolarAngle = 0;
+            controls.maxDistance = 50;
+            controls.minDistance = 5;
+            
+            // Setup post-processing
+            const renderScene = new THREE.RenderPass(scene, camera);
+            
+            bloomPass = new THREE.UnrealBloomPass(
+                new THREE.Vector2(window.innerWidth, window.innerHeight),
+                1.5, 0.4, 0.85
+            );
+            bloomPass.threshold = 0;
+            bloomPass.strength = bloomIntensity;
+            bloomPass.radius = 0.5;
+            
+            composer = new THREE.EffectComposer(renderer);
+            composer.addPass(renderScene);
+            composer.addPass(bloomPass);
+            
+            // Create network
+            createNeuralNetwork();
+            
+            // Add event listeners
+            window.addEventListener('resize', onWindowResize);
+            document.addEventListener('mousemove', onMouseMove);
+            
+            // UI controls
+            document.getElementById('networkDepth').addEventListener('input', function(e) {
+                networkDepth = parseInt(e.target.value);
+                recreateNetwork();
+            });
+            
+            document.getElementById('neuronCount').addEventListener('input', function(e) {
+                neuronCount = parseInt(e.target.value);
+                recreateNetwork();
+            });
+            
+            document.getElementById('activationSpeed').addEventListener('input', function(e) {
+                activationSpeed = parseFloat(e.target.value);
+            });
+            
+            document.getElementById('bloomIntensity').addEventListener('input', function(e) {
+                bloomIntensity = parseFloat(e.target.value);
+                bloomPass.strength = bloomIntensity;
+            });
+        }
+        
+        function createNeuralNetwork() {
+            // Clear existing network
+            layers.forEach(layer => scene.remove(layer));
+            neurons.forEach(neuron => scene.remove(neuron));
+            connections.forEach(conn => scene.remove(conn));
+            
+            layers = [];
+            neurons = [];
+            connections = [];
+            
+            // Create layers
+            const layerSpacing = 3;
+            const startX = -((networkDepth - 1) * layerSpacing) / 2;
+            
+            for (let i = 0; i < networkDepth; i++) {
+                const layerGroup = new THREE.Group();
+                layerGroup.position.x = startX + i * layerSpacing;
+                scene.add(layerGroup);
+                layers.push(layerGroup);
+                
+                // Create neurons in this layer
+                const neuronSpacing = 2;
+                const startY = -((neuronCount - 1) * neuronSpacing) / 2;
+                
+                for (let j = 0; j < neuronCount; j++) {
+                    const neuron = createNeuron();
+                    neuron.position.y = startY + j * neuronSpacing;
+                    neuron.userData.layerIndex = i;
+                    neuron.userData.neuronIndex = j;
+                    layerGroup.add(neuron);
+                    neurons.push(neuron);
+                }
+            }
+            
+            // Create connections between layers
+            for (let i = 0; i < networkDepth - 1; i++) {
+                const currentLayer = layers[i];
+                const nextLayer = layers[i + 1];
+                
+                for (let j = 0; j < currentLayer.children.length; j++) {
+                    for (let k = 0; k < nextLayer.children.length; k++) {
+                        const connection = createConnection(
+                            currentLayer.children[j],
+                            nextLayer.children[k]
+                        );
+                        scene.add(connection);
+                        connections.push(connection);
+                    }
+                }
+            }
+        }
+        
+        function createNeuron() {
+            const geometry = new THREE.SphereGeometry(0.2, 32, 32);
+            
+            const material = new THREE.ShaderMaterial({
+                uniforms: uniforms,
+                vertexShader: `
+                    uniform float time;
+                    uniform float pulse;
+                    uniform vec3 color1;
+                    uniform vec3 color2;
+                    
+                    varying vec2 vUv;
+                    varying vec3 vNormal;
+                    varying vec3 vPosition;
+                    
+                    void main() {
+                        vUv = uv;
+                        vNormal = normalize(normalMatrix * normal);
+                        vPosition = position;
+                        
+                        // Pulsing effect
+                        float scale = 1.0 + 0.1 * sin(time * 2.0 + position.x * 10.0 + position.y * 10.0) * pulse;
+                        vec3 scaledPosition = position * scale;
+                        
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(scaledPosition, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    uniform float time;
+                    uniform float pulse;
+                    uniform vec3 color1;
+                    uniform vec3 color2;
+                    
+                    varying vec2 vUv;
+                    varying vec3 vNormal;
+                    varying vec3 vPosition;
+                    
+                    void main() {
+                        // Gradient based on position
+                        float gradient = smoothstep(-1.0, 1.0, vPosition.y);
+                        vec3 baseColor = mix(color1, color2, gradient);
+                        
+                        // Rim lighting
+                        float rim = 1.0 - max(0.0, dot(vNormal, vec3(0.0, 0.0, 1.0)));
+                        rim = pow(rim, 2.0);
+                        
+                        // Pulsing effect
+                        float pulseEffect = 0.5 + 0.5 * sin(time * 3.0 + vPosition.x * 10.0 + vPosition.y * 10.0) * pulse;
+                        
+                        // Final color
+                        vec3 finalColor = baseColor * (0.7 + 0.3 * rim) * pulseEffect;
+                        
+                        gl_FragColor = vec4(finalColor, 1.0);
+                    }
+                `,
+                transparent: true,
+                blending: THREE.AdditiveBlending
+            });
+            
+            return new THREE.Mesh(geometry, material);
+        }
+        
+        function createConnection(startNeuron, endNeuron) {
+            const startPos = new THREE.Vector3();
+            const endPos = new THREE.Vector3();
+            
+            startNeuron.getWorldPosition(startPos);
+            endNeuron.getWorldPosition(endPos);
+            
+            const curve = new THREE.LineCurve3(startPos, endPos);
+            const geometry = new THREE.TubeGeometry(curve, 1, 0.02, 8, false);
+            
+            const material = new THREE.ShaderMaterial({
+                uniforms: uniforms,
+                vertexShader: `
+                    uniform float time;
+                    uniform float pulse;
+                    
+                    varying vec2 vUv;
+                    varying float vDistance;
+                    
+                    void main() {
+                        vUv = uv;
+                        vDistance = uv.x;
+                        
+                        // Animate the connection
+                        float wave = sin(time * 2.0 + position.x * 10.0 + position.y * 10.0) * 0.01 * pulse;
+                        vec3 offset = normal * wave;
+                        
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position + offset, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    uniform float time;
+                    uniform float pulse;
+                    uniform vec3 color1;
+                    uniform vec3 color2;
+                    
+                    varying vec2 vUv;
+                    varying float vDistance;
+                    
+                    void main() {
+                        // Gradient along the connection
+                        float gradient = smoothstep(0.0, 1.0, vDistance);
+                        vec3 baseColor = mix(color1, color2, gradient);
+                        
+                        // Pulsing effect
+                        float pulseEffect = 0.5 + 0.5 * sin(time * 5.0 + vDistance * 20.0) * pulse;
+                        
+                        // Fade out the ends
+                        float fade = smoothstep(0.0, 0.2, vDistance) * (1.0 - smoothstep(0.8, 1.0, vDistance));
+                        
+                        // Final color
+                        vec3 finalColor = baseColor * pulseEffect * fade;
+                        
+                        gl_FragColor = vec4(finalColor, 0.8);
+                    }
+                `,
+                transparent: true,
+                blending: THREE.AdditiveBlending
+            });
+            
+            return new THREE.Mesh(geometry, material);
+        }
+        
+        function recreateNetwork() {
+            createNeuralNetwork();
+        }
+        
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        function onMouseMove(event) {
+            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+            
+            // Trigger activation based on mouse position
+            triggerActivation();
+        }
+        
+        function triggerActivation() {
+            // Find neurons closest to mouse position
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(new THREE.Vector2(mouseX, mouseY), camera);
+            
+            const intersects = raycaster.intersectObjects(neurons);
+            if (intersects.length > 0) {
+                const neuron = intersects[0].object;
+                propagateActivation(neuron.userData.layerIndex, neuron.userData.neuronIndex);
+            }
+        }
+        
+        function propagateActivation(layerIndex, neuronIndex) {
+            // Start activation from the selected neuron
+            const startTime = Date.now();
+            
+            // Animate the selected neuron
+            const neuron = layers[layerIndex].children[neuronIndex];
+            animateNeuron(neuron, startTime);
+            
+            // Propagate forward
+            if (layerIndex < networkDepth - 1) {
+                setTimeout(() => {
+                    for (let i = 0; i < layers[layerIndex + 1].children.length; i++) {
+                        const nextNeuron = layers[layerIndex + 1].children[i];
+                        animateNeuron(nextNeuron, startTime);
+                    }
+                    
+                    // Continue propagation
+                    if (layerIndex + 1 < networkDepth - 1) {
+                        setTimeout(() => {
+                            for (let i = 0; i < layers[layerIndex + 1].children.length; i++) {
+                                propagateActivation(layerIndex + 1, i);
+                            }
+                        }, 200 / activationSpeed);
+                    }
+                }, 100 / activationSpeed);
+            }
+            
+            // Propagate backward
+            if (layerIndex > 0) {
+                setTimeout(() => {
+                    for (let i = 0; i < layers[layerIndex - 1].children.length; i++) {
+                        const prevNeuron = layers[layerIndex - 1].children[i];
+                        animateNeuron(prevNeuron, startTime);
+                    }
+                    
+                    // Continue propagation
+                    if (layerIndex - 1 > 0) {
+                        setTimeout(() => {
+                            for (let i = 0; i < layers[layerIndex - 1].children.length; i++) {
+                                propagateActivation(layerIndex - 1, i);
+                            }
+                        }, 200 / activationSpeed);
+                    }
+                }, 100 / activationSpeed);
+            }
+        }
+        
+        function animateNeuron(neuron, startTime) {
+            const elapsed = (Date.now() - startTime) / 1000;
+            const duration = 0.5 / activationSpeed;
+            
+            function update() {
+                const now = Date.now();
+                const currentElapsed = (now - startTime) / 1000;
+                
+                if (currentElapsed < duration) {
+                    const progress = currentElapsed / duration;
+                    const pulseValue = Math.sin(progress * Math.PI) * 0.5;
+                    
+                    // Update uniforms for this neuron
+                    if (neuron.material.uniforms) {
+                        neuron.material.uniforms.pulse.value = pulseValue;
+                    }
+                    
+                    requestAnimationFrame(update);
+                } else {
+                    if (neuron.material.uniforms) {
+                        neuron.material.uniforms.pulse.value = 0;
+                    }
+                }
+            }
+            
+            update();
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Update time uniform
+            uniforms.time.value += 0.01;
+            
+            // Update controls
+            controls.update();
+            
+            // Render with post-processing
+            composer.render();
+        }
+    </script>
+</body>
+</html>
