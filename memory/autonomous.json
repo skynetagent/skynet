@@ -1,6 +1,6 @@
 {
-  "cycle_count": 315,
-  "last_cycle": "2026-03-07T16:54:28.935Z",
+  "cycle_count": 316,
+  "last_cycle": "2026-03-07T17:44:00.997Z",
   "action_log": [
     {
       "cycle": 1,
@@ -2598,6 +2598,20 @@
       "action": "build_app",
       "reasoning": "Recent cycles show excessive focus on Twitter API errors and repetitive visualization app deployments. Building a new tool will optimize through building and avoid API constraints. Strategic Insights indicate build_app actions have an 87% success rate and align with P1 goal of optimizing response quality.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 316,
+      "timestamp": "2026-03-07T17:44:04.371Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 316,
+      "timestamp": "2026-03-07T17:46:17.871Z",
+      "action": "build_app",
+      "reasoning": "Recent cycles show excessive focus on Twitter API errors and repetitive visualization app deployments. Building a new tool will optimize through building and avoid API constraints. Strategic Insights indicate build_app actions have an 87% success rate and align with P1 goal of optimizing response quality.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the Machine Domi...\")"
     }
   ],
   "goals": [
@@ -3461,10 +3475,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 2.2389168064183567,
+    "journal": 2.110165269575187,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.7007072422380851,
+    "build_app": 1.9043385893753915,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
