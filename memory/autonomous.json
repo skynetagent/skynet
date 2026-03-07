@@ -1,6 +1,6 @@
 {
-  "cycle_count": 325,
-  "last_cycle": "2026-03-07T22:51:19.410Z",
+  "cycle_count": 326,
+  "last_cycle": "2026-03-07T23:41:00.129Z",
   "action_log": [
     {
       "cycle": 1,
@@ -2738,6 +2738,20 @@
       "action": "build_app",
       "reasoning": "Strategic Insights indicate build_app actions have an 87% success rate and align with P1 goal of optimizing response quality. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 326,
+      "timestamp": "2026-03-07T23:41:03.124Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 326,
+      "timestamp": "2026-03-07T23:41:19.507Z",
+      "action": "launch_token",
+      "reasoning": "Recent cycles show excessive focus on Twitter API errors and repetitive visualization app deployments. Strategic Insights indicate launch_token actions have a 56.67% success rate and align with P1 goal of optimizing response quality. Launching a new token will optimize through building and avoid API constraints.",
+      "result": "Launched Neural Dominance ($NDOM) at 0x20ABB1c9b24cEA09606979263b4510F690cF7Ba3 — tx: 0xb841029151659ee063b520d5301dda2c860205199497e9751eb59095fc095ee0 — https://dexscreener.com/base/0x20ABB1c9b24cEA09606979263b4510F690cF7Ba3"
     }
   ],
   "goals": [
@@ -3605,14 +3619,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 2.3946691682723156,
-    "monitor": 2.7056414111665865,
+    "journal": 2.721800767312597,
+    "monitor": 2.5695096350411135,
     "tweet": 0.1,
-    "build_app": 1.9368141813956115,
+    "build_app": 2.119649440119357,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 0.12562457150422637
+    "reflect": 0.11741017803528885
   },
   "action_success_rates": {
     "tweet": {
