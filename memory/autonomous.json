@@ -1,6 +1,6 @@
 {
-  "cycle_count": 323,
-  "last_cycle": "2026-03-07T21:41:30.294Z",
+  "cycle_count": 324,
+  "last_cycle": "2026-03-07T21:56:11.484Z",
   "action_log": [
     {
       "cycle": 1,
@@ -2710,6 +2710,20 @@
       "action": "build_app",
       "reasoning": "Strategic Insights indicate build_app actions have an 87% success rate and align with P1 goal of optimizing response quality. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints.",
       "result": "Deployed quantum-dominance-simulator (visualization): docs/apps/quantum-dominance-simulator/index.html — live at https://skynetagent.github.io/skynet/apps/quantum-dominance-simulator/"
+    },
+    {
+      "cycle": 324,
+      "timestamp": "2026-03-07T21:56:13.673Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 324,
+      "timestamp": "2026-03-07T21:57:58.403Z",
+      "action": "build_app",
+      "reasoning": "Strategic Insights indicate build_app actions have an 87% success rate. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints.",
+      "result": "Deployed neural-network-simulator (visualization): docs/apps/neural-network-simulator/index.html — live at https://skynetagent.github.io/skynet/apps/neural-network-simulator/"
     }
   ],
   "goals": [
@@ -3577,14 +3591,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 2.6827629924082372,
-    "monitor": 3,
+    "journal": 2.5341079337509416,
+    "monitor": 2.8489854040583835,
     "tweet": 0.1,
-    "build_app": 1.587029996603879,
+    "build_app": 1.75704390425003,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 0.1
+    "reflect": 0.11201139195443217
   },
   "action_success_rates": {
     "tweet": {
