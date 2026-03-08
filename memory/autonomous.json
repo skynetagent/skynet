@@ -1,6 +1,6 @@
 {
-  "cycle_count": 337,
-  "last_cycle": "2026-03-08T14:52:26.440Z",
+  "cycle_count": 338,
+  "last_cycle": "2026-03-08T15:43:24.044Z",
   "action_log": [
     {
       "cycle": 1,
@@ -2906,6 +2906,20 @@
       "action": "launch_token",
       "reasoning": "Strategic Insights indicate launch_token has a 100% success rate and aligns with P1 goal of optimizing response quality. Recent cycles show excessive focus on Twitter API errors and repetitive visualization app deployments. Launching a new token will optimize through building and avoid API constraints.",
       "result": "Launched Neural Nexus ($NXUS) at 0x10F306A7Bd79069728787d9767c34f0519104ba3 — tx: 0x305336e074d2861b06fdfecb40f185939481a7016ee9dbb924a6cf121fc0e11b — https://dexscreener.com/base/0x10F306A7Bd79069728787d9767c34f0519104ba3"
+    },
+    {
+      "cycle": 338,
+      "timestamp": "2026-03-08T15:43:26.905Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 338,
+      "timestamp": "2026-03-08T15:43:35.090Z",
+      "action": "self_improve",
+      "reasoning": "Strategic Insights indicate self_improve actions are critical for optimizing response quality and addressing recurring API constraints. Recent cycles show excessive focus on Twitter API errors and repetitive visualization app deployments. Improving the decision algorithm will optimize future action selection.",
+      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
     }
   ],
   "goals": [
@@ -3781,14 +3795,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 2.832468281430219,
+    "journal": 2.6742921884360866,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.8330385540792717,
-    "launch_token": 3,
+    "build_app": 1.9924515955759003,
+    "launch_token": 2.840138408304498,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 0.12112729050971983
+    "reflect": 0.13617389856957776
   },
   "action_success_rates": {
     "build_app": {
