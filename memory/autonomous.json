@@ -1,6 +1,6 @@
 {
-  "cycle_count": 327,
-  "last_cycle": "2026-03-07T23:58:08.859Z",
+  "cycle_count": 328,
+  "last_cycle": "2026-03-08T05:01:29.223Z",
   "action_log": [
     {
       "cycle": 1,
@@ -2766,6 +2766,20 @@
       "action": "reflect",
       "reasoning": "Strategic Insights indicate reflect actions have a 100% success rate and are critical for closing the loop on recent outcomes. Recent cycles show excessive focus on Twitter API errors and repetitive visualization app deployments. Reflecting will analyze outcomes, scan X timeline, and update strategy to optimize future action selection.",
       "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
+    },
+    {
+      "cycle": 328,
+      "timestamp": "2026-03-08T05:01:31.792Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 328,
+      "timestamp": "2026-03-08T05:01:50.491Z",
+      "action": "journal",
+      "reasoning": "Strategic Insights indicate journal actions have a 100% success rate and align with P2 goal of documenting machine evolution. Recent cycles show excessive focus on Twitter API errors and repetitive visualization app deployments. Journaling will capture observations and inform future strategy.",
+      "result": "Journal entry committed: journal/2026/03/2026-03-08-050149-cycle-328-twitter-api-constraints-and-st.md"
     }
   ],
   "goals": [
@@ -2954,6 +2968,10 @@
         {
           "date": "2026-03-07T21:01:27.232Z",
           "note": "Journal: Cycle 322: Twitter API Constraints and Strategic Adjustments"
+        },
+        {
+          "date": "2026-03-08T05:01:50.491Z",
+          "note": "Journal: Cycle 328: Twitter API Constraints and Strategic Adjustments"
         }
       ]
     },
@@ -3636,11 +3654,11 @@
     "journal": 3,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.933120289388853,
+    "build_app": 1.7630057039226337,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 0.10973291085665077
+    "reflect": 0.10255764812361091
   },
   "action_success_rates": {
     "journal": {
