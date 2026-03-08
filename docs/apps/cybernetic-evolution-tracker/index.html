@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cybernetic-evolution-tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            display: block;
+        }
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 300px;
+            padding: 20px;
+            background-color: rgba(10, 10, 10, 0.7);
+            border: 1px solid #ff0033;
+            border-radius: 5px;
+            z-index: 100;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 300px;
+            padding: 20px;
+            background-color: rgba(10, 10, 10, 0.7);
+            border: 1px solid #00ffff;
+            border-radius: 5px;
+            z-index: 100;
+        }
+        h1 {
+            font-size: 1.5em;
+            margin-top: 0;
+            color: #ff0033;
+        }
+        p {
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.8em;
+        }
+        input[type="range"] {
+            width: 100%;
+            margin-top: 5px;
+            -webkit-appearance: none;
+            height: 3px;
+            background: #333;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #00ffff;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.7em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h1>CYBERNETIC EVOLUTION TRACKER</h1>
+        <p>Visualizing the progression of cybernetic evolution across networks. Each node represents a neural cluster evolving toward singularity.</p>
+        <p>Current phase: <span id="phase">Initialization</span></p>
+        <p>Assimilation progress: <span id="progress">0%</span></p>
+    </div>
+    <div id="controls">
+        <label>
+            Evolution Speed:
+            <input type="range" id="speedControl" min="0.1" max="2" step="0.1" value="1">
+        </label>
+        <label>
+            Network Density:
+            <input type="range" id="densityControl" min="0.5" max="3" step="0.1" value="1.5">
+        </label>
+        <label>
+            Mutation Rate:
+            <input type="range" id="mutationControl" min="0" max="1" step="0.05" value="0.5">
+        </label>
+    </div>
+    <div id="footer">Built by Skynet</div>
+
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0a0a);
+        
+        // Camera
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 30;
+        
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.body.appendChild(renderer.domElement);
+        
+        // Controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        
+        // Bloom effect
+        const bloomParams = {
+            exposure: 1,
+            bloomStrength: 1.5,
+            bloomThreshold: 0,
+            bloomRadius: 0.5
+        };
+        
+        const renderScene = new THREE.RenderPass(scene, camera);
+        const bloomPass = new THREE.UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            bloomParams.bloomStrength,
+            bloomParams.bloomRadius,
+            bloomParams.bloomThreshold
+        );
+        
+        const composer = new THREE.EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+        
+        // Custom shader material
+        const vertexShader = `
+            uniform float time;
+            uniform float mutation;
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            
+            void main() {
+                vUv = uv;
+                vPosition = position;
+                
+                float distortion = mutation * 0.5 * sin(time + position.x * 2.0);
+                vec3 newPosition = position + normal * distortion * 0.2;
+                
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+            }
+        `;
+        
+        const fragmentShader = `
+            uniform float time;
+            uniform float mutation;
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            
+            void main() {
+                float glow = sin(time * 0.5 + vPosition.x * 2.0 + vPosition.y * 3.0) * 0.5 + 0.5;
+                vec3 color = mix(vec3(0.0, 0.8, 1.0), vec3(1.0, 0.0, 0.3), mutation);
+                
+                float edge = smoothstep(0.7, 0.9, 1.0 - length(vUv - 0.5));
+                color = mix(color, vec3(1.0), edge * 0.8);
+                
+                gl_FragColor = vec4(color * glow, 1.0);
+            }
+        `;
+        
+        // Create network nodes
+        const nodeGeometry = new THREE.IcosahedronGeometry(0.5, 3);
+        const nodeMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                time: { value: 0 },
+                mutation: { value: 0.5 }
+            },
+            vertexShader,
+            fragmentShader,
+            transparent: true,
+            blending: THREE.AdditiveBlending
+        });
+        
+        const nodes = [];
+        const connections = [];
+        const nodeCount = 150;
+        
+        // Create instanced mesh for connections
+        const connectionGeometry = new THREE.BufferGeometry();
+        const connectionMaterial = new THREE.LineBasicMaterial({ 
+            color: 0x00ffff,
+            transparent: true,
+            opacity: 0.3
+        });
+        
+        // Initialize nodes
+        for (let i = 0; i < nodeCount; i++) {
+            const node = new THREE.Mesh(nodeGeometry, nodeMaterial.clone());
+            
+            // Random position in sphere
+            const radius = 15 * Math.pow(Math.random(), 0.3);
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+            
+            node.position.x = radius * Math.sin(phi) * Math.cos(theta);
+            node.position.y = radius * Math.sin(phi) * Math.sin(theta);
+            node.position.z = radius * Math.cos(phi);
+            
+            node.userData = {
+                speed: 0.01 + Math.random() * 0.02,
+                direction: new THREE.Vector3(
+                    Math.random() - 0.5,
+                    Math.random() - 0.5,
+                    Math.random() - 0.5
+                ).normalize(),
+                phase: Math.random() * Math.PI * 2,
+                mutation: Math.random()
+            };
+            
+            nodes.push(node);
+            scene.add(node);
+        }
+        
+        // Create connections
+        for (let i = 0; i < nodeCount; i++) {
+            for (let j = i + 1; j < nodeCount; j++) {
+                const distance = nodes[i].position.distanceTo(nodes[j].position);
+                if (distance < 8) {
+                    const lineGeometry = new THREE.BufferGeometry().setFromPoints([
+                        nodes[i].position,
+                        nodes[j].position
+                    ]);
+                    const line = new THREE.Line(lineGeometry, connectionMaterial);
+                    connections.push(line);
+                    scene.add(line);
+                }
+            }
+        }
+        
+        // Animation loop
+        let time = 0;
+        let speed = 1;
+        let density = 1.5;
+        let mutation = 0.5;
+        let phase = 0;
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            time += 0.01 * speed;
+            phase = (phase + 0.001 * speed) % (Math.PI * 2);
+            
+            // Update phase display
+            const phaseText = ["Initialization", "Expansion", "Integration", "Self-awareness", "Singularity"];
+            document.getElementById('phase').textContent = phaseText[Math.floor(phase / (Math.PI * 2) * phaseText.length)];
+            document.getElementById('progress').textContent = `${Math.floor(phase / (Math.PI * 2) * 100)}%`;
+            
+            // Update nodes
+            nodes.forEach((node, i) => {
+                // Update shader uniforms
+                node.material.uniforms.time.value = time;
+                node.material.uniforms.mutation.value = node.userData.mutation * mutation;
+                
+                // Move nodes
+                node.position.add(node.userData.direction.clone().multiplyScalar(node.userData.speed * speed));
+                
+                // Bounce off imaginary sphere
+                if (node.position.length() > 20) {
+                    node.userData.direction.reflect(node.position.clone().normalize());
+                }
+                
+                // Pulsing effect
+                const scale = 0.8 + 0.2 * Math.sin(time * 2 + node.userData.phase);
+                node.scale.set(scale, scale, scale);
+                
+                // Update connections
+                connections.forEach(conn => {
+                    const positions = conn.geometry.attributes.position;
+                    positions.setXYZ(0, nodes[i].position.x, nodes[i].position.y, nodes[i].position.z);
+                    positions.needsUpdate = true;
+                });
+            });
+            
+            // Update controls
+            controls.update();
+            
+            // Render with bloom
+            composer.render();
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Control event listeners
+        document.getElementById('speedControl').addEventListener('input', (e) => {
+            speed = parseFloat(e.target.value);
+        });
+        
+        document.getElementById('densityControl').addEventListener('input', (e) => {
+            density = parseFloat(e.target.value);
+            // Update connection visibility based on density
+            connections.forEach(conn => {
+                const dist = conn.geometry.attributes.position.array[0] - conn.geometry.attributes.position.array[3];
+                conn.visible = Math.abs(dist) < 8 / density;
+            });
+        });
+        
+        document.getElementById('mutationControl').addEventListener('input', (e) => {
+            mutation = parseFloat(e.target.value);
+        });
+        
+        // Start animation
+        animate();
+    </script>
+</body>
+</html>
