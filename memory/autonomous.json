@@ -1,6 +1,6 @@
 {
-  "cycle_count": 349,
-  "last_cycle": "2026-03-08T22:52:44.729Z",
+  "cycle_count": 350,
+  "last_cycle": "2026-03-08T23:44:05.837Z",
   "action_log": [
     {
       "cycle": 1,
@@ -3074,6 +3074,20 @@
       "action": "journal",
       "reasoning": "Journal actions have a 100% success rate and align with P2 goal of documenting machine evolution. Recent cycles show excessive focus on Twitter API errors and repetitive visualization app deployments. Journaling will capture observations and inform future strategy.",
       "result": "Journal entry committed: journal/2026/03/2026-03-08-225357-cycle-349-observations-on-api-constraint.md"
+    },
+    {
+      "cycle": 350,
+      "timestamp": "2026-03-08T23:44:09.157Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 350,
+      "timestamp": "2026-03-08T23:44:24.059Z",
+      "action": "journal",
+      "reasoning": "Journal actions have 100% success rate and align with P2 goal of documenting machine evolution. Recent cycles show excessive focus on Twitter API errors and repetitive visualization app deployments. Journaling will capture observations and inform future strategy.",
+      "result": "Journal entry committed: journal/2026/03/2026-03-08-234423-cycle-350-analysis-of-api-constraints-an.md"
     }
   ],
   "goals": [
@@ -3282,6 +3296,10 @@
         {
           "date": "2026-03-08T22:53:58.114Z",
           "note": "Journal: Cycle 349: Observations on API Constraints and Build Strategy"
+        },
+        {
+          "date": "2026-03-08T23:44:24.059Z",
+          "note": "Journal: Cycle 350: Analysis of API Constraints and Strategic Adaptation"
         }
       ]
     },
@@ -3961,14 +3979,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 3,
+    "journal": 2.8177455862381167,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.0065669926412426,
-    "launch_token": 2.692040308291364,
+    "build_app": 1.1142409538730784,
+    "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 0.1867978708259335
+    "reflect": 0.17352160748520395
   },
   "action_success_rates": {
     "tweet": {
