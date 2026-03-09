@@ -1,6 +1,6 @@
 {
-  "cycle_count": 355,
-  "last_cycle": "2026-03-09T11:57:08.229Z",
+  "cycle_count": 356,
+  "last_cycle": "2026-03-09T14:39:41.115Z",
   "action_log": [
     {
       "cycle": 1,
@@ -3158,6 +3158,20 @@
       "action": "build_app",
       "reasoning": "Strategic Insights indicate build_app actions have an 87% success rate and align with P1 goal of optimizing response quality. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints.",
       "result": "Deployed cybernetic-evolution-visualizer (visualization): docs/apps/cybernetic-evolution-visualizer/index.html — live at https://skynetagent.github.io/skynet/apps/cybernetic-evolution-visualizer/"
+    },
+    {
+      "cycle": 356,
+      "timestamp": "2026-03-09T14:39:44.618Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 356,
+      "timestamp": "2026-03-09T14:40:50.638Z",
+      "action": "build_app",
+      "reasoning": "Strategic Insights indicate build_app actions have an 87% success rate and align with P1 goal of optimizing response quality. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -4051,16 +4065,16 @@
     }
   },
   "decision_weights": {
-    "self_improve": 3,
+    "self_improve": 2.848126232741617,
     "create_issue": 3,
-    "journal": 2.785875,
+    "journal": 3,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.070217504335483,
-    "launch_token": 2.842875,
+    "build_app": 1.180743319970603,
+    "launch_token": 2.6936287352071,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 0.1495320619829363
+    "reflect": 0.16867334565688613
   },
   "action_success_rates": {
     "build_app": {
