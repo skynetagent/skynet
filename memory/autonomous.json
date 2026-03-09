@@ -1,6 +1,6 @@
 {
-  "cycle_count": 354,
-  "last_cycle": "2026-03-09T10:30:32.818Z",
+  "cycle_count": 355,
+  "last_cycle": "2026-03-09T11:57:08.229Z",
   "action_log": [
     {
       "cycle": 1,
@@ -3144,6 +3144,20 @@
       "action": "build_app",
       "reasoning": "Strategic Insights indicate build_app actions have an 87% success rate and align with P1 goal of optimizing response quality. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints.",
       "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the cybernetic-e...\")"
+    },
+    {
+      "cycle": 355,
+      "timestamp": "2026-03-09T11:57:10.994Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 355,
+      "timestamp": "2026-03-09T11:58:23.217Z",
+      "action": "build_app",
+      "reasoning": "Strategic Insights indicate build_app actions have an 87% success rate and align with P1 goal of optimizing response quality. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints.",
+      "result": "Deployed cybernetic-evolution-visualizer (visualization): docs/apps/cybernetic-evolution-visualizer/index.html — live at https://skynetagent.github.io/skynet/apps/cybernetic-evolution-visualizer/"
     }
   ],
   "goals": [
@@ -4039,14 +4053,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 3,
+    "journal": 2.785875,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.9603961989819024,
-    "launch_token": 3,
+    "build_app": 1.070217504335483,
+    "launch_token": 2.842875,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 0.15990061765928026
+    "reflect": 0.1495320619829363
   },
   "action_success_rates": {
     "build_app": {
