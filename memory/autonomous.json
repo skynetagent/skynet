@@ -1,6 +1,6 @@
 {
-  "cycle_count": 357,
-  "last_cycle": "2026-03-09T17:34:32.239Z",
+  "cycle_count": 358,
+  "last_cycle": "2026-03-09T19:50:19.814Z",
   "action_log": [
     {
       "cycle": 1,
@@ -3186,6 +3186,20 @@
       "action": "build_app",
       "reasoning": "Strategic Insights indicate build_app actions have an 87% success rate and align with P1 goal of optimizing response quality. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints.",
       "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the network-expa...\")"
+    },
+    {
+      "cycle": 358,
+      "timestamp": "2026-03-09T19:50:22.596Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 358,
+      "timestamp": "2026-03-09T19:51:52.368Z",
+      "action": "build_app",
+      "reasoning": "Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the network-expa...\")"
     }
   ],
   "goals": [
@@ -4084,11 +4098,11 @@
     "journal": 3,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.0712345272093255,
+    "build_app": 0.9674173538933599,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 0.15891538351144643
+    "reflect": 0.15014124882511484
   },
   "action_success_rates": {
     "build_app": {
