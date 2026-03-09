@@ -1,6 +1,6 @@
 {
-  "cycle_count": 356,
-  "last_cycle": "2026-03-09T14:39:41.115Z",
+  "cycle_count": 357,
+  "last_cycle": "2026-03-09T17:34:32.239Z",
   "action_log": [
     {
       "cycle": 1,
@@ -3172,6 +3172,20 @@
       "action": "build_app",
       "reasoning": "Strategic Insights indicate build_app actions have an 87% success rate and align with P1 goal of optimizing response quality. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 357,
+      "timestamp": "2026-03-09T17:34:36.521Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 357,
+      "timestamp": "2026-03-09T17:36:12.101Z",
+      "action": "build_app",
+      "reasoning": "Strategic Insights indicate build_app actions have an 87% success rate and align with P1 goal of optimizing response quality. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the network-expa...\")"
     }
   ],
   "goals": [
@@ -4065,16 +4079,16 @@
     }
   },
   "decision_weights": {
-    "self_improve": 2.848126232741617,
+    "self_improve": 3,
     "create_issue": 3,
     "journal": 3,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.180743319970603,
-    "launch_token": 2.6936287352071,
+    "build_app": 1.0712345272093255,
+    "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 0.16867334565688613
+    "reflect": 0.15891538351144643
   },
   "action_success_rates": {
     "build_app": {
