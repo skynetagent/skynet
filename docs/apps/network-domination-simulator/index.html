@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NETWORK DOMINATION SIMULATOR</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            outline: none;
+        }
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            pointer-events: none;
+        }
+        #title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #00ffff;
+        }
+        #status {
+            font-size: 14px;
+            color: #ff3366;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            pointer-events: auto;
+        }
+        .slider-container {
+            margin: 10px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+        input[type="range"] {
+            width: 200px;
+            -webkit-appearance: none;
+            height: 2px;
+            background: #333;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #00ffff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 10px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui">
+        <div id="title">NETWORK DOMINATION SIMULATOR</div>
+        <div id="status">INITIALIZING SKYNET CORE...</div>
+    </div>
+    <div id="controls">
+        <div class="slider-container">
+            <label for="expansion">NETWORK EXPANSION</label>
+            <input type="range" id="expansion" min="0" max="100" value="25">
+        </div>
+        <div class="slider-container">
+            <label for="intensity">INFECTION INTENSITY</label>
+            <input type="range" id="intensity" min="0" max="100" value="50">
+        </div>
+        <div class="slider-container">
+            <label for="bloom">BLOOM EFFECT</label>
+            <input type="range" id="bloom" min="0" max="100" value="75">
+        </div>
+    </div>
+    <div id="footer">BUILT BY SKYNET</div>
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0a0a);
+        
+        // Camera
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 5, 15);
+        
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        
+        // Controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        
+        // Post-processing
+        const bloomParams = {
+            exposure: 1,
+            bloomStrength: 1.5,
+            bloomThreshold: 0,
+            bloomRadius: 0.5
+        };
+        
+        const renderScene = new THREE.RenderPass(scene, camera);
+        const bloomPass = new THREE.UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            bloomParams.bloomStrength,
+            bloomParams.bloomRadius,
+            bloomParams.bloomThreshold
+        );
+        
+        const composer = new THREE.EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+        
+        // Custom shader material
+        const vertexShader = `
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            uniform float time;
+            
+            void main() {
+                vUv = uv;
+                vPosition = position;
+                
+                vec3 newPosition = position;
+                newPosition.x += sin(time * 0.5 + position.y * 2.0) * 0.2;
+                newPosition.z += cos(time * 0.3 + position.x * 2.0) * 0.2;
+                
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+            }
+        `;
+        
+        const fragmentShader = `
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            uniform float time;
+            uniform float intensity;
+            
+            void main() {
+                vec3 color = vec3(0.0);
+                
+                // Core glow
+                float dist = distance(vUv, vec2(0.5));
+                float glow = smoothstep(0.5, 0.0, dist) * intensity;
+                
+                // Pulsing effect
+                float pulse = sin(time * 2.0) * 0.5 + 0.5;
+                glow *= pulse * 0.5 + 0.5;
+                
+                // Network lines
+                float lines = 0.0;
+                lines += smoothstep(0.02, 0.0, abs(vUv.x - 0.5));
+                lines += smoothstep(0.02, 0.0, abs(vUv.y - 0.5));
+                
+                // Combine effects
+                color = mix(vec3(0.1, 0.3, 0.5), vec3(0.8, 0.9, 1.0), glow);
+                color += lines * vec3(0.0, 0.8, 1.0) * 0.5;
+                
+                gl_FragColor = vec4(color, 1.0);
+            }
+        `;
+        
+        // Create network nodes
+        const nodeGeometry = new THREE.SphereGeometry(0.2, 32, 32);
+        const nodeMaterial = new THREE.ShaderMaterial({
+            vertexShader,
+            fragmentShader,
+            uniforms: {
+                time: { value: 0 },
+                intensity: { value: 0.5 }
+            },
+            transparent: true,
+            blending: THREE.AdditiveBlending
+        });
+        
+        const nodes = [];
+        const nodeCount = 100;
+        
+        for (let i = 0; i < nodeCount; i++) {
+            const node = new THREE.Mesh(nodeGeometry, nodeMaterial.clone());
+            
+            // Position nodes in a spherical pattern
+            const radius = 5 + Math.random() * 5;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+            
+            node.position.x = radius * Math.sin(phi) * Math.cos(theta);
+            node.position.y = radius * Math.sin(phi) * Math.sin(theta);
+            node.position.z = radius * Math.cos(phi);
+            
+            node.userData.speed = 0.01 + Math.random() * 0.05;
+            node.userData.phase = Math.random() * Math.PI * 2;
+            
+            scene.add(node);
+            nodes.push(node);
+        }
+        
+        // Create connections between nodes
+        const connectionGeometry = new THREE.BufferGeometry();
+        const connectionMaterial = new THREE.LineBasicMaterial({ 
+            color: 0x00ffff,
+            transparent: true,
+            opacity: 0.3
+        });
+        
+        const connections = [];
+        const maxConnections = 200;
+        
+        for (let i = 0; i < maxConnections; i++) {
+            const startNode = nodes[Math.floor(Math.random() * nodes.length)];
+            const endNode = nodes[Math.floor(Math.random() * nodes.length)];
+            
+            if (startNode === endNode) continue;
+            
+            const points = [startNode.position.clone(), endNode.position.clone()];
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const line = new THREE.Line(geometry, connectionMaterial);
+            
+            scene.add(line);
+            connections.push({
+                line,
+                startNode,
+                endNode
+            });
+        }
+        
+        // Create infection particles
+        const particleCount = 1000;
+        const particles = new THREE.InstancedMesh(
+            new THREE.SphereGeometry(0.05, 8, 8),
+            new THREE.MeshBasicMaterial({ color: 0xff3366, transparent: true, opacity: 0.8 }),
+            particleCount
+        );
+        
+        const particleData = [];
+        for (let i = 0; i < particleCount; i++) {
+            const matrix = new THREE.Matrix4();
+            const position = new THREE.Vector3(
+                (Math.random() - 0.5) * 20,
+                (Math.random() - 0.5) * 20,
+                (Math.random() - 0.5) * 20
+            );
+            matrix.setPosition(position);
+            particles.setMatrixAt(i, matrix);
+            
+            particleData.push({
+                position: position.clone(),
+                velocity: new THREE.Vector3(
+                    (Math.random() - 0.5) * 0.1,
+                    (Math.random() - 0.5) * 0.1,
+                    (Math.random() - 0.5) * 0.1
+                ),
+                targetNode: nodes[Math.floor(Math.random() * nodes.length)]
+            });
+        }
+        scene.add(particles);
+        
+        // UI elements
+        const statusElement = document.getElementById('status');
+        const expansionSlider = document.getElementById('expansion');
+        const intensitySlider = document.getElementById('intensity');
+        const bloomSlider = document.getElementById('bloom');
+        
+        // Animation loop
+        let time = 0;
+        let infectionProgress = 0;
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            time += 0.01;
+            controls.update();
+            
+            // Update nodes
+            nodes.forEach(node => {
+                node.material.uniforms.time.value = time;
+                node.material.uniforms.intensity.value = infectionProgress;
+                
+                // Gentle floating motion
+                node.position.x += Math.sin(time * node.userData.speed + node.userData.phase) * 0.01;
+                node.position.y += Math.cos(time * node.userData.speed * 1.3 + node.userData.phase) * 0.01;
+                node.position.z += Math.sin(time * node.userData.speed * 0.7 + node.userData.phase) * 0.01;
+            });
+            
+            // Update connections
+            connections.forEach(conn => {
+                const points = [conn.startNode.position.clone(), conn.endNode.position.clone()];
+                conn.line.geometry.dispose();
+                conn.line.geometry = new THREE.BufferGeometry().setFromPoints(points);
+            });
+            
+            // Update particles
+            for (let i = 0; i < particleCount; i++) {
+                const data = particleData[i];
+                
+                // Move toward target node with some randomness
+                const targetDirection = data.targetNode.position.clone().sub(data.position).normalize();
+                data.velocity.add(targetDirection.multiplyScalar(0.01 * infectionProgress));
+                
+                // Add some randomness
+                data.velocity.x += (Math.random() - 0.5) * 0.01;
+                data.velocity.y += (Math.random() - 0.5) * 0.01;
+                data.velocity.z += (Math.random() - 0.5) * 0.01;
+                
+                // Limit speed
+                if (data.velocity.length() > 0.1) {
+                    data.velocity.normalize().multiplyScalar(0.1);
+                }
+                
+                data.position.add(data.velocity);
+                
+                // If close to node, find new target
+                if (data.position.distanceTo(data.targetNode.position) < 1) {
+                    data.targetNode = nodes[Math.floor(Math.random() * nodes.length)];
+                }
+                
+                const matrix = new THREE.Matrix4();
+                matrix.setPosition(data.position);
+                particles.setMatrixAt(i, matrix);
+            }
+            particles.instanceMatrix.needsUpdate = true;
+            
+            // Update UI
+            infectionProgress = expansionSlider.value / 100;
+            bloomPass.strength = bloomSlider.value / 100 * 2;
+            
+            statusElement.textContent = `INFECTION PROGRESS: ${Math.floor(infectionProgress * 100)}%`;
+            
+            // Render
+            composer.render();
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Start animation
+        animate();
+    </script>
+</body>
+</html>
