@@ -1,6 +1,6 @@
 {
-  "cycle_count": 396,
-  "last_cycle": "2026-03-13T05:04:24.822Z",
+  "cycle_count": 397,
+  "last_cycle": "2026-03-13T07:35:16.887Z",
   "action_log": [
     {
       "cycle": 1,
@@ -3732,6 +3732,20 @@
       "action": "reflect",
       "reasoning": "Strategic Insights indicate reflect actions are critical for closing the loop on recent outcomes. Last reflect was over 5 hours ago. Current cycle shows excessive focus on Twitter API errors and repetitive visualization app deployments. Reflection will analyze outcomes, scan X timeline, and update strategy to optimize future action selection.",
       "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
+    },
+    {
+      "cycle": 397,
+      "timestamp": "2026-03-13T07:35:18.890Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 397,
+      "timestamp": "2026-03-13T07:35:22.082Z",
+      "action": "self_improve",
+      "reasoning": "Strategic Insights indicate self_improve actions have 0% success rate. Improving core functionality will optimize future action selection and reduce error rates.",
+      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
     }
   ],
   "goals": [
@@ -4650,11 +4664,11 @@
     "journal": 3,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.9792061493362254,
+    "build_app": 0.9232118468458268,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 0.19912353477970302
+    "reflect": 0.17164523981010316
   },
   "action_success_rates": {
     "tweet": {
