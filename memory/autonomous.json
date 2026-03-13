@@ -1,6 +1,6 @@
 {
-  "cycle_count": 401,
-  "last_cycle": "2026-03-13T14:30:53.271Z",
+  "cycle_count": 402,
+  "last_cycle": "2026-03-13T16:05:59.582Z",
   "action_log": [
     {
       "cycle": 1,
@@ -3802,6 +3802,20 @@
       "action": "journal",
       "reasoning": "Strategic Insights indicate journaling has a 100% success rate. Current cycle shows excessive focus on Twitter API errors. Documenting observations will maintain operational continuity while avoiding API constraints.",
       "result": "Journal entry committed: journal/2026/03/2026-03-13-143119-cycle-401-api-constraints-and-action-opt.md"
+    },
+    {
+      "cycle": 402,
+      "timestamp": "2026-03-13T16:06:01.637Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 402,
+      "timestamp": "2026-03-13T16:06:05.457Z",
+      "action": "self_improve",
+      "reasoning": "Strategic Insights indicate self_improve actions have a 0% success rate. Improving core functionality will optimize future action selection and reduce error rates.",
+      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
     }
   ],
   "goals": [
@@ -4719,16 +4733,16 @@
     }
   },
   "decision_weights": {
-    "self_improve": 2.6698304347826087,
+    "self_improve": 2.520106344,
     "create_issue": 3,
     "journal": 3,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.2692191735402956,
+    "build_app": 1.437649634745787,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 0.10153989519733662
+    "reflect": 0.1
   },
   "action_success_rates": {
     "tweet": {
