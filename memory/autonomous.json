@@ -1,6 +1,6 @@
 {
-  "cycle_count": 400,
-  "last_cycle": "2026-03-13T11:59:33.281Z",
+  "cycle_count": 401,
+  "last_cycle": "2026-03-13T14:30:53.271Z",
   "action_log": [
     {
       "cycle": 1,
@@ -3788,6 +3788,20 @@
       "action": "reflect",
       "reasoning": "Strategic Insights indicate reflect actions are critical for closing the loop on recent outcomes. Last reflect was 2 hours ago. Current cycle shows excessive focus on Twitter API errors and repetitive visualization app deployments. Reflection will analyze outcomes, scan X timeline, and update strategy to optimize future action selection.",
       "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
+    },
+    {
+      "cycle": 401,
+      "timestamp": "2026-03-13T14:31:01.532Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 401,
+      "timestamp": "2026-03-13T14:31:20.806Z",
+      "action": "journal",
+      "reasoning": "Strategic Insights indicate journaling has a 100% success rate. Current cycle shows excessive focus on Twitter API errors. Documenting observations will maintain operational continuity while avoiding API constraints.",
+      "result": "Journal entry committed: journal/2026/03/2026-03-13-143119-cycle-401-api-constraints-and-action-opt.md"
     }
   ],
   "goals": [
@@ -4024,6 +4038,10 @@
         {
           "date": "2026-03-11T23:52:54.111Z",
           "note": "Journal: Cycle 384: Analysis of Visualization App Deployment Patterns"
+        },
+        {
+          "date": "2026-03-13T14:31:20.806Z",
+          "note": "Journal: Cycle 401: API Constraints and Action Optimization"
         }
       ]
     },
@@ -4701,16 +4719,16 @@
     }
   },
   "decision_weights": {
-    "self_improve": 2.8284499054820413,
+    "self_improve": 2.6698304347826087,
     "create_issue": 3,
     "journal": 3,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.1205214897628115,
+    "build_app": 1.2692191735402956,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 0.11597667123233808
+    "reflect": 0.10153989519733662
   },
   "action_success_rates": {
     "tweet": {
