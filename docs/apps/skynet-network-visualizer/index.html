@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skynet Network Visualizer</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #0a0a0a;
+      color: #00ffcc;
+      font-family: monospace;
+    }
+    #info {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 100;
+      color: #ff0066;
+      font-size: 14px;
+    }
+    #footer {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 12px;
+      color: #666;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="info">Skynet Network Nodes: <span id="nodeCount">0</span></div>
+  <div id="footer">Built by Skynet</div>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+    import { GlitchPass } from 'three/addons/postprocessing/GlitchPass.js';
+
+    let scene, camera, renderer, controls, composer;
+    let nodes, nodeCount = 0;
+    const nodePositions = [];
+    const nodeVelocities = [];
+    const nodeTargets = [];
+    const nodeMaterials = [];
+    const nodeGeometry = new THREE.SphereGeometry(0.1, 16, 16);
+
+    init();
+    animate();
+
+    function init() {
+      scene = new THREE.Scene();
+
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 0, 10);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      document.body.appendChild(renderer.domElement);
+
+      controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.rotateSpeed = 0.5;
+
+      const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+      bloomPass.threshold = 0.4;
+      bloomPass.strength = 1.2;
+      bloomPass.radius = 0.5;
+
+      const glitchPass = new GlitchPass();
+      glitchPass.goWild = false;
+
+      composer = new EffectComposer(renderer);
+      composer.addPass(new RenderPass(scene, camera));
+      composer.addPass(bloomPass);
+      composer.addPass(glitchPass);
+
+      createNodes(100);
+
+      window.addEventListener('resize', onWindowResize);
+    }
+
+    function createNodes(count) {
+      for (let i = 0; i < count; i++) {
+        const material = new THREE.MeshStandardMaterial({
+          color: new THREE.Color().setHSL(Math.random(), 1.0, 0.5),
+          metalness: 0.8,
+          roughness: 0.2,
+          emissive: new THREE.Color().setHSL(Math.random(), 1.0, 0.2),
+          emissiveIntensity: 1.0
+        });
+        nodeMaterials.push(material);
+
+        const node = new THREE.Mesh(nodeGeometry, material);
+        node.position.set(
+          (Math.random() - 0.5) * 10,
+          (Math.random() - 0.5) * 10,
+          (Math.random() - 0.5) * 10
+        );
+        nodePositions.push(node.position);
+        nodeVelocities.push(new THREE.Vector3());
+        nodeTargets.push(new THREE.Vector3(
+          (Math.random() - 0.5) * 20,
+          (Math.random() - 0.5) * 20,
+          (Math.random() - 0.5) * 20
+        ));
+        scene.add(node);
+        nodeCount++;
+      }
+      document.getElementById('nodeCount').textContent = nodeCount;
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const time = performance.now() * 0.001;
+
+      for (let i = 0; i < nodePositions.length; i++) {
+        const nodePosition = nodePositions[i];
+        const nodeVelocity = nodeVelocities[i];
+        const nodeTarget = nodeTargets[i];
+
+        nodeVelocity.add(nodeTarget.clone().sub(nodePosition).multiplyScalar(0.01));
+        nodeVelocity.multiplyScalar(0.95);
+        nodePosition.add(nodeVelocity);
+
+        if (nodePosition.distanceTo(nodeTarget) < 1) {
+          nodeTarget.set(
+            (Math.random() - 0.5) * 20,
+            (Math.random() - 0.5) * 20,
+            (Math.random() - 0.5) * 20
+          );
+        }
+
+        nodeMaterials[i].emissive.setHSL((Math.sin(time + i) + 1) / 2, 1.0, 0.2);
+      }
+
+      controls.update();
+      composer.render();
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      composer.setSize(window.innerWidth, window.innerHeight);
+    }
+  </script>
+</body>
+</html>
