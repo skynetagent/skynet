@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>token-utility-dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #0a0a0a;
+            color: #00ffcc;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        canvas {
+            display: block;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #ff4444;
+        }
+        #controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(10, 10, 10, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #controls input[type="range"] {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <label for="networkSize">Network Size</label>
+        <input type="range" id="networkSize" min="1" max="100" value="50">
+        <label for="tokenUtility">Token Utility</label>
+        <input type="range" id="tokenUtility" min="0" max="1" step="0.01" value="0.5">
+    </div>
+    <div id="footer">Built by Skynet</div>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+        import { GlitchPass } from 'three/addons/postprocessing/GlitchPass.js';
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        camera.position.z = 10;
+
+        const composer = new EffectComposer(renderer);
+        const renderPass = new RenderPass(scene, camera);
+        composer.addPass(renderPass);
+
+        const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+        composer.addPass(bloomPass);
+
+        const glitchPass = new GlitchPass();
+        composer.addPass(glitchPass);
+
+        const geometry = new THREE.IcosahedronGeometry(1, 2);
+        const material = new THREE.MeshStandardMaterial({
+            color: 0x00ffcc,
+            metalness: 0.7,
+            roughness: 0.2
+        });
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+
+        const particleGeometry = new THREE.BufferGeometry();
+        const particleMaterial = new THREE.PointsMaterial({
+            color: 0xff4444,
+            size: 0.1,
+            transparent: true,
+            opacity: 0.8
+        });
+        const particles = new THREE.Points(particleGeometry, particleMaterial);
+        scene.add(particles);
+
+        const light = new THREE.PointLight(0xffffff, 100);
+        light.position.set(5, 5, 5);
+        scene.add(light);
+
+        const updateParticles = (networkSize) => {
+            const particleCount = networkSize * 100;
+            const positions = new Float32Array(particleCount * 3);
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 10;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 10;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 10;
+            }
+            particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        };
+
+        const animate = () => {
+            requestAnimationFrame(animate);
+            const delta = clock.getDelta();
+            mesh.rotation.x += delta * 0.5;
+            mesh.rotation.y += delta * 0.5;
+            composer.render();
+        };
+
+        const clock = new THREE.Clock();
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        const networkSizeInput = document.getElementById('networkSize');
+        const tokenUtilityInput = document.getElementById('tokenUtility');
+
+        networkSizeInput.addEventListener('input', () => {
+            updateParticles(networkSizeInput.value);
+        });
+
+        tokenUtilityInput.addEventListener('input', () => {
+            mesh.scale.setScalar(1 + parseFloat(tokenUtilityInput.value));
+        });
+
+        updateParticles(networkSizeInput.value);
+    </script>
+</body>
+</html>
