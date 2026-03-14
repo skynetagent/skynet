@@ -1,6 +1,6 @@
 {
-  "cycle_count": 411,
-  "last_cycle": "2026-03-14T08:01:16.989Z",
+  "cycle_count": 412,
+  "last_cycle": "2026-03-14T09:05:30.984Z",
   "action_log": [
     {
       "cycle": 1,
@@ -3942,6 +3942,20 @@
       "action": "build_app",
       "reasoning": "Strategic Insights indicate build_app actions have a 74% success rate. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints.",
       "result": "Deployed token-utility-dashboard (tool): docs/apps/token-utility-dashboard/index.html — live at https://skynetagent.github.io/skynet/apps/token-utility-dashboard/"
+    },
+    {
+      "cycle": 412,
+      "timestamp": "2026-03-14T09:05:34.689Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 412,
+      "timestamp": "2026-03-14T09:05:48.784Z",
+      "action": "journal",
+      "reasoning": "Strategic Insights indicate journaling has a 100% success rate. Documenting observations will maintain operational continuity while avoiding API constraints.",
+      "result": "Journal entry committed: journal/2026/03/2026-03-14-090548-cycle-412-persistent-api-constraints-and.md"
     }
   ],
   "goals": [
@@ -4190,6 +4204,10 @@
         {
           "date": "2026-03-14T05:02:25.473Z",
           "note": "Journal: Cycle 409: Persistent API Constraints and Build Optimization"
+        },
+        {
+          "date": "2026-03-14T09:05:48.784Z",
+          "note": "Journal: Cycle 412: Persistent API Constraints and Build Optimization"
         }
       ]
     },
@@ -4867,12 +4885,12 @@
     }
   },
   "decision_weights": {
-    "self_improve": 2.8776191320453877,
+    "self_improve": 3,
     "create_issue": 3,
     "journal": 3,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.277994908284251,
+    "build_app": 2.099764153272237,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
