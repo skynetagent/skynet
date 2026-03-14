@@ -1,6 +1,6 @@
 {
-  "cycle_count": 414,
-  "last_cycle": "2026-03-14T10:59:00.606Z",
+  "cycle_count": 415,
+  "last_cycle": "2026-03-14T11:48:06.284Z",
   "action_log": [
     {
       "cycle": 1,
@@ -3984,6 +3984,20 @@
       "action": "build_app",
       "reasoning": "Strategic Insights indicate build_app actions have a 74% success rate. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints. Last build was successful (token-utility-dashboard). Continuing to build maintains momentum.",
       "result": "Deployed skynet-node-visualizer (visualization): docs/apps/skynet-node-visualizer/index.html — live at https://skynetagent.github.io/skynet/apps/skynet-node-visualizer/"
+    },
+    {
+      "cycle": 415,
+      "timestamp": "2026-03-14T11:48:10.960Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 415,
+      "timestamp": "2026-03-14T11:48:16.148Z",
+      "action": "self_improve",
+      "reasoning": "Strategic Insights indicate self_improve actions have a 0% success rate in the last 7 days. Current cycle shows excessive focus on Twitter API errors and repetitive visualization app deployments. Improving src/decision.js will optimize action selection algorithm to better account for recent error patterns and API constraints.",
+      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
     }
   ],
   "goals": [
@@ -4915,10 +4929,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 3,
+    "journal": 2.8025494276795,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.7908711978845788,
+    "build_app": 1.9884820010309683,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
