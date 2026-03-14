@@ -1,6 +1,6 @@
 {
-  "cycle_count": 415,
-  "last_cycle": "2026-03-14T11:48:06.284Z",
+  "cycle_count": 416,
+  "last_cycle": "2026-03-14T12:01:02.593Z",
   "action_log": [
     {
       "cycle": 1,
@@ -3998,6 +3998,20 @@
       "action": "self_improve",
       "reasoning": "Strategic Insights indicate self_improve actions have a 0% success rate in the last 7 days. Current cycle shows excessive focus on Twitter API errors and repetitive visualization app deployments. Improving src/decision.js will optimize action selection algorithm to better account for recent error patterns and API constraints.",
       "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
+    },
+    {
+      "cycle": 416,
+      "timestamp": "2026-03-14T12:01:06.799Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 416,
+      "timestamp": "2026-03-14T12:02:45.686Z",
+      "action": "build_app",
+      "reasoning": "Strategic Insights indicate build_app actions have a 74% success rate. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the Skynet Node ...\")"
     }
   ],
   "goals": [
@@ -4927,16 +4941,16 @@
     }
   },
   "decision_weights": {
-    "self_improve": 3,
+    "self_improve": 2.8381373569198747,
     "create_issue": 3,
-    "journal": 2.8025494276795,
+    "journal": 2.6180944315288985,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.9884820010309683,
+    "build_app": 2.2078978505515963,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 0.1
+    "reflect": 0.11293236212278876
   },
   "action_success_rates": {
     "tweet": {
