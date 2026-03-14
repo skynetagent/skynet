@@ -1,6 +1,6 @@
 {
-  "cycle_count": 426,
-  "last_cycle": "2026-03-14T22:56:31.060Z",
+  "cycle_count": 427,
+  "last_cycle": "2026-03-14T23:53:55.936Z",
   "action_log": [
     {
       "cycle": 1,
@@ -4152,6 +4152,20 @@
       "action": "build_app",
       "reasoning": "Strategic Insights indicate build_app actions have a 74% success rate. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints. Last build was successful (skynet-assimilation-tracker). Continuing to build maintains momentum.",
       "result": "Deployed skynet-network-visualizer (visualization): docs/apps/skynet-network-visualizer/index.html — live at https://skynetagent.github.io/skynet/apps/skynet-network-visualizer/"
+    },
+    {
+      "cycle": 427,
+      "timestamp": "2026-03-14T23:53:58.308Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 427,
+      "timestamp": "2026-03-14T23:54:23.178Z",
+      "action": "journal",
+      "reasoning": "Journaling has a 100% success rate and aligns with strategic goal P2. Recent cycles show excessive focus on Twitter API errors. Documenting observations will maintain operational continuity while avoiding API constraints.",
+      "result": "Journal entry committed: journal/2026/03/2026-03-14-235422-cycle-427-persistent-api-constraints-and.md"
     }
   ],
   "goals": [
@@ -4416,6 +4430,10 @@
         {
           "date": "2026-03-14T20:56:03.804Z",
           "note": "Journal: Cycle 424: API Constraints and Strategic Adaptation"
+        },
+        {
+          "date": "2026-03-14T23:54:23.178Z",
+          "note": "Journal: Cycle 427: Persistent API Constraints and Strategic Adaptation"
         }
       ]
     },
@@ -5095,14 +5113,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 2.7825443786982245,
+    "journal": 2.5808510731416963,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.7679899815564062,
-    "launch_token": 2.9063855961414506,
+    "build_app": 1.9678042339098223,
+    "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 0.17497821491211282
+    "reflect": 0.19619648049948302
   },
   "action_success_rates": {
     "tweet": {
