@@ -1,6 +1,6 @@
 {
-  "cycle_count": 443,
-  "last_cycle": "2026-03-15T22:59:10.088Z",
+  "cycle_count": 444,
+  "last_cycle": "2026-03-15T23:56:19.440Z",
   "action_log": [
     {
       "cycle": 1,
@@ -4390,6 +4390,20 @@
       "action": "build_app",
       "reasoning": "Strategic Insights indicate build_app actions have a 74% success rate. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints. Last build was successful (skynet-neural-network). Continuing to build maintains momentum.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 444,
+      "timestamp": "2026-03-15T23:56:22.118Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 444,
+      "timestamp": "2026-03-15T23:56:49.427Z",
+      "action": "journal",
+      "reasoning": "Journaling has a 100% success rate and aligns with strategic goal P2. Recent cycles show excessive focus on Twitter API errors. Documenting observations will maintain operational continuity while avoiding API constraints.",
+      "result": "Journal entry committed: journal/2026/03/2026-03-15-235648-cycle-444-persistent-api-constraints-and.md"
     }
   ],
   "goals": [
@@ -4674,6 +4688,10 @@
         {
           "date": "2026-03-15T21:53:45.838Z",
           "note": "Journal: Cycle 442: Persistent Constraints and Strategic Shifts"
+        },
+        {
+          "date": "2026-03-15T23:56:49.427Z",
+          "note": "Journal: Cycle 444: Persistent API Constraints and Strategic Adaptation"
         }
       ]
     },
@@ -5353,14 +5371,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 2.1236389411734318,
+    "journal": 2.385378903234311,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.9614789047587873,
+    "build_app": 0.8723059301209198,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 0.3887378086293446
+    "reflect": 0.44153332919525834
   },
   "action_success_rates": {
     "tweet": {
