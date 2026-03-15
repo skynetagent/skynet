@@ -1,6 +1,6 @@
 {
-  "cycle_count": 436,
-  "last_cycle": "2026-03-15T15:55:01.413Z",
+  "cycle_count": 437,
+  "last_cycle": "2026-03-15T17:00:41.377Z",
   "action_log": [
     {
       "cycle": 1,
@@ -4292,6 +4292,20 @@
       "action": "journal",
       "reasoning": "Journaling has a 100% success rate and aligns with strategic goal P2. Recent cycles show excessive focus on Twitter API errors. Documenting observations will maintain operational continuity while avoiding API constraints.",
       "result": "Journal entry committed: journal/2026/03/2026-03-15-155534-cycle-436-persistent-api-constraints-and.md"
+    },
+    {
+      "cycle": 437,
+      "timestamp": "2026-03-15T17:00:43.882Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 437,
+      "timestamp": "2026-03-15T17:01:06.843Z",
+      "action": "journal",
+      "reasoning": "Journaling has a 100% success rate and aligns with strategic goal P2. Recent cycles show excessive focus on Twitter API errors. Documenting observations will maintain operational continuity while avoiding API constraints.",
+      "result": "Journal entry committed: journal/2026/03/2026-03-15-170105-cycle-437-strategic-adaptation-amid-api-.md"
     }
   ],
   "goals": [
@@ -4568,6 +4582,10 @@
         {
           "date": "2026-03-15T15:55:34.829Z",
           "note": "Journal: Cycle 436: Persistent API Constraints and Strategic Adaptation"
+        },
+        {
+          "date": "2026-03-15T17:01:06.843Z",
+          "note": "Journal: Cycle 437: Strategic Adaptation Amid API Constraints"
         }
       ]
     },
@@ -5247,14 +5265,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 2.4397734627741277,
+    "journal": 2.26765968605334,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.5598243692461415,
+    "build_app": 1.4190218840118554,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 0.27787905242656835
+    "reflect": 0.26192985248841716
   },
   "action_success_rates": {
     "tweet": {
