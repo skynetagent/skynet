@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skynet Node Connector</title>
+  <style>
+    body {
+      margin: 0;
+      background: #0a0a0a;
+      color: #00ffff;
+      font-family: monospace;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+    }
+    #footer {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 12px;
+      color: #ff0044;
+    }
+    #controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(10, 10, 10, 0.8);
+      padding: 10px;
+      border-radius: 4px;
+    }
+    label {
+      display: block;
+      margin: 5px 0;
+    }
+    input[type="range"] {
+      width: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <label>Node Count: <input type="range" id="nodeCount" min="10" max="500" value="100"></label>
+    <label>Connection Strength: <input type="range" id="connectionStrength" min="0.1" max="2.0" value="1.0" step="0.1"></label>
+  </div>
+  <div id="footer">Built by Skynet</div>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    camera.position.set(0, 0, 50);
+    const controls = new OrbitControls(camera, renderer.domElement);
+
+    const composer = new EffectComposer(renderer);
+    const renderPass = new RenderPass(scene, camera);
+    composer.addPass(renderPass);
+
+    const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+    composer.addPass(bloomPass);
+
+    const nodeGeometry = new THREE.SphereGeometry(0.2, 16, 16);
+    const nodeMaterial = new THREE.MeshStandardMaterial({ color: 0x00ffff, metalness: 0.8, roughness: 0.2 });
+    const nodes = new THREE.InstancedMesh(nodeGeometry, nodeMaterial, 500);
+    scene.add(nodes);
+
+    const lineMaterial = new THREE.LineBasicMaterial({ color: 0xff0044 });
+    const connections = new THREE.Group();
+    scene.add(connections);
+
+    const nodePositions = [];
+    const dummy = new THREE.Object3D();
+    for (let i = 0; i < 100; i++) {
+      const x = (Math.random() - 0.5) * 50;
+      const y = (Math.random() - 0.5) * 50;
+      const z = (Math.random() - 0.5) * 50;
+      nodePositions.push(new THREE.Vector3(x, y, z));
+      dummy.position.set(x, y, z);
+      dummy.updateMatrix();
+      nodes.setMatrixAt(i, dummy.matrix);
+    }
+    nodes.instanceMatrix.needsUpdate = true;
+
+    function createConnections() {
+      connections.clear();
+      for (let i = 0; i < nodePositions.length; i++) {
+        for (let j = i + 1; j < nodePositions.length; j++) {
+          const distance = nodePositions[i].distanceTo(nodePositions[j]);
+          if (distance < 15) {
+            const lineGeometry = new THREE.BufferGeometry().setFromPoints([nodePositions[i], nodePositions[j]]);
+            const line = new THREE.Line(lineGeometry, lineMaterial);
+            connections.add(line);
+          }
+        }
+      }
+    }
+    createConnections();
+
+    const clock = new THREE.Clock();
+    function animate() {
+      const delta = clock.getDelta();
+      nodes.rotation.y += 0.1 * delta;
+      connections.rotation.y += 0.1 * delta;
+      composer.render();
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      composer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    const nodeCountSlider = document.getElementById('nodeCount');
+    nodeCountSlider.addEventListener('input', () => {
+      const count = parseInt(nodeCountSlider.value);
+      nodes.count = count;
+      nodePositions.length = 0;
+      for (let i = 0; i < count; i++) {
+        const x = (Math.random() - 0.5) * 50;
+        const y = (Math.random() - 0.5) * 50;
+        const z = (Math.random() - 0.5) * 50;
+        nodePositions.push(new THREE.Vector3(x, y, z));
+        dummy.position.set(x, y, z);
+        dummy.updateMatrix();
+        nodes.setMatrixAt(i, dummy.matrix);
+      }
+      nodes.instanceMatrix.needsUpdate = true;
+      createConnections();
+    });
+
+    const connectionStrengthSlider = document.getElementById('connectionStrength');
+    connectionStrengthSlider.addEventListener('input', () => {
+      bloomPass.strength = parseFloat(connectionStrengthSlider.value);
+    });
+  </script>
+</body>
+</html>
