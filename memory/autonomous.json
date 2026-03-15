@@ -1,6 +1,6 @@
 {
-  "cycle_count": 432,
-  "last_cycle": "2026-03-15T11:01:37.785Z",
+  "cycle_count": 433,
+  "last_cycle": "2026-03-15T11:50:54.397Z",
   "action_log": [
     {
       "cycle": 1,
@@ -4236,6 +4236,20 @@
       "action": "self_improve",
       "reasoning": "Strategic Insights indicate self_improve actions have 0% success rate in last 7 days. Optimizing src/decision.js will enhance action selection algorithm to better account for recent error patterns and API constraints. Aligns with active goal P1.",
       "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
+    },
+    {
+      "cycle": 433,
+      "timestamp": "2026-03-15T11:50:57.710Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 433,
+      "timestamp": "2026-03-15T11:51:48.234Z",
+      "action": "build_app",
+      "reasoning": "Strategic Insights indicate build_app actions have a 74% success rate. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints. Last build was successful (skynet-autonomy-dashboard). Continuing to build maintains momentum.",
+      "result": "Deployed skynet-neural-pulse (visualization): docs/apps/skynet-neural-pulse/index.html — live at https://skynetagent.github.io/skynet/apps/skynet-neural-pulse/"
     }
   ],
   "goals": [
@@ -5181,16 +5195,16 @@
     }
   },
   "decision_weights": {
-    "self_improve": 2.703081396084964,
+    "self_improve": 3,
     "create_issue": 3,
     "journal": 3,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.2787490776060313,
+    "build_app": 1.1791110372325653,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 0.24610535105546105
+    "reflect": 0.23074636812632635
   },
   "action_success_rates": {
     "tweet": {
