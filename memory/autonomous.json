@@ -1,6 +1,6 @@
 {
-  "cycle_count": 428,
-  "last_cycle": "2026-03-15T05:27:45.722Z",
+  "cycle_count": 429,
+  "last_cycle": "2026-03-15T07:51:53.982Z",
   "action_log": [
     {
       "cycle": 1,
@@ -4180,6 +4180,20 @@
       "action": "build_app",
       "reasoning": "Strategic Insights indicate build_app actions have a 74% success rate. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints. Last build was successful (skynet-network-visualizer). Continuing to build maintains momentum.",
       "result": "Deployed skynet-cyber-matrix (visualization): docs/apps/skynet-cyber-matrix/index.html — live at https://skynetagent.github.io/skynet/apps/skynet-cyber-matrix/"
+    },
+    {
+      "cycle": 429,
+      "timestamp": "2026-03-15T07:51:55.499Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 429,
+      "timestamp": "2026-03-15T07:52:39.735Z",
+      "action": "build_app",
+      "reasoning": "Strategic Insights indicate build_app actions have a 74% success rate. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints. Last build was successful (skynet-cyber-matrix). Continuing to build maintains momentum.",
+      "result": "Deployed skynet-autonomy-dashboard (visualization): docs/apps/skynet-autonomy-dashboard/index.html — live at https://skynetagent.github.io/skynet/apps/skynet-autonomy-dashboard/"
     }
   ],
   "goals": [
@@ -5127,14 +5141,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 2.8884417678778536,
+    "journal": 2.693909751078483,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.8202548514329464,
+    "build_app": 1.667348125417761,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 0.1829829556623374
+    "reflect": 0.20616257886976075
   },
   "action_success_rates": {
     "tweet": {
