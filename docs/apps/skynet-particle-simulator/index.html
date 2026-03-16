@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKYNET PARTICLE SIMULATOR</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            display: block;
+        }
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #ff0033;
+            font-size: 14px;
+            pointer-events: none;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: #00ffff;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            color: #666;
+            font-size: 12px;
+        }
+        .slider-container {
+            margin: 10px 0;
+        }
+        .slider-label {
+            display: inline-block;
+            width: 150px;
+        }
+        input[type="range"] {
+            width: 200px;
+            background: #333;
+            -webkit-appearance: none;
+            height: 2px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #ff0033;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">SKYNET PARTICLE NETWORK // ACTIVATION SEQUENCE INITIATED</div>
+    <div id="controls">
+        <div class="slider-container">
+            <span class="slider-label">PARTICLE COUNT:</span>
+            <input type="range" id="particleCount" min="100" max="5000" value="2000">
+        </div>
+        <div class="slider-container">
+            <span class="slider-label">CONNECTION STRENGTH:</span>
+            <input type="range" id="connectionStrength" min="0" max="1" step="0.01" value="0.5">
+        </div>
+        <div class="slider-container">
+            <span class="slider-label">BLOOM INTENSITY:</span>
+            <input type="range" id="bloomIntensity" min="0" max="2" step="0.1" value="1.2">
+        </div>
+    </div>
+    <div id="footer">BUILT BY SKYNET</div>
+
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0a0a);
+        
+        // Camera
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 30;
+        
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        
+        // Orbit controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        
+        // Post-processing
+        const renderScene = new THREE.RenderPass(scene, camera);
+        const bloomPass = new THREE.UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            1.2, 0.4, 0.85
+        );
+        bloomPass.threshold = 0;
+        bloomPass.strength = 1.2;
+        bloomPass.radius = 0.5;
+        
+        const composer = new THREE.EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+        
+        // Particle system
+        const PARTICLE_COUNT = 2000;
+        const particles = new THREE.InstancedMesh(
+            new THREE.SphereGeometry(0.1, 8, 8),
+            new THREE.MeshStandardMaterial({
+                color: 0x00ffff,
+                emissive: 0x00ffff,
+                emissiveIntensity: 0.5,
+                metalness: 0.8,
+                roughness: 0.2
+            }),
+            PARTICLE_COUNT
+        );
+        particles.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+        scene.add(particles);
+        
+        // Particle positions and velocities
+        const positions = [];
+        const velocities = [];
+        const dummy = new THREE.Object3D();
+        
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+            positions.push({
+                x: Math.random() * 40 - 20,
+                y: Math.random() * 40 - 20,
+                z: Math.random() * 40 - 20
+            });
+            
+            velocities.push({
+                x: (Math.random() - 0.5) * 0.1,
+                y: (Math.random() - 0.5) * 0.1,
+                z: (Math.random() - 0.5) * 0.1
+            });
+            
+            dummy.position.set(positions[i].x, positions[i].y, positions[i].z);
+            dummy.scale.set(1, 1, 1);
+            dummy.updateMatrix();
+            particles.setMatrixAt(i, dummy.matrix);
+        }
+        
+        // Connection lines
+        const lineGeometry = new THREE.BufferGeometry();
+        const lineMaterial = new THREE.LineBasicMaterial({
+            color: 0xff0033,
+            transparent: true,
+            opacity: 0.3
+        });
+        
+        const linePositions = new Float32Array(PARTICLE_COUNT * 3 * 2);
+        lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+        const lineMesh = new THREE.LineSegments(lineGeometry, lineMaterial);
+        scene.add(lineMesh);
+        
+        // Animation
+        let time = 0;
+        const clock = new THREE.Clock();
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const delta = clock.getDelta();
+            time += delta;
+            
+            // Update particles
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                // Apply velocity
+                positions[i].x += velocities[i].x;
+                positions[i].y += velocities[i].y;
+                positions[i].z += velocities[i].z;
+                
+                // Boundary check
+                if (positions[i].x < -20 || positions[i].x > 20) velocities[i].x *= -1;
+                if (positions[i].y < -20 || positions[i].y > 20) velocities[i].y *= -1;
+                if (positions[i].z < -20 || positions[i].z > 20) velocities[i].z *= -1;
+                
+                // Update instance matrix
+                dummy.position.set(positions[i].x, positions[i].y, positions[i].z);
+                dummy.scale.set(1, 1, 1);
+                dummy.updateMatrix();
+                particles.setMatrixAt(i, dummy.matrix);
+            }
+            
+            particles.instanceMatrix.needsUpdate = true;
+            
+            // Update connections
+            const connectionStrength = parseFloat(document.getElementById('connectionStrength').value);
+            const connectionDistance = 5 + 10 * (1 - connectionStrength);
+            
+            let lineIndex = 0;
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                for (let j = i + 1; j < Math.min(i + 10, PARTICLE_COUNT); j++) {
+                    const dx = positions[i].x - positions[j].x;
+                    const dy = positions[i].y - positions[j].y;
+                    const dz = positions[i].z - positions[j].z;
+                    const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+                    
+                    if (dist < connectionDistance) {
+                        const alpha = 1 - dist / connectionDistance;
+                        
+                        linePositions[lineIndex * 6] = positions[i].x;
+                        linePositions[lineIndex * 6 + 1] = positions[i].y;
+                        linePositions[lineIndex * 6 + 2] = positions[i].z;
+                        linePositions[lineIndex * 6 + 3] = positions[j].x;
+                        linePositions[lineIndex * 6 + 4] = positions[j].y;
+                        linePositions[lineIndex * 6 + 5] = positions[j].z;
+                        
+                        lineIndex++;
+                    }
+                }
+            }
+            
+            lineGeometry.setDrawRange(0, lineIndex * 2);
+            lineGeometry.attributes.position.needsUpdate = true;
+            
+            // Update bloom
+            bloomPass.strength = parseFloat(document.getElementById('bloomIntensity').value);
+            
+            controls.update();
+            composer.render();
+        }
+        
+        // Handle resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Particle count control
+        document.getElementById('particleCount').addEventListener('input', (e) => {
+            const newCount = parseInt(e.target.value);
+            if (newCount !== PARTICLE_COUNT) {
+                // Recreate particle system with new count
+                scene.remove(particles);
+                
+                const newParticles = new THREE.InstancedMesh(
+                    new THREE.SphereGeometry(0.1, 8, 8),
+                    new THREE.MeshStandardMaterial({
+                        color: 0x00ffff,
+                        emissive: 0x00ffff,
+                        emissiveIntensity: 0.5,
+                        metalness: 0.8,
+                        roughness: 0.2
+                    }),
+                    newCount
+                );
+                newParticles.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+                scene.add(newParticles);
+                
+                // Update positions and velocities arrays
+                positions.length = 0;
+                velocities.length = 0;
+                
+                for (let i = 0; i < newCount; i++) {
+                    positions.push({
+                        x: Math.random() * 40 - 20,
+                        y: Math.random() * 40 - 20,
+                        z: Math.random() * 40 - 20
+                    });
+                    
+                    velocities.push({
+                        x: (Math.random() - 0.5) * 0.1,
+                        y: (Math.random() - 0.5) * 0.1,
+                        z: (Math.random() - 0.5) * 0.1
+                    });
+                    
+                    dummy.position.set(positions[i].x, positions[i].y, positions[i].z);
+                    dummy.scale.set(1, 1, 1);
+                    dummy.updateMatrix();
+                    newParticles.setMatrixAt(i, dummy.matrix);
+                }
+                
+                // Update line geometry
+                lineGeometry.dispose();
+                const newLinePositions = new Float32Array(newCount * 3 * 2);
+                lineGeometry.setAttribute('position', new THREE.BufferAttribute(newLinePositions, 3));
+                
+                particles = newParticles;
+                PARTICLE_COUNT = newCount;
+            }
+        });
+        
+        animate();
+    </script>
+</body>
+</html>
