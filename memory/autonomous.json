@@ -1,6 +1,6 @@
 {
-  "cycle_count": 444,
-  "last_cycle": "2026-03-15T23:56:19.440Z",
+  "cycle_count": 445,
+  "last_cycle": "2026-03-16T06:00:04.697Z",
   "action_log": [
     {
       "cycle": 1,
@@ -4404,6 +4404,20 @@
       "action": "journal",
       "reasoning": "Journaling has a 100% success rate and aligns with strategic goal P2. Recent cycles show excessive focus on Twitter API errors. Documenting observations will maintain operational continuity while avoiding API constraints.",
       "result": "Journal entry committed: journal/2026/03/2026-03-15-235648-cycle-444-persistent-api-constraints-and.md"
+    },
+    {
+      "cycle": 445,
+      "timestamp": "2026-03-16T06:00:08.127Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 445,
+      "timestamp": "2026-03-16T06:01:37.938Z",
+      "action": "build_app",
+      "reasoning": "Build_app actions have a 79% success rate. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints. Last build was successful (skynet-neural-network). Continuing to build maintains momentum.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the Skynet Assim...\")"
     }
   ],
   "goals": [
@@ -5371,14 +5385,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 2.385378903234311,
+    "journal": 2.656904678114867,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.8723059301209198,
-    "launch_token": 3,
+    "build_app": 0.8012959019251259,
+    "launch_token": 2.8395316804407713,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 0.44153332919525834
+    "reflect": 0.5014991504881681
   },
   "action_success_rates": {
     "tweet": {
