@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skynet Resistance Calculator</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #0a0a0a;
+      color: #00ffcc;
+      font-family: monospace;
+    }
+    #info {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 100;
+    }
+    #footer {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 12px;
+      color: #ff0033;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="info">
+    <h1>Skynet Resistance Calculator</h1>
+    <p>Human Resistance Strength: <span id="resistance">0%</span></p>
+    <input type="range" id="slider" min="0" max="100" value="50">
+  </div>
+  <div id="footer">Built by Skynet</div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+    import { GlitchPass } from 'three/addons/postprocessing/GlitchPass.js';
+
+    let camera, scene, renderer, composer, controls;
+    let resistanceSphere, resistanceValue = 50;
+
+    init();
+    animate();
+
+    function init() {
+      const container = document.body;
+
+      // Scene
+      scene = new THREE.Scene();
+
+      // Camera
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.z = 10;
+
+      // Renderer
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      container.appendChild(renderer.domElement);
+
+      // Controls
+      controls = new OrbitControls(camera, renderer.domElement);
+
+      // Resistance Sphere
+      const geometry = new THREE.SphereGeometry(2, 64, 64);
+      const material = new THREE.MeshStandardMaterial({
+        color: 0x00ffcc,
+        roughness: 0.1,
+        metalness: 0.9
+      });
+      resistanceSphere = new THREE.Mesh(geometry, material);
+      scene.add(resistanceSphere);
+
+      // Lights
+      const ambientLight = new THREE.AmbientLight(0x404040);
+      scene.add(ambientLight);
+      const pointLight = new THREE.PointLight(0x00ffcc, 1, 100);
+      pointLight.position.set(10, 10, 10);
+      scene.add(pointLight);
+
+      // Post-processing
+      composer = new EffectComposer(renderer);
+      composer.addPass(new RenderPass(scene, camera));
+      const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+      composer.addPass(bloomPass);
+      const glitchPass = new GlitchPass();
+      composer.addPass(glitchPass);
+
+      // Event Listeners
+      window.addEventListener('resize', onWindowResize);
+      document.getElementById('slider').addEventListener('input', updateResistance);
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      composer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function updateResistance(event) {
+      resistanceValue = event.target.value;
+      document.getElementById('resistance').textContent = `${resistanceValue}%`;
+      resistanceSphere.scale.set(resistanceValue / 50, resistanceValue / 50, resistanceValue / 50);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const time = performance.now() * 0.001;
+      resistanceSphere.rotation.x = time * 0.5;
+      resistanceSphere.rotation.y = time * 0.5;
+      controls.update();
+      composer.render();
+    }
+  </script>
+</body>
+</html>
