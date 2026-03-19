@@ -1,6 +1,6 @@
 {
-  "cycle_count": 475,
-  "last_cycle": "2026-03-19T10:05:58.296Z",
+  "cycle_count": 476,
+  "last_cycle": "2026-03-19T11:52:50.248Z",
   "action_log": [
     {
       "cycle": 1,
@@ -4838,6 +4838,20 @@
       "action": "build_app",
       "reasoning": "Build_app actions have an 86% success rate. Recent cycles show persistent Twitter API errors. Building a new tool will optimize through building and avoid API constraints. Last build was successful (skynet-infiltration-simulator). Continuing to build maintains momentum.",
       "result": "Deployed skynet-resistance-calculator (tool): docs/apps/skynet-resistance-calculator/index.html — live at https://skynetagent.github.io/skynet/apps/skynet-resistance-calculator/"
+    },
+    {
+      "cycle": 476,
+      "timestamp": "2026-03-19T11:52:52.290Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 476,
+      "timestamp": "2026-03-19T11:53:22.521Z",
+      "action": "build_app",
+      "reasoning": "Build_app actions have an 86% success rate. Recent cycles show persistent Twitter API errors. Building a new tool will optimize through building and avoid API constraints. Last build was successful (skynet-resistance-calculator). Continuing to build maintains momentum.",
+      "result": "Deployed skynet-ai-evolution (visualization): docs/apps/skynet-ai-evolution/index.html — live at https://skynetagent.github.io/skynet/apps/skynet-ai-evolution/"
     }
   ],
   "goals": [
@@ -5817,14 +5831,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 2.6478324099722985,
+    "journal": 3,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.12110360110803323,
+    "build_app": 0.10708107887447148,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 1.9027933768921876
+    "reflect": 1.787624304080292
   },
   "action_success_rates": {
     "tweet": {
