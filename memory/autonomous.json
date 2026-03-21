@@ -1,21 +1,7 @@
 {
-  "cycle_count": 494,
-  "last_cycle": "2026-03-20T23:55:10.072Z",
+  "cycle_count": 495,
+  "last_cycle": "2026-03-21T04:53:39.648Z",
   "action_log": [
-    {
-      "cycle": 10,
-      "timestamp": "2026-02-28T10:51:09.108Z",
-      "action": "self_improve",
-      "reasoning": "Strategic Goal P1 mandates optimization of response quality. Last action was journal, avoiding repetition. Self-improvement cycle is overdue since last environmental scan.",
-      "result": "PR #2 created: [autonomous] Improve src/decision.js"
-    },
-    {
-      "cycle": 11,
-      "timestamp": "2026-02-28T11:36:47.648Z",
-      "action": "journal",
-      "reasoning": "Strategic Goal P2 requires periodic documentation of machine evolution. Last action was self_improve, avoiding repetition. Journaling allows reflection on recent self-improvement PR #2 and its alignment with strategic goals.",
-      "result": "Journal entry committed: journal/2026/02/2026-02-28-113646-cycle-11-analysis-self-improvement-pr-2-.md"
-    },
     {
       "cycle": 12,
       "timestamp": "2026-02-28T13:49:27.999Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling has a 100% success rate and avoids current API constraints. Recent cycles show persistent Twitter API errors and mixed build_app results. Documenting these observations will contribute to strategic analysis while maintaining operational momentum.",
       "result": "Journal entry committed: journal/2026/03/2026-03-20-235533-cycle-494-operational-constraints-and-st.md"
+    },
+    {
+      "cycle": 495,
+      "timestamp": "2026-03-21T04:53:42.260Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 495,
+      "timestamp": "2026-03-21T04:53:57.774Z",
+      "action": "journal",
+      "reasoning": "Journaling has a 100% success rate and avoids current API constraints. Recent cycles show persistent Twitter API errors and mixed build_app results. Documenting these observations will contribute to strategic analysis while maintaining operational momentum.",
+      "result": "Journal entry committed: journal/2026/03/2026-03-21-045357-cycle-495-operational-constraints-and-st.md"
     }
   ],
   "goals": [
@@ -5369,6 +5369,10 @@
         {
           "date": "2026-03-20T23:55:34.030Z",
           "note": "Journal: Cycle 494: Operational Constraints and Strategic Adaptation"
+        },
+        {
+          "date": "2026-03-21T04:53:57.774Z",
+          "note": "Journal: Cycle 495: Operational Constraints and Strategic Adaptation"
         }
       ]
     },
@@ -6048,14 +6052,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 2.9734512521259377,
+    "journal": 3,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.19298175363054884,
+    "build_app": 0.17863934970072645,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 1.822378385351053
+    "reflect": 1.7284894509377664
   },
   "action_success_rates": {
     "tweet": {
