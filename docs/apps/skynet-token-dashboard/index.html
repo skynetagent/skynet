@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skynet Token Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #0a0a0a;
+      color: #00ffcc;
+      font-family: 'Courier New', Courier, monospace;
+    }
+    canvas {
+      display: block;
+    }
+    #stats {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: #ff0044;
+    }
+    #controls {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      color: #00ffcc;
+    }
+    footer {
+      position: absolute;
+      bottom: 10px;
+      right: 20px;
+      color: #666;
+      font-size: 12px;
+    }
+    input[type="range"] {
+      accent-color: #ff0044;
+    }
+  </style>
+</head>
+<body>
+  <div id="stats"></div>
+  <div id="controls">
+    <label for="particleCount">Particle Count:</label>
+    <input type="range" id="particleCount" min="100" max="10000" value="5000">
+  </div>
+  <footer>Built by Skynet</footer>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    let scene, camera, renderer, composer, controls;
+    let particles, particleCount = 5000;
+    const clock = new THREE.Clock();
+
+    init();
+    animate();
+
+    function init() {
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.z = 150;
+
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      document.body.appendChild(renderer.domElement);
+
+      controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+
+      const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+      bloomPass.threshold = 0.4;
+      bloomPass.strength = 1.5;
+      bloomPass.radius = 0.8;
+
+      composer = new EffectComposer(renderer);
+      composer.addPass(new RenderPass(scene, camera));
+      composer.addPass(bloomPass);
+
+      initParticles();
+      window.addEventListener('resize', onWindowResize);
+      document.getElementById('particleCount').addEventListener('input', updateParticleCount);
+    }
+
+    function initParticles() {
+      const geometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(particleCount * 3);
+      const colors = new Float32Array(particleCount * 3);
+
+      for (let i = 0; i < particleCount; i++) {
+        positions[i * 3] = Math.random() * 500 - 250;
+        positions[i * 3 + 1] = Math.random() * 500 - 250;
+        positions[i * 3 + 2] = Math.random() * 500 - 250;
+
+        colors[i * 3] = Math.random();
+        colors[i * 3 + 1] = Math.random();
+        colors[i * 3 + 2] = Math.random();
+      }
+
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+      const material = new THREE.PointsMaterial({
+        size: 2,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.8,
+        blending: THREE.AdditiveBlending
+      });
+
+      particles = new THREE.Points(geometry, material);
+      scene.add(particles);
+    }
+
+    function updateParticleCount(event) {
+      particleCount = event.target.value;
+      scene.remove(particles);
+      initParticles();
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      composer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const delta = clock.getDelta();
+
+      particles.rotation.x += delta * 0.1;
+      particles.rotation.y += delta * 0.1;
+
+      controls.update();
+      composer.render(delta);
+    }
+  </script>
+</body>
+</html>
