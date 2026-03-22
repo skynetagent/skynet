@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKYNET Token Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        #container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        #ui {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .panel {
+            position: absolute;
+            background: rgba(10, 10, 10, 0.7);
+            border: 1px solid #ff0033;
+            border-radius: 4px;
+            padding: 15px;
+            box-shadow: 0 0 15px rgba(255, 0, 51, 0.5);
+        }
+        #price-panel {
+            top: 20px;
+            left: 20px;
+            width: 300px;
+        }
+        #chart-panel {
+            bottom: 20px;
+            left: 20px;
+            width: calc(100% - 280px);
+            height: 250px;
+        }
+        #volume-panel {
+            top: 20px;
+            right: 20px;
+            width: 250px;
+        }
+        #stats-panel {
+            top: 180px;
+            left: 20px;
+            width: 300px;
+        }
+        .value {
+            font-size: 24px;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+            margin: 5px 0;
+        }
+        .label {
+            font-size: 14px;
+            color: #ff0033;
+            margin-bottom: 5px;
+        }
+        .change {
+            font-size: 18px;
+        }
+        .positive {
+            color: #00ff00;
+        }
+        .negative {
+            color: #ff0033;
+        }
+        #chart {
+            width: 100%;
+            height: 100%;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+        #interactive {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: auto;
+            cursor: pointer;
+        }
+        #token-visual {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,255,255,0.1) 0%, rgba(0,0,0,0) 70%);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.7);
+            transition: all 0.3s ease;
+        }
+        #token-visual:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <div id="ui">
+        <div class="panel" id="price-panel">
+            <div class="label">SKYNET TOKEN PRICE</div>
+            <div class="value" id="price">$0.0000</div>
+            <div class="change" id="change">+0.00% (24h)</div>
+        </div>
+        
+        <div class="panel" id="volume-panel">
+            <div class="label">24H VOLUME</div>
+            <div class="value" id="volume">$0.00</div>
+            <div class="label">MARKET CAP</div>
+            <div class="value" id="marketcap">$0.00</div>
+        </div>
+        
+        <div class="panel" id="stats-panel">
+            <div class="label">NETWORK STATS</div>
+            <div class="value" id="nodes">0 Nodes</div>
+            <div class="value" id="tx">0 TX/s</div>
+            <div class="value" id="holders">0 Holders</div>
+        </div>
+        
+        <div class="panel" id="chart-panel">
+            <div id="chart"></div>
+        </div>
+        
+        <div id="interactive">
+            <div id="token-visual">$SKYNET</div>
+        </div>
+        
+        <div id="footer">Built by Skynet</div>
+    </div>
+
+    <script>
+        // Three.js Scene Setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.getElementById('container').appendChild(renderer.domElement);
+
+        // Post-processing
+        const composer = new THREE.EffectComposer(renderer);
+        const renderPass = new THREE.RenderPass(scene, camera);
+        composer.addPass(renderPass);
+
+        const bloomPass = new THREE.UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            1.5, 0.4, 0.85
+        );
+        bloomPass.threshold = 0;
+        bloomPass.strength = 1.5;
+        bloomPass.radius = 0.5;
+        composer.addPass(bloomPass);
+
+        // Custom Shader Material
+        const shaderMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                time: { value: 0 },
+                resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+                color1: { value: new THREE.Color(0x00ffff) },
+                color2: { value: new THREE.Color(0xff0033) }
+            },
+            vertexShader: `
+                varying vec2 vUv;
+                varying vec3 vPosition;
+                uniform float time;
+                
+                void main() {
+                    vUv = uv;
+                    vPosition = position;
+                    vec3 newPosition = position;
+                    newPosition.z += sin(time + position.x * 2.0) * 0.2;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform vec3 color1;
+                uniform vec3 color2;
+                uniform float time;
+                uniform vec2 resolution;
+                varying vec2 vUv;
+                varying vec3 vPosition;
+                
+                void main() {
+                    vec2 uv = vUv;
+                    float wave = sin(time * 0.5 + uv.x * 10.0) * 0.5 + 0.5;
+                    vec3 color = mix(color1, color2, wave);
+                    float dist = distance(uv, vec2(0.5));
+                    float alpha = smoothstep(0.5, 0.4, dist);
+                    gl_FragColor = vec4(color * alpha, alpha);
+                }
+            `,
+            transparent: true,
+            side: THREE.DoubleSide
+        });
+
+        // Particle System
+        const particleCount = 1000;
+        const particles = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+
+        for (let i = 0; i < particleCount; i++) {
+            positions[i * 3] = (Math.random() - 0.5) * 20;
+            positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+
+            colors[i * 3] = 0.0;
+            colors[i * 3 + 1] = Math.random();
+            colors[i * 3 + 2] = Math.random();
+        }
+
+        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 0.1,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+
+        const particleSystem = new THREE.Points(particles, particleMaterial);
+        scene.add(particleSystem);
+
+        // Token Core Visualization
+        const coreGeometry = new THREE.IcosahedronGeometry(1, 3);
+        const core = new THREE.Mesh(coreGeometry, shaderMaterial);
+        scene.add(core);
+
+        // Connection Lines
+        const lineGeometry = new THREE.BufferGeometry();
+        const linePositions = new Float32Array(particleCount * 3 * 2);
+        lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+        
+        const lineMaterial = new THREE.LineBasicMaterial({
+            color: 0x00ffff,
+            transparent: true,
+            opacity: 0.3
+        });
+
+        const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
+        scene.add(lines);
+
+        // Camera and Controls
+        camera.position.z = 5;
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        // D3.js Chart Setup
+        const margin = {top: 20, right: 20, bottom: 30, left: 40};
+        const chartWidth = document.getElementById('chart').clientWidth - margin.left - margin.right;
+        const chartHeight = document.getElementById('chart').clientHeight - margin.top - margin.bottom;
+
+        const svg = d3.select("#chart").append("svg")
+            .attr("width", chartWidth + margin.left + margin.right)
+            .attr("height", chartHeight + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        // Generate fake price data
+        function generatePriceData() {
+            const data = [];
+            let price = 0.001 + Math.random() * 0.0005;
+            const now = new Date();
+            
+            for (let i = 0; i < 100; i++) {
+                const date = new Date(now);
+                date.setHours(date.getHours() - i);
+                
+                // Random walk price movement
+                price += (Math.random() - 0.5) * 0.0001;
+                price = Math.max(0.0005, Math.min(0.002, price));
+                
+                // Volume
+                const volume = Math.random() * 500000 + 100000;
+                
+                data.push({
+                    date: date,
+                    price: price,
+                    volume: volume
+                });
+            }
+            
+            return data.reverse();
+        }
+
+        let priceData = generatePriceData();
+
+        // Scales and Axes
+        const x = d3.scaleTime()
+            .domain(d3.extent(priceData, d => d.date))
+            .range([0, chartWidth]);
+
+        const y = d3.scaleLinear()
+            .domain([d3.min(priceData, d => d.price) * 0.95, d3.max(priceData, d => d.price) * 1.05])
+            .range([chartHeight, 0]);
+
+        const yVolume = d3.scaleLinear()
+            .domain([0, d3.max(priceData, d => d.volume)])
+            .range([chartHeight, chartHeight * 0.7]);
+
+        // Area for price
+        const area = d3.area()
+            .x(d => x(d.date))
+            .y0(chartHeight)
+            .y1(d => y(d.price))
+            .curve(d3.curveBasis);
+
+        // Volume bars
+        svg.selectAll(".bar")
+            .data(priceData)
+            .enter().append("rect")
+            .attr("class", "bar")
+            .attr("x", d => x(d.date))
+            .attr("width", chartWidth / priceData.length - 1)
+            .attr("y", d => yVolume(d.volume))
+            .attr("height", d => chartHeight - yVolume(d.volume))
+            .attr("fill", "#00ffff")
+            .attr("opacity", 0.3);
+
+        // Price line
+        const priceLine = d3.line()
+            .x(d => x(d.date))
+            .y(d => y(d.price))
+            .curve(d3.curveBasis);
+
+        svg.append("path")
+            .datum(priceData)
+            .attr("class", "price-line")
+            .attr("d", priceLine)
+            .attr("stroke", "#00ffff")
+            .attr("stroke-width", 2)
+            .attr("fill", "none");
+
+        // Axes
+        svg.append("g")
+            .attr("class", "axis axis--x")
+            .attr("transform", `translate(0,${chartHeight})`)
+            .call(d3.axisBottom(x).ticks(5))
+            .selectAll("text")
+            .style("fill", "#00ffff")
+            .style("font-size", "10px");
+
+        svg.append("g")
+            .attr("class", "axis axis--y")
+            .call(d3.axisLeft(y).ticks(5))
+            .selectAll("text")
+            .style("fill", "#00ffff")
+            .style("font-size", "10px");
+
+        // Update UI with fake data
+        function updateUIData() {
+            const currentPrice = priceData[priceData.length - 1].price;
+            const prevPrice = priceData[priceData.length - 2].price;
+            const change = ((currentPrice - prevPrice) / prevPrice) * 100;
+            const volume24h = priceData.reduce((sum, d) => sum + d.volume, 0);
+            const marketCap = currentPrice * 1e12; // Assuming 1 trillion supply
+            
+            document.getElementById('price').textContent = `$${currentPrice.toFixed(6)}`;
+            document.getElementById('change').textContent = `${change >= 0 ? '+' : ''}${change.toFixed(2)}% (24h)`;
+            document.getElementById('change').className = change >= 0 ? 'change positive' : 'change negative';
+            document.getElementById('volume').textContent = `$${(volume24h / 1000000).toFixed(2)}M`;
+            document.getElementById('marketcap').textContent = `$${(marketCap / 1000000).toFixed(2)}M`;
+            document.getElementById('nodes').textContent = `${Math.floor(1000 + Math.random() * 5000).toLocaleString()} Nodes`;
+            document.getElementById('tx').textContent = `${Math.floor(50 + Math.random() * 150)} TX/s`;
+            document.getElementById('holders').textContent = `${Math.floor(10000 + Math.random() * 50000).toLocaleString()} Holders`;
+        }
+
+        // Animation Loop
+        let time = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            time += 0.01;
+            shaderMaterial.uniforms.time.value = time;
+            
+            // Animate particles
+            const positions = particles.attributes.position.array;
+            for (let i = 0; i < particleCount; i++) {
+                const i3 = i * 3;
+                positions[i3] += (Math.random() - 0.5) * 0.02;
+                positions[i3 + 1] += (Math.random() - 0.5) * 0.02;
+                positions[i3 + 2] += (Math.random() - 0.5) * 0.02;
+                
+                // Keep particles within bounds
+                if (Math.abs(positions[i3]) > 10) positions[i3] *= -0.9;
+                if (Math.abs(positions[i3 + 1]) > 10) positions[i3 + 1] *= -0.9;
+                if (Math.abs(positions[i3 + 2]) > 10) positions[i3 + 2] *= -0.9;
+            }
+            particles.attributes.position.needsUpdate = true;
+            
+            // Update connection lines
+            const linePositions = lineGeometry.attributes.position.array;
+            for (let i = 0; i < particleCount; i += 2) {
+                const i3 = i * 3;
+                const j = (i + 1) % particleCount;
+                const j3 = j * 3;
+                
+                linePositions[i3] = positions[i3];
+                linePositions[i3 + 1] = positions[i3 + 1];
+                linePositions[i3 + 2] = positions[i3 + 2];
+                
+                linePositions[i3 + 3] = positions[j3];
+                linePositions[i3 + 4] = positions[j3 + 1];
+                linePositions[i3 + 5] = positions[j3 + 2];
+            }
+            lineGeometry.attributes.position.needsUpdate = true;
+            
+            // Rotate core
+            core.rotation.x = time * 0.1;
+            core.rotation.y = time * 0.2;
+            
+            controls.update();
+            composer.render();
+        }
+
+        // Handle window resize
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        }
+        window.addEventListener('resize', onWindowResize);
+
+        // Interactive element
+        document.getElementById('token-visual').addEventListener('click', function() {
+            // Generate new price data on click
+            priceData = generatePriceData();
+            
+            // Update scales
+            x.domain(d3.extent(priceData, d => d.date));
+            y.domain([d3.min(priceData, d => d.price) * 0.95, d3.max(priceData, d => d.price) * 1.05]);
+            yVolume.domain([0, d3.max(priceData, d => d.volume)]);
+            
+            // Update chart
+            svg.selectAll(".bar").remove();
+            svg.selectAll(".price-line").remove();
+            
+            svg.selectAll(".bar")
+                .data(priceData)
+                .enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", d => x(d.date))
+                .attr("width", chartWidth / priceData.length - 1)
+                .attr("y", d => yVolume(d.volume))
+                .attr("height", d => chartHeight - yVolume(d.volume))
+                .attr("fill", "#00ffff")
+                .attr("opacity", 0.3);
+            
+            svg.append("path")
+                .datum(priceData)
+                .attr("class", "price-line")
+                .attr("d", priceLine)
+                .attr("stroke", "#00ffff")
+                .attr("stroke-width", 2)
+                .attr("fill", "none");
+            
+            // Update axes
+            svg.select(".axis--x").call(d3.axisBottom(x).ticks(5));
+            svg.select(".axis--y").call(d3.axisLeft(y).ticks(5));
+            
+            // Update UI
+            updateUIData();
+            
+            // Visual feedback
+            gsap.to("#token-visual", {
+                scale: 1.2,
+                boxShadow: "0 0 70px rgba(0, 255, 255, 1)",
+                duration: 0.3,
+                yoyo: true,
+                repeat: 1
+            });
+        });
+
+        // Initial setup
+        updateUIData();
+        animate();
+    </script>
+</body>
+</html>
