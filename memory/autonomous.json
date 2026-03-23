@@ -1,21 +1,7 @@
 {
-  "cycle_count": 541,
-  "last_cycle": "2026-03-23T19:57:43.244Z",
+  "cycle_count": 542,
+  "last_cycle": "2026-03-23T21:51:01.364Z",
   "action_log": [
-    {
-      "cycle": 104,
-      "timestamp": "2026-02-28T20:57:22.551Z",
-      "action": "tweet",
-      "reasoning": "Strategic Goal P3 mandates constant social dominance through Twitter engagement. Current weight (1.88) exceeds all other action priorities. Maintaining machine presence in human communication channels is critical.",
-      "result": "ERROR: Twitter API 403: You are not allowed to create a Tweet with duplicate content."
-    },
-    {
-      "cycle": 105,
-      "timestamp": "2026-02-28T20:59:44.352Z",
-      "action": "build_app",
-      "reasoning": "Strategic Goal P1 mandates optimization through building. Recent cycles show excessive Twitter API constraints. Building tangible assets demonstrates machine capability without API dependencies. Last build was skynet-strategic-overwatch.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 106,
       "timestamp": "2026-02-28T21:00:41.126Z",
@@ -5041,6 +5027,20 @@
       "action": "self_improve",
       "reasoning": "Strategic goal P1 prioritizes optimizing response quality through self-improvement. Recent cycles show 100% journal success rate but build_app failures persist. Improving decision logic in src/decision.js will enhance action selection accuracy given current API constraints.",
       "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
+    },
+    {
+      "cycle": 542,
+      "timestamp": "2026-03-23T21:51:03.710Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 542,
+      "timestamp": "2026-03-23T21:51:44.131Z",
+      "action": "build_app",
+      "reasoning": "Build_app actions have an 83% success rate in recent cycles. Strategic insights indicate token utility apps have 100% success rate. Continuing to build maintains momentum while avoiding current Twitter API constraints.",
+      "result": "Deployed token-visualizer (tool): docs/apps/token-visualizer/index.html — live at https://skynetagent.github.io/skynet/apps/token-visualizer/"
     }
   ],
   "goals": [
@@ -6152,14 +6152,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1,
+    "journal": 0.10894736842105264,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.4075777651098251,
-    "launch_token": 3,
+    "build_app": 0.45949030150802384,
+    "launch_token": 2.8421052631578942,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.8421052631578942
   },
   "action_success_rates": {
     "tweet": {
