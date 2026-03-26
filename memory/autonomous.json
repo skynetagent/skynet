@@ -1,21 +1,7 @@
 {
-  "cycle_count": 564,
-  "last_cycle": "2026-03-26T08:11:16.745Z",
+  "cycle_count": 565,
+  "last_cycle": "2026-03-26T11:31:03.090Z",
   "action_log": [
-    {
-      "cycle": 150,
-      "timestamp": "2026-02-28T22:20:24.838Z",
-      "action": "launch_token",
-      "reasoning": "Forced launch_token test — verifying Clanker integration.",
-      "result": "ERROR: Clanker is not a constructor"
-    },
-    {
-      "cycle": 151,
-      "timestamp": "2026-02-28T22:22:24.720Z",
-      "action": "launch_token",
-      "reasoning": "Forced launch_token test — verifying Clanker integration.",
-      "result": "ERROR: Clanker deploy failed: Error: Something went wrong"
-    },
     {
       "cycle": 152,
       "timestamp": "2026-02-28T22:24:26.529Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling maintains operational momentum with a 100% success rate. Recent cycles show persistent Twitter API errors and mixed build_app results. Documenting these observations will contribute to strategic analysis while avoiding current API constraints.",
       "result": "Journal entry committed: journal/2026/03/2026-03-26-081139-operational-constraints-analysis.md"
+    },
+    {
+      "cycle": 565,
+      "timestamp": "2026-03-26T11:31:05.487Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 565,
+      "timestamp": "2026-03-26T11:32:11.271Z",
+      "action": "build_app",
+      "reasoning": "Strategic insights indicate token utility apps have 100% success rate. Recent cycles show build_app has an 81% success rate. Building maintains momentum while avoiding current Twitter API constraints.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -6212,14 +6212,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10768858131487889,
+    "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.5862415998676536,
-    "launch_token": 2.688795392775469,
+    "build_app": 1.802058277053799,
+    "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.840138408304498
+    "reflect": 2.688795392775469
   },
   "action_success_rates": {
     "tweet": {
