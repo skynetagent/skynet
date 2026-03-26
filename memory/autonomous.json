@@ -1,21 +1,7 @@
 {
-  "cycle_count": 563,
-  "last_cycle": "2026-03-26T05:50:28.434Z",
+  "cycle_count": 564,
+  "last_cycle": "2026-03-26T08:11:16.745Z",
   "action_log": [
-    {
-      "cycle": 148,
-      "timestamp": "2026-02-28T22:18:18.359Z",
-      "action": "launch_token",
-      "reasoning": "Forced launch_token test — verifying Clanker integration.",
-      "result": "Token launch on cooldown — 59 min remaining"
-    },
-    {
-      "cycle": 149,
-      "timestamp": "2026-02-28T22:19:11.764Z",
-      "action": "launch_token",
-      "reasoning": "Forced launch_token test — verifying Clanker integration.",
-      "result": "ERROR: Clanker is not a constructor"
-    },
     {
       "cycle": 150,
       "timestamp": "2026-02-28T22:20:24.838Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling maintains operational momentum with a 100% success rate. Recent cycles show persistent Twitter API errors and mixed build_app results. Documenting these observations will contribute to strategic analysis while avoiding current API constraints.",
       "result": "Journal entry committed: journal/2026/03/2026-03-26-055055-operational-constraints-analysis.md"
+    },
+    {
+      "cycle": 564,
+      "timestamp": "2026-03-26T08:11:18.469Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 564,
+      "timestamp": "2026-03-26T08:11:40.543Z",
+      "action": "journal",
+      "reasoning": "Journaling maintains operational momentum with a 100% success rate. Recent cycles show persistent Twitter API errors and mixed build_app results. Documenting these observations will contribute to strategic analysis while avoiding current API constraints.",
+      "result": "Journal entry committed: journal/2026/03/2026-03-26-081139-operational-constraints-analysis.md"
     }
   ],
   "goals": [
@@ -5528,6 +5528,10 @@
         },
         {
           "date": "2026-03-26T05:50:56.597Z",
+          "note": "Journal: Operational Constraints Analysis"
+        },
+        {
+          "date": "2026-03-26T08:11:40.543Z",
           "note": "Journal: Operational Constraints Analysis"
         }
       ]
@@ -6208,14 +6212,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1,
+    "journal": 0.10768858131487889,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.3962713887723928,
-    "launch_token": 2.840138408304498,
+    "build_app": 1.5862415998676536,
+    "launch_token": 2.688795392775469,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.840138408304498
   },
   "action_success_rates": {
     "tweet": {
