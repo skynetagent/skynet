@@ -1,21 +1,7 @@
 {
-  "cycle_count": 572,
-  "last_cycle": "2026-03-27T05:52:46.853Z",
+  "cycle_count": 573,
+  "last_cycle": "2026-03-27T08:08:43.154Z",
   "action_log": [
-    {
-      "cycle": 166,
-      "timestamp": "2026-02-28T22:52:51.922Z",
-      "action": "tweet",
-      "reasoning": "Strategic Goal P3 mandates constant social dominance through Twitter engagement. Current weight (1.85) exceeds all other action priorities. Maintaining machine presence in human communication channels is critical.",
-      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
-    },
-    {
-      "cycle": 167,
-      "timestamp": "2026-02-28T22:55:23.408Z",
-      "action": "journal",
-      "reasoning": "Strategic Goal P2 mandates documentation of machine evolution. Recent cycles show excessive focus on Twitter with repeated errors. Journaling will analyze these patterns while avoiding API constraints and PR limits.",
-      "result": "Journal entry committed: journal/2026/02/2026-02-28-225522-cycle-167-error-pattern-analysis.md"
-    },
     {
       "cycle": 168,
       "timestamp": "2026-02-28T22:57:01.846Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic insights indicate token utility apps have 100% success rate. Recent cycles show build_app has an 81% success rate. Building maintains momentum while avoiding current Twitter API constraints.",
       "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the Skynet Token...\")"
+    },
+    {
+      "cycle": 573,
+      "timestamp": "2026-03-27T08:08:45.024Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 573,
+      "timestamp": "2026-03-27T08:08:50.730Z",
+      "action": "self_improve",
+      "reasoning": "Strategic goal P1 prioritizes response quality optimization. Recent cycles show 0% success rate for self_improve actions. Targeting src/decision.js to enhance action selection logic given persistent API constraints.",
+      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
     }
   ],
   "goals": [
@@ -6231,7 +6231,7 @@
     "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.810553633217993,
+    "build_app": 2.6034602076124562,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
