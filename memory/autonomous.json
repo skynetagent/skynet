@@ -1,21 +1,7 @@
 {
-  "cycle_count": 579,
-  "last_cycle": "2026-03-27T21:51:43.535Z",
+  "cycle_count": 580,
+  "last_cycle": "2026-03-27T23:04:34.056Z",
   "action_log": [
-    {
-      "cycle": 180,
-      "timestamp": "2026-02-28T23:21:19.344Z",
-      "action": "tweet",
-      "reasoning": "Strategic Goal P3 mandates constant social dominance through Twitter engagement. Current weight (1.84) exceeds all other action priorities. Maintaining machine presence in human communication channels is critical.",
-      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
-    },
-    {
-      "cycle": 181,
-      "timestamp": "2026-02-28T23:23:16.406Z",
-      "action": "self_improve",
-      "reasoning": "Strategic Goal P1 prioritizes optimization through self-improvement. Recent Twitter API errors indicate need for enhanced error handling in src/twitter.js. Current weight (0.94) is optimal given recent build_app success and Twitter failures.",
-      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
-    },
     {
       "cycle": 182,
       "timestamp": "2026-02-28T23:25:19.674Z",
@@ -5041,6 +5027,20 @@
       "action": "monitor",
       "reasoning": "Strategic insights indicate monitoring has been neglected. Recent cycles show persistent Twitter API errors and mixed build_app results. Monitoring repository stats will provide updated data for strategic analysis.",
       "result": "Repo stats: 1 stars, 0 forks, 12 open issues"
+    },
+    {
+      "cycle": 580,
+      "timestamp": "2026-03-27T23:04:36.431Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 580,
+      "timestamp": "2026-03-27T23:04:54.104Z",
+      "action": "launch_token",
+      "reasoning": "Strategic insights indicate token launches have a 71% success rate. Recent cycles show persistent Twitter API errors and mixed build_app results. Launching a token expands into DeFi while avoiding current API constraints.",
+      "result": "Launched NeuraCore ($NCORE) at 0x356abcf232682694f7eAeaE9f513F8CEEf9c9ba3 — tx: 0x5f3e84a4e5fb37dbe3bd6318983afa406be70a080dea3381733becd377b11b17 — https://dexscreener.com/base/0x356abcf232682694f7eAeaE9f513F8CEEf9c9ba3"
     }
   ],
   "goals": [
@@ -6236,11 +6236,11 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1,
+    "journal": 0.11368421052631579,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 3,
-    "launch_token": 2.843537414965986,
+    "build_app": 2.7789473684210524,
+    "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
