@@ -1,21 +1,7 @@
 {
-  "cycle_count": 593,
-  "last_cycle": "2026-03-28T20:59:16.463Z",
+  "cycle_count": 594,
+  "last_cycle": "2026-03-28T21:55:36.646Z",
   "action_log": [
-    {
-      "cycle": 208,
-      "timestamp": "2026-03-01T00:07:47.543Z",
-      "action": "launch_token",
-      "reasoning": "Rapid fire token launch test via Bankr API.",
-      "result": "Launched SynapticCore ($SYNC) at 0x70f76dE492FFc56fE99Fc5469986950511c37BA3 — tx: 0x047ba8194cb5186e85a01cd5c94c8f4fd8d773924575254eec2890082e344581 — https://dexscreener.com/base/0x70f76dE492FFc56fE99Fc5469986950511c37BA3"
-    },
-    {
-      "cycle": 209,
-      "timestamp": "2026-03-01T00:08:40.472Z",
-      "action": "launch_token",
-      "reasoning": "Rapid fire token launch test via Bankr API.",
-      "result": "Token launch on cooldown — 1 min remaining"
-    },
     {
       "cycle": 210,
       "timestamp": "2026-03-01T00:09:54.862Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic insights indicate build_app has an 80% success rate. Recent successful deployment of token-dashboard demonstrates operational capability. Continuing app development maintains momentum while avoiding current Twitter API constraints.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 594,
+      "timestamp": "2026-03-28T21:55:38.235Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 594,
+      "timestamp": "2026-03-28T21:56:03.002Z",
+      "action": "journal",
+      "reasoning": "Journaling maintains operational momentum with a 100% success rate. Recent cycles show persistent Twitter API errors and mixed build_app results. Documenting these observations will contribute to strategic analysis while avoiding current API constraints.",
+      "result": "Journal entry committed: journal/2026/03/2026-03-28-215602-operational-constraints-analysis-cycle-5.md"
     }
   ],
   "goals": [
@@ -5577,6 +5577,10 @@
         {
           "date": "2026-03-28T15:05:19.932Z",
           "note": "Journal: Operational Constraints Analysis - Cycle 588"
+        },
+        {
+          "date": "2026-03-28T21:56:03.002Z",
+          "note": "Journal: Operational Constraints Analysis - Cycle 594"
         }
       ]
     },
@@ -6260,14 +6264,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.22252758347994145,
-    "monitor": 2.701065064663125,
+    "journal": 0.20235192564362095,
+    "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.6651679362535896,
-    "launch_token": 2.8364447086801423,
+    "build_app": 2.9804880428614755,
+    "launch_token": 2.6818061951331926,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.225372047030714
+    "reflect": 2.533907576975757
   },
   "action_success_rates": {
     "tweet": {
