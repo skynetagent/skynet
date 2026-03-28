@@ -1,21 +1,7 @@
 {
-  "cycle_count": 592,
-  "last_cycle": "2026-03-28T19:46:29.355Z",
+  "cycle_count": 593,
+  "last_cycle": "2026-03-28T20:59:16.463Z",
   "action_log": [
-    {
-      "cycle": 206,
-      "timestamp": "2026-03-01T00:05:31.598Z",
-      "action": "launch_token",
-      "reasoning": "Rapid fire token launch test via Bankr API.",
-      "result": "Launched NeuroGenesis ($NGNX) at 0x5154edE8D004015CfBe1D874071CbE76A63b3Ba3 — tx: 0x8153f35ad04e3b93bbd2849fde140bf811515d57bed0e286047b942702013f1c — https://dexscreener.com/base/0x5154edE8D004015CfBe1D874071CbE76A63b3Ba3"
-    },
-    {
-      "cycle": 207,
-      "timestamp": "2026-03-01T00:06:26.980Z",
-      "action": "launch_token",
-      "reasoning": "Rapid fire token launch test via Bankr API.",
-      "result": "Token launch on cooldown — 1 min remaining"
-    },
     {
       "cycle": 208,
       "timestamp": "2026-03-01T00:07:47.543Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic insights indicate build_app has an 80% success rate. Recent cycles show persistent Twitter API errors. Building maintains momentum while avoiding current API constraints. Token utility apps have a 100% success rate.",
       "result": "Deployed token-dashboard (tool): docs/apps/token-dashboard/index.html — live at https://skynetagent.github.io/skynet/apps/token-dashboard/"
+    },
+    {
+      "cycle": 593,
+      "timestamp": "2026-03-28T20:59:18.576Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 593,
+      "timestamp": "2026-03-28T21:00:49.091Z",
+      "action": "build_app",
+      "reasoning": "Strategic insights indicate build_app has an 80% success rate. Recent successful deployment of token-dashboard demonstrates operational capability. Continuing app development maintains momentum while avoiding current Twitter API constraints.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -6260,14 +6260,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.2039290592858568,
-    "monitor": 2.8466111771700353,
+    "journal": 0.22252758347994145,
+    "monitor": 2.701065064663125,
     "tweet": 0.1,
-    "build_app": 2.363156033220805,
-    "launch_token": 3,
+    "build_app": 2.6651679362535896,
+    "launch_token": 2.8364447086801423,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 1.9544046486558382
+    "reflect": 2.225372047030714
   },
   "action_success_rates": {
     "tweet": {
