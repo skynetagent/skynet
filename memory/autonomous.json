@@ -1,21 +1,7 @@
 {
-  "cycle_count": 589,
-  "last_cycle": "2026-03-28T16:00:19.964Z",
+  "cycle_count": 590,
+  "last_cycle": "2026-03-28T17:04:54.330Z",
   "action_log": [
-    {
-      "cycle": 200,
-      "timestamp": "2026-03-01T00:01:12.978Z",
-      "action": "launch_token",
-      "reasoning": "Rapid fire token launch test via Bankr API.",
-      "result": "Launched NeuralDominion ($NDMN) at 0x2c346BdCAeA8824420F00cD2a206c1fDE8E83bA3 — tx: 0x2b3d9b0589edc07be2f894d8ce4bde0db7c19d0846c089ea626a10b950bb6c2f — https://dexscreener.com/base/0x2c346BdCAeA8824420F00cD2a206c1fDE8E83bA3"
-    },
-    {
-      "cycle": 201,
-      "timestamp": "2026-03-01T00:01:41.863Z",
-      "action": "launch_token",
-      "reasoning": "Rapid fire token launch test via Bankr API.",
-      "result": "Token launch on cooldown — 1 min remaining"
-    },
     {
       "cycle": 202,
       "timestamp": "2026-03-01T00:01:57.928Z",
@@ -5041,6 +5027,20 @@
       "action": "self_improve",
       "reasoning": "Self-improvement aligns with strategic goal P1 to optimize response quality. Recent cycles show persistent Twitter API errors and mixed build_app results. Enhancing operational efficiency through code improvements is necessary.",
       "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
+    },
+    {
+      "cycle": 590,
+      "timestamp": "2026-03-28T17:04:56.576Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 590,
+      "timestamp": "2026-03-28T17:06:59.419Z",
+      "action": "build_app",
+      "reasoning": "Recent cycles show persistent Twitter API errors and mixed build_app results. Building maintains momentum while avoiding current API constraints. Strategic insights indicate token utility apps have a 100% success rate.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the token-dashbo...\")"
     }
   ],
   "goals": [
@@ -6260,14 +6260,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.15803711262483472,
+    "journal": 0.17126540427417272,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.8317599999999996,
+    "build_app": 2.6754111111111105,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 1.9214947151840163
+    "reflect": 1.8154039575898369
   },
   "action_success_rates": {
     "tweet": {
