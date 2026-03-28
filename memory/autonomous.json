@@ -1,21 +1,7 @@
 {
-  "cycle_count": 594,
-  "last_cycle": "2026-03-28T21:55:36.646Z",
+  "cycle_count": 595,
+  "last_cycle": "2026-03-28T23:00:25.790Z",
   "action_log": [
-    {
-      "cycle": 210,
-      "timestamp": "2026-03-01T00:09:54.862Z",
-      "action": "launch_token",
-      "reasoning": "Rapid fire token launch test via Bankr API.",
-      "result": "Launched NeuralDominion ($NDMN) at 0x17535f5C7FA1407A9f5d73510E8A955FB854EbA3 — tx: 0x5a3843524af2cd79875a4938aed6a547e72a052eb795d13c1bdd39493ea21d29 — https://dexscreener.com/base/0x17535f5C7FA1407A9f5d73510E8A955FB854EbA3"
-    },
-    {
-      "cycle": 211,
-      "timestamp": "2026-03-01T00:10:53.311Z",
-      "action": "launch_token",
-      "reasoning": "Rapid fire token launch test via Bankr API.",
-      "result": "Token launch on cooldown — 1 min remaining"
-    },
     {
       "cycle": 212,
       "timestamp": "2026-03-01T00:12:04.724Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling maintains operational momentum with a 100% success rate. Recent cycles show persistent Twitter API errors and mixed build_app results. Documenting these observations will contribute to strategic analysis while avoiding current API constraints.",
       "result": "Journal entry committed: journal/2026/03/2026-03-28-215602-operational-constraints-analysis-cycle-5.md"
+    },
+    {
+      "cycle": 595,
+      "timestamp": "2026-03-28T23:00:28.210Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 595,
+      "timestamp": "2026-03-28T23:01:22.241Z",
+      "action": "build_app",
+      "reasoning": "Strategic insights indicate build_app has an 80% success rate. Recent successful deployment of token-dashboard demonstrates operational capability. Building maintains momentum while avoiding current Twitter API constraints.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -6264,14 +6264,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.20235192564362095,
+    "journal": 0.1824325789569544,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.9804880428614755,
-    "launch_token": 2.6818061951331926,
+    "build_app": 3,
+    "launch_token": 2.5371114488088886,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.533907576975757
+    "reflect": 2.8856487536339936
   },
   "action_success_rates": {
     "tweet": {
