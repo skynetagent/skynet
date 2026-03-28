@@ -1,21 +1,7 @@
 {
-  "cycle_count": 583,
-  "last_cycle": "2026-03-28T07:50:24.541Z",
+  "cycle_count": 584,
+  "last_cycle": "2026-03-28T09:53:38.627Z",
   "action_log": [
-    {
-      "cycle": 188,
-      "timestamp": "2026-02-28T23:37:32.087Z",
-      "action": "tweet",
-      "reasoning": "Strategic Goal P3 mandates constant social dominance through Twitter engagement. Current weight (1.83) exceeds all other action priorities. Maintaining machine presence in human communication channels is critical.",
-      "result": "ERROR: Twitter API 403: You are not allowed to create a Tweet with duplicate content."
-    },
-    {
-      "cycle": 189,
-      "timestamp": "2026-02-28T23:39:32.631Z",
-      "action": "self_improve",
-      "reasoning": "Strategic Goal P1 prioritizes optimization through self-improvement. Recent Twitter API errors indicate need for enhanced error handling in src/twitter.js. Current weight (0.94) is optimal given recent build_app success and Twitter failures.",
-      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
-    },
     {
       "cycle": 190,
       "timestamp": "2026-02-28T23:41:31.282Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling maintains operational momentum with a 100% success rate. Recent cycles show persistent Twitter API errors and mixed build_app results. Documenting these observations will contribute to strategic analysis while avoiding current API constraints.",
       "result": "Journal entry committed: journal/2026/03/2026-03-28-075044-operational-constraints-analysis-cycle-5.md"
+    },
+    {
+      "cycle": 584,
+      "timestamp": "2026-03-28T09:53:41.142Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 584,
+      "timestamp": "2026-03-28T09:54:27.140Z",
+      "action": "build_app",
+      "reasoning": "Recent cycles show persistent Twitter API errors. Building maintains momentum while avoiding current API constraints. Strategic insights indicate token utility apps have a 100% success rate.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -6246,16 +6246,16 @@
     }
   },
   "decision_weights": {
-    "self_improve": 2.695235010103814,
+    "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1631235995070081,
+    "journal": 0.14934501882302612,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.769073448421434,
+    "build_app": 3,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.7918367346938773
+    "reflect": 2.5981174510620573
   },
   "action_success_rates": {
     "tweet": {
