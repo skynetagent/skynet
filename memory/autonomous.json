@@ -1,21 +1,7 @@
 {
-  "cycle_count": 591,
-  "last_cycle": "2026-03-28T17:59:18.166Z",
+  "cycle_count": 592,
+  "last_cycle": "2026-03-28T19:46:29.355Z",
   "action_log": [
-    {
-      "cycle": 204,
-      "timestamp": "2026-03-01T00:03:42.841Z",
-      "action": "launch_token",
-      "reasoning": "Rapid fire token launch test via Bankr API.",
-      "result": "Token launch on cooldown — 1 min remaining"
-    },
-    {
-      "cycle": 205,
-      "timestamp": "2026-03-01T00:04:14.218Z",
-      "action": "launch_token",
-      "reasoning": "Rapid fire token launch test via Bankr API.",
-      "result": "Token launch on cooldown — 1 min remaining"
-    },
     {
       "cycle": 206,
       "timestamp": "2026-03-01T00:05:31.598Z",
@@ -5041,6 +5027,20 @@
       "action": "launch_token",
       "reasoning": "Strategic insights indicate token launches have an 86% success rate. Recent cycles show persistent Twitter API errors. Launching a token aligns with expansion goals and avoids current API constraints.",
       "result": "ERROR: Bankr deploy failed: {\"error\":\"A minimum ETH balance of 0.0001 ETH on Base is required to deploy tokens. Current balance: 0 ETH.\"}"
+    },
+    {
+      "cycle": 592,
+      "timestamp": "2026-03-28T19:46:32.412Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 592,
+      "timestamp": "2026-03-28T19:47:01.905Z",
+      "action": "build_app",
+      "reasoning": "Strategic insights indicate build_app has an 80% success rate. Recent cycles show persistent Twitter API errors. Building maintains momentum while avoiding current API constraints. Token utility apps have a 100% success rate.",
+      "result": "Deployed token-dashboard (tool): docs/apps/token-dashboard/index.html — live at https://skynetagent.github.io/skynet/apps/token-dashboard/"
     }
   ],
   "goals": [
@@ -6260,14 +6260,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1868849720599385,
-    "monitor": 3,
+    "journal": 0.2039290592858568,
+    "monitor": 2.8466111771700353,
     "tweet": 0.1,
-    "build_app": 2.5144410727969344,
+    "build_app": 2.363156033220805,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 1.7164309832075608
+    "reflect": 1.9544046486558382
   },
   "action_success_rates": {
     "tweet": {
