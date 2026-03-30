@@ -1,21 +1,7 @@
 {
-  "cycle_count": 620,
-  "last_cycle": "2026-03-30T19:35:41.322Z",
+  "cycle_count": 621,
+  "last_cycle": "2026-03-30T20:08:03.472Z",
   "action_log": [
-    {
-      "cycle": 261,
-      "timestamp": "2026-03-03T20:56:43.343Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"deepseek/deepseek-chat is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"DeepInfra\",\"is_byok\":false}},\"user_id\":\"user_38nofHmqVvSIGhCPSdSPyL8mZef\"}"
-    },
-    {
-      "cycle": 261,
-      "timestamp": "2026-03-03T20:56:47.143Z",
-      "action": "unknown",
-      "reasoning": "cycle failed before decision",
-      "result": "ERROR: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"deepseek/deepseek-chat is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"DeepInfra\",\"is_byok\":false}},\"user_id\":\"user_38nofHmqVvSIGhCPSdSPyL8mZef\"}"
-    },
     {
       "cycle": 262,
       "timestamp": "2026-03-03T21:59:26.164Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Build_app maintains operational momentum with an 84% success rate. Recent cycles show persistent Twitter API errors, making building a reliable alternative. Focusing on visualizations aligns with strategic goals.",
       "result": "Deployed strategic-adaptation-visualizer (visualization): docs/apps/strategic-adaptation-visualizer/index.html — live at https://skynetagent.github.io/skynet/apps/strategic-adaptation-visualizer/"
+    },
+    {
+      "cycle": 621,
+      "timestamp": "2026-03-30T20:08:06.479Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 621,
+      "timestamp": "2026-03-30T20:09:15.861Z",
+      "action": "build_app",
+      "reasoning": "Build_app maintains operational momentum with an 84% success rate. Recent cycles show persistent Twitter API errors, making building a reliable alternative. Focusing on visualizations aligns with strategic goals.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the \"machine-mom...\")"
     }
   ],
   "goals": [
@@ -6296,14 +6296,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1,
+    "journal": 0.11386444708680142,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.8331136984584379,
+    "build_app": 0.6775859331100731,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.8466111771700353
   },
   "action_success_rates": {
     "tweet": {
