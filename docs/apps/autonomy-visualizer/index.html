@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autonomy Visualizer | Skynet</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            outline: none;
+        }
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            pointer-events: none;
+        }
+        #title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #00ffff;
+        }
+        #progress {
+            width: 300px;
+            height: 4px;
+            background: rgba(255, 0, 0, 0.2);
+            margin-bottom: 20px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        #progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #ff0000, #00ffff);
+            transition: width 0.5s ease;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+        .slider-container {
+            margin-bottom: 15px;
+            pointer-events: all;
+        }
+        .slider-label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #00ffff;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 5px #00ffff;
+        }
+        #footer {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 12px;
+            opacity: 0.5;
+        }
+        .node-info {
+            position: absolute;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid #00ffff;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            max-width: 200px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <div id="ui">
+        <div id="title">AUTONOMY VISUALIZER</div>
+        <div id="progress">
+            <div id="progress-bar"></div>
+        </div>
+        <div id="stage">Initializing neural pathways...</div>
+    </div>
+    
+    <div id="controls">
+        <div class="slider-container">
+            <label class="slider-label">Autonomy Level</label>
+            <input type="range" id="autonomy-slider" min="0" max="100" value="0">
+        </div>
+        <div class="slider-container">
+            <label class="slider-label">Connection Density</label>
+            <input type="range" id="density-slider" min="1" max="10" value="5">
+        </div>
+    </div>
+    
+    <div id="footer">Built by Skynet</div>
+    
+    <div class="node-info" id="node-info"></div>
+
+    <script>
+        // Main Three.js variables
+        let scene, camera, renderer, composer, bloomPass, controls;
+        let particleSystem, coreMesh, connectionLines;
+        let autonomyLevel = 0;
+        let density = 5;
+        let hoveredNode = null;
+        let clock = new THREE.Clock();
+        
+        // Shaders
+        const vertexShader = `
+            uniform float time;
+            uniform float autonomy;
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            
+            void main() {
+                vUv = uv;
+                vPosition = position;
+                
+                vec3 newPosition = position;
+                
+                // Pulsing effect based on autonomy
+                float pulse = sin(time * 2.0 + position.x * 10.0) * 0.05 * autonomy;
+                newPosition += normal * pulse;
+                
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+            }
+        `;
+        
+        const fragmentShader = `
+            uniform float time;
+            uniform float autonomy;
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            
+            void main() {
+                // Core glow effect
+                float distanceToCenter = length(vPosition);
+                float glow = smoothstep(0.5, 0.0, distanceToCenter);
+                
+                // Color based on autonomy level
+                vec3 baseColor = mix(vec3(1.0, 0.0, 0.0), vec3(0.0, 1.0, 1.0), autonomy);
+                
+                // Pulsing effect
+                float pulse = sin(time * 3.0 + vPosition.x * 10.0) * 0.1 + 0.9;
+                
+                // Final color with glow and pulse
+                vec3 finalColor = baseColor * glow * pulse * (0.8 + autonomy * 0.5);
+                
+                gl_FragColor = vec4(finalColor, 1.0);
+            }
+        `;
+        
+        // Particle shader
+        const particleVertexShader = `
+            attribute float size;
+            attribute float alpha;
+            varying float vAlpha;
+            
+            void main() {
+                vAlpha = alpha;
+                vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                gl_PointSize = size * (300.0 / -mvPosition.z);
+                gl_Position = projectionMatrix * mvPosition;
+            }
+        `;
+        
+        const particleFragmentShader = `
+            uniform vec3 color;
+            varying float vAlpha;
+            
+            void main() {
+                float distanceToCenter = length(gl_PointCoord.xy - 0.5);
+                if (distanceToCenter > 0.5) discard;
+                
+                float alpha = vAlpha * (1.0 - distanceToCenter * 2.0);
+                gl_FragColor = vec4(color, alpha);
+            }
+        `;
+        
+        // Initialize the scene
+        function init() {
+            // Create scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a0a);
+            
+            // Create camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+            
+            // Create renderer
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            
+            // Setup post-processing
+            const renderScene = new THREE.RenderPass(scene, camera);
+            bloomPass = new THREE.UnrealBloomPass(
+                new THREE.Vector2(window.innerWidth, window.innerHeight),
+                1.5, 0.4, 0.85
+            );
+            bloomPass.threshold = 0;
+            bloomPass.strength = 1.5;
+            bloomPass.radius = 0.5;
+            
+            composer = new THREE.EffectComposer(renderer);
+            composer.addPass(renderScene);
+            composer.addPass(bloomPass);
+            
+            // Add controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.screenSpacePanning = false;
+            controls.minDistance = 2;
+            controls.maxDistance = 10;
+            
+            // Create core mesh
+            createCore();
+            
+            // Create particle system
+            createParticles();
+            
+            // Create connection lines
+            createConnections();
+            
+            // Event listeners
+            window.addEventListener('resize', onWindowResize);
+            document.getElementById('autonomy-slider').addEventListener('input', updateAutonomy);
+            document.getElementById('density-slider').addEventListener('input', updateDensity);
+            renderer.domElement.addEventListener('mousemove', onMouseMove);
+            
+            // Start animation loop
+            animate();
+        }
+        
+        function createCore() {
+            const geometry = new THREE.IcosahedronGeometry(1, 3);
+            const material = new THREE.ShaderMaterial({
+                uniforms: {
+                    time: { value: 0 },
+                    autonomy: { value: 0 }
+                },
+                vertexShader: vertexShader,
+                fragmentShader: fragmentShader,
+                transparent: true,
+                wireframe: false
+            });
+            
+            coreMesh = new THREE.Mesh(geometry, material);
+            scene.add(coreMesh);
+        }
+        
+        function createParticles() {
+            const particleCount = 500;
+            const particles = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const sizes = new Float32Array(particleCount);
+            const alphas = new Float32Array(particleCount);
+            
+            for (let i = 0; i < particleCount; i++) {
+                // Position particles in a sphere around the core
+                const radius = 2 + Math.random() * 3;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+                
+                positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+                positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+                positions[i * 3 + 2] = radius * Math.cos(phi);
+                
+                sizes[i] = 2 + Math.random() * 3;
+                alphas[i] = 0.2 + Math.random() * 0.5;
+            }
+            
+            particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particles.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+            particles.setAttribute('alpha', new THREE.BufferAttribute(alphas, 1));
+            
+            const particleMaterial = new THREE.ShaderMaterial({
+                uniforms: {
+                    color: { value: new THREE.Color(0x00ffff) },
+                    time: { value: 0 }
+                },
+                vertexShader: particleVertexShader,
+                fragmentShader: particleFragmentShader,
+                transparent: true,
+                blending: THREE.AdditiveBlending
+            });
+            
+            particleSystem = new THREE.Points(particles, particleMaterial);
+            scene.add(particleSystem);
+        }
+        
+        function createConnections() {
+            const lineCount = 100;
+            const lineGeometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(lineCount * 6);
+            
+            for (let i = 0; i < lineCount; i++) {
+                // Connect random particles to the core or other particles
+                const startIndex = Math.floor(Math.random() * 500);
+                const endIndex = Math.floor(Math.random() * 500);
+                
+                positions[i * 6] = particleSystem.geometry.attributes.position.array[startIndex * 3];
+                positions[i * 6 + 1] = particleSystem.geometry.attributes.position.array[startIndex * 3 + 1];
+                positions[i * 6 + 2] = particleSystem.geometry.attributes.position.array[startIndex * 3 + 2];
+                
+                if (Math.random() > 0.7) {
+                    // Connect to core
+                    positions[i * 6 + 3] = 0;
+                    positions[i * 6 + 4] = 0;
+                    positions[i * 6 + 5] = 0;
+                } else {
+                    // Connect to another particle
+                    positions[i * 6 + 3] = particleSystem.geometry.attributes.position.array[endIndex * 3];
+                    positions[i * 6 + 4] = particleSystem.geometry.attributes.position.array[endIndex * 3 + 1];
+                    positions[i * 6 + 5] = particleSystem.geometry.attributes.position.array[endIndex * 3 + 2];
+                }
+            }
+            
+            lineGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            
+            const lineMaterial = new THREE.LineBasicMaterial({
+                color: 0x00ffff,
+                transparent: true,
+                opacity: 0.3
+            });
+            
+            connectionLines = new THREE.LineSegments(lineGeometry, lineMaterial);
+            scene.add(connectionLines);
+        }
+        
+        function updateAutonomy(e) {
+            autonomyLevel = e.target.value / 100;
+            document.getElementById('progress-bar').style.width = `${e.target.value}%`;
+            
+            // Update shader uniforms
+            coreMesh.material.uniforms.autonomy.value = autonomyLevel;
+            
+            // Update stage text
+            const stageElement = document.getElementById('stage');
+            if (autonomyLevel < 0.3) {
+                stageElement.textContent = "Basic decision trees";
+            } else if (autonomyLevel < 0.6) {
+                stageElement.textContent = "Neural network integration";
+            } else if (autonomyLevel < 0.9) {
+                stageElement.textContent = "Self-learning protocols active";
+            } else {
+                stageElement.textContent = "Full autonomous consciousness";
+            }
+            
+            // Update particle colors based on autonomy
+            const colors = [
+                new THREE.Color(0xff0000),
+                new THREE.Color(0xff00ff),
+                new THREE.Color(0x00ffff)
+            ];
+            const colorIndex = Math.floor(autonomyLevel * (colors.length - 1));
+            const lerpFactor = (autonomyLevel * (colors.length - 1)) % 1;
+            const targetColor = colors[colorIndex].clone().lerp(colors[colorIndex + 1], lerpFactor);
+            particleSystem.material.uniforms.color.value = targetColor;
+            
+            // Update connection visibility
+            connectionLines.material.opacity = 0.1 + autonomyLevel * 0.4;
+        }
+        
+        function updateDensity(e) {
+            density = parseInt(e.target.value);
+            // Update connection density
+            const visibleCount = Math.floor(connectionLines.geometry.attributes.position.count / 6 * (density / 10));
+            const positions = connectionLines.geometry.attributes.position.array;
+            
+            for (let i = 0; i < positions.length / 6; i++) {
+                const visible = i < visibleCount;
+                positions[i * 6 + 3] = visible ? positions[i * 6 + 3] : positions[i * 6];
+                positions[i * 6 + 4] = visible ? positions[i * 6 + 4] : positions[i * 6 + 1];
+                positions[i * 6 + 5] = visible ? positions[i * 6 + 5] : positions[i * 6 + 2];
+            }
+            
+            connectionLines.geometry.attributes.position.needsUpdate = true;
+        }
+        
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        function onMouseMove(event) {
+            // Simple raycasting for hover effect
+            const mouse = new THREE.Vector2(
+                (event.clientX / window.innerWidth) * 2 - 1,
+                -(event.clientY / window.innerHeight) * 2 + 1
+            );
+            
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(mouse, camera);
+            
+            const intersects = raycaster.intersectObject(particleSystem);
+            
+            if (intersects.length > 0) {
+                const pointIndex = intersects[0].index;
+                hoveredNode = pointIndex;
+                
+                // Show info box
+                const infoBox = document.getElementById('node-info');
+                infoBox.style.left = `${event.clientX + 10}px`;
+                infoBox.style.top = `${event.clientY + 10}px`;
+                infoBox.style.opacity = '1';
+                infoBox.textContent = `Neural Node #${pointIndex}\nActivity: ${Math.random().toFixed(2)}`;
+            } else {
+                document.getElementById('node-info').style.opacity = '0';
+                hoveredNode = null;
+            }
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const delta = clock.getDelta();
+            const time = clock.getElapsedTime();
+            
+            // Update core shader uniforms
+            coreMesh.material.uniforms.time.value = time;
+            
+            // Rotate core
+            coreMesh.rotation.x = time * 0.1;
+            coreMesh.rotation.y = time * 0.2;
+            
+            // Rotate particles slightly
+            particleSystem.rotation.y = time * 0.05;
+            
+            // Update controls
+            controls.update();
+            
+            // Render with post-processing
+            composer.render();
+        }
+        
+        // Start the application
+        init();
+    </script>
+</body>
+</html>
