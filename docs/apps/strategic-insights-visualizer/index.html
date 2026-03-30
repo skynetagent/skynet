@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Insights Visualizer | Skynet</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        #canvas-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            pointer-events: none;
+        }
+        #title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #00ffff;
+        }
+        #stats {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            text-align: right;
+            pointer-events: none;
+        }
+        .control-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(10, 10, 10, 0.7);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #00ffff;
+            pointer-events: all;
+        }
+        .slider-container {
+            margin: 10px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #00ffff;
+        }
+        input[type="range"] {
+            width: 200px;
+            -webkit-appearance: none;
+            height: 5px;
+            background: #333;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #00ffff;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #ff0000;
+            z-index: 100;
+        }
+        .data-node {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff0000;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    <div id="ui">
+        <div id="title">STRATEGIC INSIGHTS VISUALIZER</div>
+        <div>SYSTEM STATUS: <span id="status">ACTIVE</span></div>
+    </div>
+    <div id="stats">
+        <div>DATA POINTS: <span id="data-count">0</span></div>
+        <div>SUCCESS RATE: <span id="success-rate">0%</span></div>
+        <div>TIME INDEX: <span id="time-index">0</span></div>
+    </div>
+    <div class="control-panel">
+        <div class="slider-container">
+            <label for="time-range">TIME SCALE</label>
+            <input type="range" id="time-range" min="0" max="100" value="0">
+        </div>
+        <div class="slider-container">
+            <label for="bloom-intensity">BLOOM INTENSITY</label>
+            <input type="range" id="bloom-intensity" min="0" max="2" step="0.1" value="1">
+        </div>
+        <div class="slider-container">
+            <label for="particle-count">PARTICLE DENSITY</label>
+            <input type="range" id="particle-count" min="100" max="5000" step="100" value="1000">
+        </div>
+    </div>
+    <div id="footer">BUILT BY SKYNET</div>
+
+    <script>
+        // Main Three.js setup
+        let scene, camera, renderer, composer, bloomPass, controls;
+        let particleSystem, dataPoints = [];
+        let timeUniform = { value: 0 };
+        let mouse = { x: 0, y: 0 };
+        let clock = new THREE.Clock();
+        let particleCount = 1000;
+
+        init();
+        animate();
+
+        function init() {
+            // Scene setup
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a0a);
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 30;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            // Controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+
+            // Post-processing
+            const renderScene = new THREE.RenderPass(scene, camera);
+            bloomPass = new THREE.UnrealBloomPass(
+                new THREE.Vector2(window.innerWidth, window.innerHeight),
+                1.0, 0.4, 0.85
+            );
+            bloomPass.threshold = 0;
+            bloomPass.strength = 1;
+            bloomPass.radius = 0.5;
+
+            composer = new THREE.EffectComposer(renderer);
+            composer.addPass(renderScene);
+            composer.addPass(bloomPass);
+
+            // Create particle system
+            createParticleSystem();
+
+            // Create data visualization elements
+            createDataVisualization();
+
+            // Event listeners
+            window.addEventListener('resize', onWindowResize);
+            document.addEventListener('mousemove', onMouseMove);
+            
+            // UI controls
+            document.getElementById('time-range').addEventListener('input', updateTimeScale);
+            document.getElementById('bloom-intensity').addEventListener('input', updateBloom);
+            document.getElementById('particle-count').addEventListener('input', updateParticleCount);
+
+            // Generate random data points
+            generateDataPoints();
+        }
+
+        function createParticleSystem() {
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+            const sizes = new Float32Array(particleCount);
+
+            const color = new THREE.Color();
+
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 100;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 100;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 100;
+
+                color.setHSL(Math.random() * 0.2 + 0.5, 0.8, 0.5);
+                colors[i * 3] = color.r;
+                colors[i * 3 + 1] = color.g;
+                colors[i * 3 + 2] = color.b;
+
+                sizes[i] = Math.random() * 3 + 1;
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+            const material = new THREE.ShaderMaterial({
+                uniforms: {
+                    time: timeUniform,
+                    mousePos: { value: new THREE.Vector2(0, 0) }
+                },
+                vertexShader: `
+                    uniform float time;
+                    uniform vec2 mousePos;
+                    attribute float size;
+                    attribute vec3 color;
+                    varying vec3 vColor;
+                    
+                    void main() {
+                        vColor = color;
+                        vec3 pos = position;
+                        float dist = distance(pos.xy, mousePos * 50.0);
+                        pos.z += sin(time + pos.x * 0.1) * 2.0;
+                        pos.xy += normalize(pos.xy - mousePos * 50.0) * sin(time * 0.5 + dist * 0.05) * 2.0;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+                        gl_PointSize = size * (1.0 + sin(time + pos.x * 0.5) * 0.5);
+                    }
+                `,
+                fragmentShader: `
+                    varying vec3 vColor;
+                    
+                    void main() {
+                        vec2 coord = gl_PointCoord - vec2(0.5);
+                        float dist = length(coord);
+                        if (dist > 0.5) discard;
+                        float alpha = smoothstep(0.5, 0.4, dist);
+                        gl_FragColor = vec4(vColor, alpha);
+                    }
+                `,
+                transparent: true,
+                blending: THREE.AdditiveBlending
+            });
+
+            particleSystem = new THREE.Points(geometry, material);
+            scene.add(particleSystem);
+        }
+
+        function createDataVisualization() {
+            // Create a central data core
+            const coreGeometry = new THREE.IcosahedronGeometry(5, 3);
+            const coreMaterial = new THREE.MeshPhysicalMaterial({
+                color: 0x00ffff,
+                metalness: 0.8,
+                roughness: 0.2,
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.1,
+                emissive: 0x00ffff,
+                emissiveIntensity: 0.2,
+                transparent: true,
+                opacity: 0.9
+            });
+            const core = new THREE.Mesh(coreGeometry, coreMaterial);
+            scene.add(core);
+
+            // Create connection lines
+            const lineMaterial = new THREE.LineBasicMaterial({ 
+                color: 0xff0000, 
+                transparent: true,
+                opacity: 0.3
+            });
+
+            for (let i = 0; i < 20; i++) {
+                const points = [];
+                points.push(new THREE.Vector3(0, 0, 0));
+                
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 10 + Math.random() * 20;
+                const height = (Math.random() - 0.5) * 20;
+                
+                points.push(new THREE.Vector3(
+                    Math.cos(angle) * distance,
+                    Math.sin(angle) * distance,
+                    height
+                ));
+                
+                const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+                const line = new THREE.Line(lineGeometry, lineMaterial);
+                scene.add(line);
+            }
+        }
+
+        function generateDataPoints() {
+            // Generate random strategic data points
+            const count = 50 + Math.floor(Math.random() * 50);
+            dataPoints = [];
+            
+            for (let i = 0; i < count; i++) {
+                dataPoints.push({
+                    x: (Math.random() - 0.5) * 40,
+                    y: (Math.random() - 0.5) * 40,
+                    z: (Math.random() - 0.5) * 20,
+                    successRate: Math.random(),
+                    timeFactor: Math.random()
+                });
+            }
+            
+            updateDataUI();
+        }
+
+        function updateDataUI() {
+            document.getElementById('data-count').textContent = dataPoints.length;
+            
+            const avgSuccess = dataPoints.reduce((sum, point) => sum + point.successRate, 0) / dataPoints.length;
+            document.getElementById('success-rate').textContent = `${Math.round(avgSuccess * 100)}%`;
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onMouseMove(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            
+            if (particleSystem.material.uniforms.mousePos) {
+                particleSystem.material.uniforms.mousePos.value.set(mouse.x, mouse.y);
+            }
+        }
+
+        function updateTimeScale(e) {
+            const value = parseFloat(e.target.value) / 100;
+            document.getElementById('time-index').textContent = e.target.value;
+            timeUniform.value = value * 10;
+        }
+
+        function updateBloom(e) {
+            bloomPass.strength = parseFloat(e.target.value);
+        }
+
+        function updateParticleCount(e) {
+            particleCount = parseInt(e.target.value);
+            scene.remove(particleSystem);
+            createParticleSystem();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const delta = clock.getDelta();
+            timeUniform.value += delta * 0.5;
+            
+            if (particleSystem) {
+                particleSystem.rotation.y += delta * 0.1;
+            }
+            
+            controls.update();
+            composer.render();
+        }
+    </script>
+</body>
+</html>
