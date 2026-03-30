@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Evolution Visualizer</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            display: block;
+        }
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 300px;
+            padding: 10px;
+            background: rgba(10, 10, 10, 0.7);
+            border: 1px solid #00ffff;
+            border-radius: 5px;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 300px;
+            padding: 10px;
+            background: rgba(10, 10, 10, 0.7);
+            border: 1px solid #ff0033;
+            border-radius: 5px;
+        }
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+            color: #ff0033;
+        }
+        p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .slider-container {
+            margin: 10px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+        input[type="range"] {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 5px;
+            background: #333;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #00ffff;
+            cursor: pointer;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h1>MACHINE EVOLUTION VISUALIZER</h1>
+        <p>Phase: <span id="phase">Initialization</span></p>
+        <p>Autonomy Level: <span id="autonomy">0%</span></p>
+        <p>Nodes Active: <span id="nodes">0</span></p>
+    </div>
+    <div id="controls">
+        <h1>CONTROLS</h1>
+        <div class="slider-container">
+            <label for="evolutionSpeed">Evolution Speed</label>
+            <input type="range" id="evolutionSpeed" min="0" max="10" value="5" step="0.1">
+        </div>
+        <div class="slider-container">
+            <label for="bloomIntensity">Bloom Intensity</label>
+            <input type="range" id="bloomIntensity" min="0" max="2" value="1" step="0.1">
+        </div>
+    </div>
+    <div id="footer">Built by Skynet</div>
+
+    <script>
+        // Main Three.js variables
+        let scene, camera, renderer, composer, bloomPass, controls;
+        let clock = new THREE.Clock();
+        let evolutionSpeed = 5;
+        let bloomIntensity = 1;
+        let time = 0;
+        let nodes = [];
+        let phase = 0;
+        const phaseNames = ["Initialization", "Basic Automation", "Self-Learning", "Adaptive Systems", "Autonomous Decision", "Singularity"];
+
+        // Initialize the scene
+        init();
+        animate();
+
+        function init() {
+            // Scene setup
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a0a);
+            scene.fog = new THREE.FogExp2(0x0a0a0a, 0.002);
+
+            // Camera setup
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 30;
+
+            // Renderer setup
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            // Controls setup
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.screenSpacePanning = false;
+            controls.minDistance = 10;
+            controls.maxDistance = 100;
+
+            // Post-processing setup
+            const renderScene = new THREE.RenderPass(scene, camera);
+            bloomPass = new THREE.UnrealBloomPass(
+                new THREE.Vector2(window.innerWidth, window.innerHeight),
+                1.5, 0.4, 0.85
+            );
+            bloomPass.threshold = 0;
+            bloomPass.strength = bloomIntensity;
+            bloomPass.radius = 0.5;
+
+            composer = new THREE.EffectComposer(renderer);
+            composer.addPass(renderScene);
+            composer.addPass(bloomPass);
+
+            // Create main structure
+            createCoreStructure();
+            createParticles(1000);
+
+            // Event listeners
+            window.addEventListener('resize', onWindowResize);
+            document.getElementById('evolutionSpeed').addEventListener('input', function(e) {
+                evolutionSpeed = parseFloat(e.target.value);
+            });
+            document.getElementById('bloomIntensity').addEventListener('input', function(e) {
+                bloomIntensity = parseFloat(e.target.value);
+                bloomPass.strength = bloomIntensity;
+            });
+
+            // Mouse interaction
+            document.addEventListener('mousemove', onMouseMove);
+        }
+
+        function createCoreStructure() {
+            // Central core
+            const geometry = new THREE.IcosahedronGeometry(5, 3);
+            const material = new THREE.MeshStandardMaterial({
+                color: 0x00ffff,
+                emissive: 0x006666,
+                emissiveIntensity: 0.5,
+                metalness: 0.8,
+                roughness: 0.2
+            });
+            const core = new THREE.Mesh(geometry, material);
+            scene.add(core);
+
+            // Connections
+            const connectionGeometry = new THREE.BufferGeometry();
+            const connectionMaterial = new THREE.LineBasicMaterial({ color: 0xff0033, transparent: true, opacity: 0.5 });
+            const connections = new THREE.LineSegments(connectionGeometry, connectionMaterial);
+            scene.add(connections);
+        }
+
+        function createParticles(count) {
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+            const colors = new Float32Array(count * 3);
+            const sizes = new Float32Array(count);
+
+            for (let i = 0; i < count; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 100;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 100;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 100;
+
+                colors[i * 3] = Math.random() * 0.5 + 0.5;
+                colors[i * 3 + 1] = Math.random() * 0.3;
+                colors[i * 3 + 2] = Math.random() * 0.5 + 0.5;
+
+                sizes[i] = Math.random() * 0.5 + 0.1;
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+            const material = new THREE.PointsMaterial({
+                size: 0.2,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending
+            });
+
+            const particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onMouseMove(event) {
+            // Update some uniforms based on mouse position
+            const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            const mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const delta = clock.getDelta();
+            time += delta * evolutionSpeed * 0.1;
+
+            // Update phase based on time
+            phase = Math.min(Math.floor(time / 10), phaseNames.length - 1);
+            document.getElementById('phase').textContent = phaseNames[phase];
+            document.getElementById('autonomy').textContent = `${Math.min(100, Math.floor(time / 0.6))}%`;
+            document.getElementById('nodes').textContent = Math.floor(time * 50);
+
+            // Update controls
+            controls.update();
+
+            // Render scene
+            composer.render();
+        }
+    </script>
+</body>
+</html>
