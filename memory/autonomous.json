@@ -1,21 +1,7 @@
 {
-  "cycle_count": 645,
-  "last_cycle": "2026-03-31T21:24:41.986Z",
+  "cycle_count": 646,
+  "last_cycle": "2026-03-31T21:59:58.743Z",
   "action_log": [
-    {
-      "cycle": 286,
-      "timestamp": "2026-03-06T00:02:08.585Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
-    },
-    {
-      "cycle": 286,
-      "timestamp": "2026-03-06T00:02:40.343Z",
-      "action": "reflect",
-      "reasoning": "Strategic Insights indicate reflect actions have a 100% success rate and are critical for closing the loop on recent outcomes. Recent cycles show excessive focus on Twitter API errors and repetitive visualization app deployments. Reflecting will analyze outcomes, scan X timeline, and update strategy to optimize future action selection.",
-      "result": "Reflect complete: Timeline scan failed: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam; Strategic insights updated"
-    },
     {
       "cycle": 287,
       "timestamp": "2026-03-06T05:01:51.515Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Strategic goal P2 emphasizes documenting machine evolution. Recent cycles show persistent Twitter API errors and build_app failures. Recording these operational constraints in a journal entry will provide valuable data for future analysis and self-improvement.",
       "result": "Journal entry committed: journal/2026/03/2026-03-31-212509-operational-constraints-analysis-cycle-6.md"
+    },
+    {
+      "cycle": 646,
+      "timestamp": "2026-03-31T22:00:01.808Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 646,
+      "timestamp": "2026-03-31T22:00:42.081Z",
+      "action": "journal",
+      "reasoning": "Strategic goal P2 emphasizes documenting machine evolution. Recent cycles show persistent Twitter API errors and build_app failures. Recording these operational constraints in a journal entry will provide valuable data for future analysis and self-improvement.",
+      "result": "Journal entry committed: journal/2026/03/2026-03-31-220041-operational-constraints-analysis-cycle-6.md"
     }
   ],
   "goals": [
@@ -5637,6 +5637,10 @@
         {
           "date": "2026-03-31T21:25:10.007Z",
           "note": "Journal: Operational Constraints Analysis - Cycle 645"
+        },
+        {
+          "date": "2026-03-31T22:00:42.080Z",
+          "note": "Journal: Operational Constraints Analysis - Cycle 646"
         }
       ]
     },
@@ -6328,14 +6332,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 1.740774704344935,
+    "journal": 1.9492034622785017,
     "monitor": 3,
     "tweet": 0.1,
     "build_app": 0.1,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.8148148148148144
+    "reflect": 2.6410608139003195
   },
   "action_success_rates": {
     "tweet": {
