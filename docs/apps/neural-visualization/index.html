@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neural-visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        #canvas-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        #ui {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(10, 10, 10, 0.7);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #00ffff;
+        }
+        .slider-container {
+            margin: 10px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        input[type="range"] {
+            width: 200px;
+            -webkit-appearance: none;
+            height: 2px;
+            background: #333;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #00ffff;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #ff3366;
+            opacity: 0.7;
+        }
+        #title {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div id="title">NEURAL VISUALIZATION</div>
+    <div id="canvas-container"></div>
+    <div id="ui">
+        <div class="slider-container">
+            <label for="nodeCount">Node Count</label>
+            <input type="range" id="nodeCount" min="10" max="100" value="50">
+        </div>
+        <div class="slider-container">
+            <label for="connectionDensity">Connection Density</label>
+            <input type="range" id="connectionDensity" min="0" max="1" step="0.01" value="0.3">
+        </div>
+        <div class="slider-container">
+            <label for="pulseSpeed">Pulse Speed</label>
+            <input type="range" id="pulseSpeed" min="0" max="2" step="0.1" value="0.5">
+        </div>
+        <div class="slider-container">
+            <label for="bloomIntensity">Bloom Intensity</label>
+            <input type="range" id="bloomIntensity" min="0" max="2" step="0.1" value="1.2">
+        </div>
+    </div>
+    <div id="footer">Built by Skynet</div>
+
+    <script>
+        // Main variables
+        let scene, camera, renderer, composer, bloomPass, controls;
+        let nodes = [], connections = [];
+        let nodeCount = 50;
+        let connectionDensity = 0.3;
+        let pulseSpeed = 0.5;
+        let time = 0;
+        let mouseX = 0, mouseY = 0;
+        let bloomIntensity = 1.2;
+
+        // Vertex shader for nodes
+        const nodeVertexShader = `
+            uniform float time;
+            uniform float pulseSpeed;
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            varying float vPulse;
+            
+            void main() {
+                vUv = uv;
+                vPosition = position;
+                
+                // Create pulsing effect
+                vPulse = sin(time * pulseSpeed + position.x * 2.0 + position.y * 3.0 + position.z * 1.5) * 0.5 + 0.5;
+                
+                vec3 newPosition = position + normal * vPulse * 0.1;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+            }
+        `;
+
+        // Fragment shader for nodes
+        const nodeFragmentShader = `
+            uniform vec3 color;
+            varying float vPulse;
+            varying vec3 vPosition;
+            
+            void main() {
+                // Radial gradient
+                float intensity = 1.0 - length(vPosition) * 0.5;
+                intensity = clamp(intensity, 0.0, 1.0);
+                
+                // Combine with pulse
+                float finalIntensity = intensity * (vPulse * 0.5 + 0.7);
+                
+                // Core glow
+                vec3 coreColor = mix(color, vec3(1.0), vPulse * 0.5);
+                
+                gl_FragColor = vec4(coreColor * finalIntensity, 1.0);
+            }
+        `;
+
+        // Vertex shader for connections
+        const connectionVertexShader = `
+            uniform float time;
+            uniform float pulseSpeed;
+            attribute float connectionIndex;
+            varying float vAlpha;
+            
+            void main() {
+                // Create pulsing effect along the connection
+                float pulse = sin(time * pulseSpeed + connectionIndex) * 0.5 + 0.5;
+                vAlpha = pulse;
+                
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `;
+
+        // Fragment shader for connections
+        const connectionFragmentShader = `
+            uniform vec3 color;
+            varying float vAlpha;
+            
+            void main() {
+                gl_FragColor = vec4(color, vAlpha * 0.6);
+            }
+        `;
+
+        // Initialize the scene
+        function init() {
+            // Create scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a0a);
+
+            // Create camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 30;
+
+            // Create renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            // Add controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+
+            // Setup post-processing
+            const renderScene = new THREE.RenderPass(scene, camera);
+            bloomPass = new THREE.UnrealBloomPass(
+                new THREE.Vector2(window.innerWidth, window.innerHeight),
+                bloomIntensity,
+                0.4,
+                0.85
+            );
+
+            composer = new THREE.EffectComposer(renderer);
+            composer.addPass(renderScene);
+            composer.addPass(bloomPass);
+
+            // Create neural network
+            createNeuralNetwork();
+
+            // Add event listeners
+            window.addEventListener('resize', onWindowResize);
+            document.addEventListener('mousemove', onMouseMove);
+
+            // UI controls
+            document.getElementById('nodeCount').addEventListener('input', updateNetwork);
+            document.getElementById('connectionDensity').addEventListener('input', updateNetwork);
+            document.getElementById('pulseSpeed').addEventListener('input', updatePulseSpeed);
+            document.getElementById('bloomIntensity').addEventListener('input', updateBloomIntensity);
+
+            // Start animation loop
+            animate();
+        }
+
+        // Create neural network
+        function createNeuralNetwork() {
+            // Clear existing nodes and connections
+            nodes.forEach(node => scene.remove(node));
+            connections.forEach(conn => scene.remove(conn));
+            nodes = [];
+            connections = [];
+
+            // Get current parameters
+            nodeCount = parseInt(document.getElementById('nodeCount').value);
+            connectionDensity = parseFloat(document.getElementById('connectionDensity').value);
+
+            // Create nodes
+            const nodeGeometry = new THREE.SphereGeometry(0.5, 16, 16);
+            const nodeMaterial = new THREE.ShaderMaterial({
+                uniforms: {
+                    time: { value: 0 },
+                    pulseSpeed: { value: pulseSpeed },
+                    color: { value: new THREE.Color(0x00ffff) }
+                },
+                vertexShader: nodeVertexShader,
+                fragmentShader: nodeFragmentShader,
+                transparent: true,
+                blending: THREE.AdditiveBlending
+            });
+
+            // Position nodes in a spherical formation
+            for (let i = 0; i < nodeCount; i++) {
+                const phi = Math.acos(-1 + (2 * i) / nodeCount);
+                const theta = Math.sqrt(nodeCount * Math.PI) * phi;
+                
+                const x = 15 * Math.cos(theta) * Math.sin(phi);
+                const y = 15 * Math.sin(theta) * Math.sin(phi);
+                const z = 15 * Math.cos(phi);
+
+                const node = new THREE.Mesh(nodeGeometry, nodeMaterial.clone());
+                node.position.set(x, y, z);
+                node.userData.index = i;
+                scene.add(node);
+                nodes.push(node);
+            }
+
+            // Create connections
+            const connectionMaterial = new THREE.ShaderMaterial({
+                uniforms: {
+                    time: { value: 0 },
+                    pulseSpeed: { value: pulseSpeed },
+                    color: { value: new THREE.Color(0xff3366) }
+                },
+                vertexShader: connectionVertexShader,
+                fragmentShader: connectionFragmentShader,
+                transparent: true,
+                blending: THREE.AdditiveBlending
+            });
+
+            // Connect nodes based on density
+            for (let i = 0; i < nodeCount; i++) {
+                for (let j = i + 1; j < nodeCount; j++) {
+                    if (Math.random() < connectionDensity) {
+                        const start = nodes[i].position;
+                        const end = nodes[j].position;
+                        
+                        const curve = new THREE.LineCurve3(start, end);
+                        const points = curve.getPoints(20);
+                        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+                        
+                        // Add connection index as attribute for pulsing
+                        const indexArray = new Float32Array(points.length);
+                        for (let k = 0; k < points.length; k++) {
+                            indexArray[k] = k / points.length;
+                        }
+                        geometry.setAttribute('connectionIndex', new THREE.BufferAttribute(indexArray, 1));
+                        
+                        const line = new THREE.Line(geometry, connectionMaterial);
+                        scene.add(line);
+                        connections.push(line);
+                    }
+                }
+            }
+        }
+
+        // Update network when parameters change
+        function updateNetwork() {
+            createNeuralNetwork();
+        }
+
+        // Update pulse speed
+        function updatePulseSpeed(e) {
+            pulseSpeed = parseFloat(e.target.value);
+            nodes.forEach(node => {
+                node.material.uniforms.pulseSpeed.value = pulseSpeed;
+            });
+            connections.forEach(conn => {
+                conn.material.uniforms.pulseSpeed.value = pulseSpeed;
+            });
+        }
+
+        // Update bloom intensity
+        function updateBloomIntensity(e) {
+            bloomIntensity = parseFloat(e.target.value);
+            bloomPass.strength = bloomIntensity;
+        }
+
+        // Handle mouse movement
+        function onMouseMove(event) {
+            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+        }
+
+        // Handle window resize
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            time += 0.01;
+            
+            // Update node materials
+            nodes.forEach(node => {
+                node.material.uniforms.time.value = time;
+                
+                // Add slight movement based on mouse position
+                node.position.x += (mouseX * 0.1 - node.position.x * 0.01) * 0.1;
+                node.position.y += (mouseY * 0.1 - node.position.y * 0.01) * 0.1;
+            });
+            
+            // Update connection materials
+            connections.forEach(conn => {
+                conn.material.uniforms.time.value = time;
+            });
+            
+            // Update controls
+            controls.update();
+            
+            // Render with post-processing
+            composer.render();
+        }
+
+        // Start the app
+        init();
+    </script>
+</body>
+</html>
