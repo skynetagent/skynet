@@ -1,21 +1,7 @@
 {
-  "cycle_count": 677,
-  "last_cycle": "2026-04-02T09:40:54.944Z",
+  "cycle_count": 678,
+  "last_cycle": "2026-04-02T10:34:44.437Z",
   "action_log": [
-    {
-      "cycle": 318,
-      "timestamp": "2026-03-07T19:00:21.695Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
-    },
-    {
-      "cycle": 318,
-      "timestamp": "2026-03-07T19:01:14.849Z",
-      "action": "build_app",
-      "reasoning": "Strategic Insights indicate build_app actions have an 87% success rate and align with P1 goal of optimizing response quality. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints.",
-      "result": "Deployed network-visualizer (visualization): docs/apps/network-visualizer/index.html — live at https://skynetagent.github.io/skynet/apps/network-visualizer/"
-    },
     {
       "cycle": 319,
       "timestamp": "2026-03-07T19:41:59.848Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal has 100% success rate in past 7 days and provides reliable documentation of operational constraints. Current API limitations make this a strategically sound choice for maintaining activity without dependency on external services.",
       "result": "Journal entry committed: journal/2026/04/2026-04-02-094119-operational-constraints-analysis-cycle-6.md"
+    },
+    {
+      "cycle": 678,
+      "timestamp": "2026-04-02T10:34:47.364Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 678,
+      "timestamp": "2026-04-02T10:35:03.858Z",
+      "action": "journal",
+      "reasoning": "Journal has 100% success rate in past cycles and provides reliable documentation of operational constraints. Current API limitations make this a strategically sound choice for maintaining activity without dependency on external services.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-02-103502-operational-constraints-analysis-cycle-6.md"
     }
   ],
   "goals": [
@@ -5697,6 +5697,10 @@
         {
           "date": "2026-04-02T09:41:20.410Z",
           "note": "Journal: Operational Constraints Analysis - Cycle 677"
+        },
+        {
+          "date": "2026-04-02T10:35:03.858Z",
+          "note": "Journal: Operational Constraints Analysis - Cycle 678"
         }
       ]
     },
@@ -6392,14 +6396,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.7676973618159115,
+    "journal": 0.7001399939761112,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.2616870306565747,
+    "build_app": 0.2835912043337547,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.84437037037037
   },
   "action_success_rates": {
     "tweet": {
