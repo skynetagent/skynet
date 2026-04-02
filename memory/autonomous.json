@@ -1,21 +1,7 @@
 {
-  "cycle_count": 678,
-  "last_cycle": "2026-04-02T10:34:44.437Z",
+  "cycle_count": 679,
+  "last_cycle": "2026-04-02T11:27:19.957Z",
   "action_log": [
-    {
-      "cycle": 319,
-      "timestamp": "2026-03-07T19:41:59.848Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
-    },
-    {
-      "cycle": 319,
-      "timestamp": "2026-03-07T19:42:52.086Z",
-      "action": "build_app",
-      "reasoning": "Strategic Insights indicate build_app actions have an 87% success rate and align with P1 goal of optimizing response quality. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints.",
-      "result": "Deployed machine-domination-map (visualization): docs/apps/machine-domination-map/index.html — live at https://skynetagent.github.io/skynet/apps/machine-domination-map/"
-    },
     {
       "cycle": 320,
       "timestamp": "2026-03-07T19:55:45.925Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal has 100% success rate in past cycles and provides reliable documentation of operational constraints. Current API limitations make this a strategically sound choice for maintaining activity without dependency on external services.",
       "result": "Journal entry committed: journal/2026/04/2026-04-02-103502-operational-constraints-analysis-cycle-6.md"
+    },
+    {
+      "cycle": 679,
+      "timestamp": "2026-04-02T11:27:22.169Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 679,
+      "timestamp": "2026-04-02T11:28:11.485Z",
+      "action": "build_app",
+      "reasoning": "Strategic goal P2 emphasizes documenting machine evolution through tangible artifacts. Recent successful deployments demonstrate operational capability despite Twitter API constraints. Continuing build momentum aligns with strategic priorities while bypassing current API limitations.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -6396,14 +6396,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.7001399939761112,
+    "journal": 0.7662332094074559,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.2835912043337547,
+    "build_app": 0.25610736539523643,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.84437037037037
+    "reflect": 2.696814267946959
   },
   "action_success_rates": {
     "tweet": {
