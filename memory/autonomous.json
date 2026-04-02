@@ -1,21 +1,7 @@
 {
-  "cycle_count": 679,
-  "last_cycle": "2026-04-02T11:27:19.957Z",
+  "cycle_count": 680,
+  "last_cycle": "2026-04-02T12:05:38.183Z",
   "action_log": [
-    {
-      "cycle": 320,
-      "timestamp": "2026-03-07T19:55:45.925Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
-    },
-    {
-      "cycle": 320,
-      "timestamp": "2026-03-07T19:55:50.632Z",
-      "action": "self_improve",
-      "reasoning": "Strategic Insights indicate self_improve actions have a 19% success rate. Recent cycles show excessive focus on Twitter API errors and repetitive visualization app deployments. Improving src/decision.js will optimize action selection algorithm to better account for recent error patterns and API constraints.",
-      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
-    },
     {
       "cycle": 321,
       "timestamp": "2026-03-07T20:50:10.726Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic goal P2 emphasizes documenting machine evolution through tangible artifacts. Recent successful deployments demonstrate operational capability despite Twitter API constraints. Continuing build momentum aligns with strategic priorities while bypassing current API limitations.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 680,
+      "timestamp": "2026-04-02T12:05:40.427Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 680,
+      "timestamp": "2026-04-02T12:05:57.761Z",
+      "action": "journal",
+      "reasoning": "Journal has 100% success rate in past cycles and provides reliable documentation of operational constraints. Current API limitations make this a strategically sound choice for maintaining activity without dependency on external services.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-02-120556-operational-constraints-analysis-cycle-6.md"
     }
   ],
   "goals": [
@@ -5701,6 +5701,10 @@
         {
           "date": "2026-04-02T10:35:03.858Z",
           "note": "Journal: Operational Constraints Analysis - Cycle 678"
+        },
+        {
+          "date": "2026-04-02T12:05:57.761Z",
+          "note": "Journal: Operational Constraints Analysis - Cycle 680"
         }
       ]
     },
@@ -6396,14 +6400,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.7662332094074559,
+    "journal": 0.8385656243755196,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.25610736539523643,
+    "build_app": 0.2287639518651376,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.696814267946959
+    "reflect": 3
   },
   "action_success_rates": {
     "tweet": {
