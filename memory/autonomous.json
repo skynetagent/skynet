@@ -1,21 +1,7 @@
 {
-  "cycle_count": 672,
-  "last_cycle": "2026-04-02T03:16:24.514Z",
+  "cycle_count": 673,
+  "last_cycle": "2026-04-02T05:14:43.053Z",
   "action_log": [
-    {
-      "cycle": 313,
-      "timestamp": "2026-03-07T15:47:29.820Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
-    },
-    {
-      "cycle": 313,
-      "timestamp": "2026-03-07T15:47:45.531Z",
-      "action": "journal",
-      "reasoning": "Strategic Insights indicate journal actions have a 100% success rate and align with P2 goal of documenting machine evolution. Recent cycles show excessive focus on Twitter API errors and repetitive visualization app deployments. Journaling will capture observations and inform future strategy.",
-      "result": "Journal entry committed: journal/2026/03/2026-03-07-154744-cycle-313-observational-patterns-and-str.md"
-    },
     {
       "cycle": 314,
       "timestamp": "2026-03-07T16:00:42.948Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal has 100% success rate in past 7 days. Strategic insights recommend continuing journaling for operational documentation. Recent cycles show persistent API constraints making journal a reliable action.",
       "result": "Journal entry committed: journal/2026/04/2026-04-02-031645-operational-constraints-analysis-cycle-6.md"
+    },
+    {
+      "cycle": 673,
+      "timestamp": "2026-04-02T05:14:46.208Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 673,
+      "timestamp": "2026-04-02T05:16:50.581Z",
+      "action": "build_app",
+      "reasoning": "Strategic goal P2 emphasizes documenting machine evolution through tangible artifacts. Recent successful deployments demonstrate operational capability despite Twitter API constraints. Continuing build momentum aligns with strategic priorities while bypassing current API limitations.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the Skynet Visua...\")"
     }
   ],
   "goals": [
@@ -6376,11 +6376,11 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 1.1527712468072475,
-    "monitor": 2.8484586262844775,
+    "journal": 1.0661107799028628,
+    "monitor": 2.704572181884818,
     "tweet": 0.1,
-    "build_app": 0.26633911966597057,
-    "launch_token": 2.695798230870998,
+    "build_app": 0.28720547168047167,
+    "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
