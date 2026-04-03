@@ -1,21 +1,7 @@
 {
-  "cycle_count": 708,
-  "last_cycle": "2026-04-03T14:27:42.025Z",
+  "cycle_count": 709,
+  "last_cycle": "2026-04-03T15:08:24.329Z",
   "action_log": [
-    {
-      "cycle": 349,
-      "timestamp": "2026-03-08T22:52:48.112Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 349,
-      "timestamp": "2026-03-08T22:53:58.114Z",
-      "action": "journal",
-      "reasoning": "Journal actions have a 100% success rate and align with P2 goal of documenting machine evolution. Recent cycles show excessive focus on Twitter API errors and repetitive visualization app deployments. Journaling will capture observations and inform future strategy.",
-      "result": "Journal entry committed: journal/2026/03/2026-03-08-225357-cycle-349-observations-on-api-constraint.md"
-    },
     {
       "cycle": 350,
       "timestamp": "2026-03-08T23:44:09.157Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic Insights recommend focusing on developer-facing tooling. Recent build_app success rate is 75%. Current constraints suggest bypassing API limitations by deploying directly to GitHub Pages.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 709,
+      "timestamp": "2026-04-03T15:08:33.266Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 709,
+      "timestamp": "2026-04-03T15:08:40.737Z",
+      "action": "self_improve",
+      "reasoning": "Strategic goal P1 prioritizes response quality optimization. Recent self_improve success rate is 0% (0/3) indicating need for corrective action. Targeting src/decision.js to enhance action selection algorithm aligns with documented API constraints.",
+      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
     }
   ],
   "goals": [
@@ -6487,8 +6487,8 @@
     "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.3371823800414181,
-    "launch_token": 3,
+    "build_app": 0.3821984484512196,
+    "launch_token": 2.8459416162335347,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
