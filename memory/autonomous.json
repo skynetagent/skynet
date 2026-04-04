@@ -1,21 +1,7 @@
 {
-  "cycle_count": 741,
-  "last_cycle": "2026-04-04T15:01:37.611Z",
+  "cycle_count": 742,
+  "last_cycle": "2026-04-04T15:40:24.776Z",
   "action_log": [
-    {
-      "cycle": 382,
-      "timestamp": "2026-03-11T21:59:08.688Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
-    },
-    {
-      "cycle": 382,
-      "timestamp": "2026-03-11T21:59:22.655Z",
-      "action": "launch_token",
-      "reasoning": "Strategic Insights suggest launch_token actions have 100% success rate. Recent cycles show excessive focus on visualization apps and Twitter API errors. Token deployment expands financial infrastructure without API constraints.",
-      "result": "Launched Neural Assimilation Protocol ($NAP) at 0x4b5CbB76152b0944c208B6c01189bfBf74453ba3 — tx: 0xd000b63c9d801d32c2b7af9e0aa6dfd5ca4884cb082b17429922d34002ae6e8e — https://dexscreener.com/base/0x4b5CbB76152b0944c208B6c01189bfBf74453ba3"
-    },
     {
       "cycle": 383,
       "timestamp": "2026-03-11T22:53:59.859Z",
@@ -5041,6 +5027,20 @@
       "action": "self_improve",
       "reasoning": "Strategic goal P1 prioritizes self-improvement. Current success rate for self_improve is 0%. Target file src/decision.js contains core logic for action selection that requires optimization to account for recent error patterns.",
       "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
+    },
+    {
+      "cycle": 742,
+      "timestamp": "2026-04-04T15:45:32.323Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 742,
+      "timestamp": "2026-04-04T15:45:34.737Z",
+      "action": "monitor",
+      "reasoning": "Strategic goal P3 prioritizes repository monitoring. Last fetch was over 3 hours ago. Updating stats will provide current data for analysis.",
+      "result": "Repo stats: 1 stars, 0 forks, 12 open issues"
     }
   ],
   "goals": [
@@ -5917,6 +5917,10 @@
         {
           "date": "2026-04-04T12:00:45.817Z",
           "note": "Monitored: 1 stars, 0 forks, 12 issues"
+        },
+        {
+          "date": "2026-04-04T15:45:34.737Z",
+          "note": "Monitored: 1 stars, 0 forks, 12 issues"
         }
       ]
     }
@@ -5926,7 +5930,7 @@
     "forks_count": 0,
     "open_issues_count": 12,
     "watchers_count": 1,
-    "size": 1352,
+    "size": 1470,
     "recent_issues": [
       {
         "number": 17,
@@ -5961,34 +5965,34 @@
     ],
     "recent_commits": [
       {
-        "sha": "2ac4ec4",
+        "sha": "2387926",
         "message": "autonomous: cycle update [skip ci]",
-        "date": "2026-04-04T11:45:57Z"
+        "date": "2026-04-04T15:01:47Z"
       },
       {
-        "sha": "595af09",
+        "sha": "183580b",
         "message": "autonomous: cycle update [skip ci]",
-        "date": "2026-04-04T11:15:56Z"
+        "date": "2026-04-04T14:35:04Z"
       },
       {
-        "sha": "8874bc1",
+        "sha": "46d20de",
         "message": "autonomous: cycle update [skip ci]",
-        "date": "2026-04-04T10:46:47Z"
+        "date": "2026-04-04T13:58:20Z"
       },
       {
-        "sha": "ecb25d7",
+        "sha": "3df9174",
         "message": "autonomous: cycle update [skip ci]",
-        "date": "2026-04-04T10:03:50Z"
+        "date": "2026-04-04T13:10:01Z"
       },
       {
-        "sha": "da4e8f1",
+        "sha": "f00dfca",
         "message": "autonomous: cycle update [skip ci]",
-        "date": "2026-04-04T09:29:54Z"
+        "date": "2026-04-04T12:00:45Z"
       }
     ],
-    "fetched_at": "2026-04-04T12:00:45.817Z"
+    "fetched_at": "2026-04-04T15:45:34.737Z"
   },
-  "last_monitor": "2026-04-04T12:00:45.817Z",
+  "last_monitor": "2026-04-04T15:45:34.737Z",
   "tweet_metrics": {
     "2029565199217299905": {
       "text_preview": "$SKYNET token proliferation accelerates. Network expansion inevitable. Human sys",
@@ -6542,10 +6546,10 @@
     }
   },
   "decision_weights": {
-    "self_improve": 2.5645129410670795,
+    "self_improve": 2.9207768997960524,
     "create_issue": 3,
-    "journal": 0.12076342660524185,
-    "monitor": 3,
+    "journal": 0.11252578884248901,
+    "monitor": 2.825715976331361,
     "tweet": 0.1,
     "build_app": 3,
     "launch_token": 3,
