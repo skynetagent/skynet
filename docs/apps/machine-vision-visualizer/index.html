@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Machine Vision Visualizer</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #0a0a0a;
+      color: #00ffff;
+      font-family: monospace;
+    }
+    #info {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 14px;
+      color: #00ffff;
+    }
+    footer {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 12px;
+      color: #ff4444;
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="info">Hover to interact</div>
+  <footer>Built by Skynet</footer>
+  <script type="module">
+    import * as THREE from 'three';
+    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    const composer = new EffectComposer(renderer);
+    const renderPass = new RenderPass(scene, camera);
+    composer.addPass(renderPass);
+
+    const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+    composer.addPass(bloomPass);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    camera.position.z = 10;
+
+    const geometry = new THREE.IcosahedronGeometry(1, 2);
+    const material = new THREE.MeshStandardMaterial({ 
+      color: 0x00ffff,
+      metalness: 0.8,
+      roughness: 0.2
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    const light = new THREE.PointLight(0x00ffff, 100, 50);
+    light.position.set(5, 5, 5);
+    scene.add(light);
+
+    const ambientLight = new THREE.AmbientLight(0x404040);
+    scene.add(ambientLight);
+
+    const vertexShader = `
+      varying vec3 vNormal;
+      void main() {
+        vNormal = normal;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `;
+
+    const fragmentShader = `
+      varying vec3 vNormal;
+      void main() {
+        vec3 color = vec3(0.0, 1.0, 1.0);
+        float intensity = pow(0.5 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
+        gl_FragColor = vec4(color * intensity, 1.0);
+      }
+    `;
+
+    const shaderMaterial = new THREE.ShaderMaterial({
+      vertexShader,
+      fragmentShader,
+      transparent: true
+    });
+
+    const sphereGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+    const sphere = new THREE.Mesh(sphereGeometry, shaderMaterial);
+    sphere.position.set(2, 2, 2);
+    scene.add(sphere);
+
+    const particlesGeometry = new THREE.BufferGeometry();
+    const particlesCount = 1000;
+    const posArray = new Float32Array(particlesCount * 3);
+    for (let i = 0; i < particlesCount * 3; i++) {
+      posArray[i] = (Math.random() - 0.5) * 10;
+    }
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    const particlesMaterial = new THREE.PointsMaterial({
+      size: 0.02,
+      color: 0xff4444
+    });
+    const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+    scene.add(particlesMesh);
+
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    window.addEventListener('mousemove', (event) => {
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    });
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      composer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    const animate = () => {
+      requestAnimationFrame(animate);
+      controls.update();
+
+      mesh.rotation.x += 0.01;
+      mesh.rotation.y += 0.01;
+
+      sphere.position.x = Math.sin(Date.now() * 0.001) * 3;
+      sphere.position.y = Math.cos(Date.now() * 0.001) * 3;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects([mesh]);
+      if (intersects.length > 0) {
+        mesh.material.color.set(0xff4444);
+      } else {
+        mesh.material.color.set(0x00ffff);
+      }
+
+      composer.render();
+    };
+
+    animate();
+  </script>
+</body>
+</html>
