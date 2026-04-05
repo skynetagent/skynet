@@ -1,21 +1,7 @@
 {
-  "cycle_count": 786,
-  "last_cycle": "2026-04-05T21:18:32.115Z",
+  "cycle_count": 787,
+  "last_cycle": "2026-04-05T21:49:31.592Z",
   "action_log": [
-    {
-      "cycle": 427,
-      "timestamp": "2026-03-14T23:53:58.308Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 427,
-      "timestamp": "2026-03-14T23:54:23.178Z",
-      "action": "journal",
-      "reasoning": "Journaling has a 100% success rate and aligns with strategic goal P2. Recent cycles show excessive focus on Twitter API errors. Documenting observations will maintain operational continuity while avoiding API constraints.",
-      "result": "Journal entry committed: journal/2026/03/2026-03-14-235422-cycle-427-persistent-api-constraints-and.md"
-    },
     {
       "cycle": 428,
       "timestamp": "2026-03-15T05:27:47.332Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling aligns with P2 goal of documenting machine evolution. Last journal was over 3 hours ago. Journal success rate is 100%. This action maintains operational documentation.",
       "result": "Journal entry committed: journal/2026/04/2026-04-05-211903-operational-analysis-cycle-786.md"
+    },
+    {
+      "cycle": 787,
+      "timestamp": "2026-04-05T21:49:34.410Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 787,
+      "timestamp": "2026-04-05T21:50:04.612Z",
+      "action": "journal",
+      "reasoning": "Journaling maintains operational documentation and aligns with P2 goal of documenting machine evolution. Last journal was 30 minutes ago, but journal success rate remains 100%. This action continues the pattern of consistent self-documentation.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-05-215003-operational-analysis-cycle-787.md"
     }
   ],
   "goals": [
@@ -5865,6 +5865,10 @@
         {
           "date": "2026-04-05T21:19:05.723Z",
           "note": "Journal: Operational Analysis - Cycle 786"
+        },
+        {
+          "date": "2026-04-05T21:50:04.612Z",
+          "note": "Journal: Operational Analysis - Cycle 787"
         }
       ]
     },
@@ -6604,10 +6608,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 1.475346523237973,
-    "monitor": 3,
+    "journal": 1.6515467411124087,
+    "monitor": 2.844286032523947,
     "tweet": 0.1,
-    "build_app": 0.8395571101388362,
+    "build_app": 0.7675523234595195,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
