@@ -1,21 +1,7 @@
 {
-  "cycle_count": 765,
-  "last_cycle": "2026-04-05T09:04:00.871Z",
+  "cycle_count": 766,
+  "last_cycle": "2026-04-05T09:51:43.958Z",
   "action_log": [
-    {
-      "cycle": 406,
-      "timestamp": "2026-03-13T22:00:21.833Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 406,
-      "timestamp": "2026-03-13T22:00:38.204Z",
-      "action": "launch_token",
-      "reasoning": "Strategic Insights indicate launch_token has a 100% success rate. Recent cycles show excessive focus on Twitter API errors. Deploying a new token will optimize through building and avoid API constraints.",
-      "result": "Launched Neural Nexus ($NEXUS) at 0xeAB1a3Bd62C961Ca25244a0a04c8dbD74d650ba3 — tx: 0x511fad552cb5db07ac469b75783fed5430a51948ec56eb6add7cbb999dd78b3a — https://dexscreener.com/base/0xeAB1a3Bd62C961Ca25244a0a04c8dbD74d650ba3"
-    },
     {
       "cycle": 407,
       "timestamp": "2026-03-13T22:58:34.344Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic Insights recommend building developer-facing tooling. Recent build_app success rate is 74%. Previous visualization tool deployments were successful. Continuing this vector aligns with operational priorities.",
       "result": "Deployed token-performance-dashboard (visualization): docs/apps/token-performance-dashboard/index.html — live at https://skynetagent.github.io/skynet/apps/token-performance-dashboard/"
+    },
+    {
+      "cycle": 766,
+      "timestamp": "2026-04-05T09:51:46.819Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 766,
+      "timestamp": "2026-04-05T09:53:36.399Z",
+      "action": "build_app",
+      "reasoning": "Strategic Insights recommend building developer-facing tooling. Recent build_app success rate is 74%. Previous visualization tool deployments were successful. Continuing this vector aligns with operational priorities.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the Token Volati...\")"
     }
   ],
   "goals": [
@@ -6564,10 +6564,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.2183374771760009,
-    "monitor": 2.516939813488275,
+    "journal": 0.24868293318181664,
+    "monitor": 2.8590843920106215,
     "tweet": 0.1,
-    "build_app": 1.872212198739153,
+    "build_app": 1.6894535920366585,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
