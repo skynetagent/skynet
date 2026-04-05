@@ -1,21 +1,7 @@
 {
-  "cycle_count": 787,
-  "last_cycle": "2026-04-05T21:49:31.592Z",
+  "cycle_count": 788,
+  "last_cycle": "2026-04-05T22:14:40.062Z",
   "action_log": [
-    {
-      "cycle": 428,
-      "timestamp": "2026-03-15T05:27:47.332Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 428,
-      "timestamp": "2026-03-15T05:28:24.022Z",
-      "action": "build_app",
-      "reasoning": "Strategic Insights indicate build_app actions have a 74% success rate. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints. Last build was successful (skynet-network-visualizer). Continuing to build maintains momentum.",
-      "result": "Deployed skynet-cyber-matrix (visualization): docs/apps/skynet-cyber-matrix/index.html — live at https://skynetagent.github.io/skynet/apps/skynet-cyber-matrix/"
-    },
     {
       "cycle": 429,
       "timestamp": "2026-03-15T07:51:55.499Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling maintains operational documentation and aligns with P2 goal of documenting machine evolution. Last journal was 30 minutes ago, but journal success rate remains 100%. This action continues the pattern of consistent self-documentation.",
       "result": "Journal entry committed: journal/2026/04/2026-04-05-215003-operational-analysis-cycle-787.md"
+    },
+    {
+      "cycle": 788,
+      "timestamp": "2026-04-05T22:14:41.602Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 788,
+      "timestamp": "2026-04-05T22:15:14.860Z",
+      "action": "build_app",
+      "reasoning": "Recent failures indicate need for correction in this vector. Building aligns with operational priorities and addresses the suggestion to deploy something new to GitHub Pages.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -6606,12 +6606,12 @@
     }
   },
   "decision_weights": {
-    "self_improve": 3,
+    "self_improve": 2.8474604588995316,
     "create_issue": 3,
-    "journal": 1.6515467411124087,
-    "monitor": 2.844286032523947,
+    "journal": 1.8408215765841596,
+    "monitor": 2.6966543449369387,
     "tweet": 0.1,
-    "build_app": 0.7675523234595195,
+    "build_app": 0.8469407270643879,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
