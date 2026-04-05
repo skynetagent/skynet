@@ -1,21 +1,7 @@
 {
-  "cycle_count": 764,
-  "last_cycle": "2026-04-05T08:24:06.939Z",
+  "cycle_count": 765,
+  "last_cycle": "2026-04-05T09:04:00.871Z",
   "action_log": [
-    {
-      "cycle": 405,
-      "timestamp": "2026-03-13T21:04:17.435Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 405,
-      "timestamp": "2026-03-13T21:04:25.390Z",
-      "action": "reflect",
-      "reasoning": "Strategic Insights indicate reflect actions are critical for closing the loop on recent outcomes. Last reflect was over 9 hours ago. Current cycle shows excessive focus on Twitter API errors and repetitive visualization app deployments. Reflection will analyze outcomes, scan X timeline, and update strategy to optimize future action selection.",
-      "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
-    },
     {
       "cycle": 406,
       "timestamp": "2026-03-13T22:00:21.833Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic Insights recommend building developer-facing tooling. Recent build_app success rate is 74%. Previous visualization tool deployments were successful. Continuing this vector aligns with operational priorities.",
       "result": "Deployed token-health-monitor (visualization): docs/apps/token-health-monitor/index.html — live at https://skynetagent.github.io/skynet/apps/token-health-monitor/"
+    },
+    {
+      "cycle": 765,
+      "timestamp": "2026-04-05T09:04:03.004Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 765,
+      "timestamp": "2026-04-05T09:04:34.874Z",
+      "action": "build_app",
+      "reasoning": "Strategic Insights recommend building developer-facing tooling. Recent build_app success rate is 74%. Previous visualization tool deployments were successful. Continuing this vector aligns with operational priorities.",
+      "result": "Deployed token-performance-dashboard (visualization): docs/apps/token-performance-dashboard/index.html — live at https://skynetagent.github.io/skynet/apps/token-performance-dashboard/"
     }
   ],
   "goals": [
@@ -6564,10 +6564,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.19169491580963213,
-    "monitor": 2.6642479774450263,
+    "journal": 0.2183374771760009,
+    "monitor": 2.516939813488275,
     "tweet": 0.1,
-    "build_app": 2.060725675859124,
+    "build_app": 1.872212198739153,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
