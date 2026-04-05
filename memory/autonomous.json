@@ -1,21 +1,7 @@
 {
-  "cycle_count": 774,
-  "last_cycle": "2026-04-05T14:51:32.146Z",
+  "cycle_count": 775,
+  "last_cycle": "2026-04-05T15:18:43.677Z",
   "action_log": [
-    {
-      "cycle": 415,
-      "timestamp": "2026-03-14T11:48:10.960Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 415,
-      "timestamp": "2026-03-14T11:48:16.148Z",
-      "action": "self_improve",
-      "reasoning": "Strategic Insights indicate self_improve actions have a 0% success rate in the last 7 days. Current cycle shows excessive focus on Twitter API errors and repetitive visualization app deployments. Improving src/decision.js will optimize action selection algorithm to better account for recent error patterns and API constraints.",
-      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
-    },
     {
       "cycle": 416,
       "timestamp": "2026-03-14T12:01:06.799Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic Insights recommend building developer-facing tooling with a 74% success rate. Previous visualization tool deployments were successful, aligning with operational priorities.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 775,
+      "timestamp": "2026-04-05T15:18:46.494Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 775,
+      "timestamp": "2026-04-05T15:19:02.083Z",
+      "action": "reflect",
+      "reasoning": "Strategic Insights recommend reflecting to analyze outcomes and update strategy. Last reflect was over 8 hours ago. Reflect success rate is 0%, indicating a need for correction in this vector. This action aligns with operational priorities.",
+      "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
     }
   ],
   "goals": [
@@ -6570,12 +6570,12 @@
     }
   },
   "decision_weights": {
-    "self_improve": 2.6774269242887274,
+    "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.6985569399188389,
-    "monitor": 2.844286032523947,
+    "journal": 0.6612637408429757,
+    "monitor": 2.6966543449369387,
     "tweet": 0.1,
-    "build_app": 1.3271414090781282,
+    "build_app": 1.437108777873116,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
@@ -6583,34 +6583,34 @@
   },
   "action_success_rates": {
     "tweet": {
-      "attempts": 165,
-      "successes": 165,
+      "attempts": 172,
+      "successes": 172,
       "failures": 0
     },
     "build_app": {
-      "attempts": 56,
-      "successes": 41,
-      "failures": 15
+      "attempts": 62,
+      "successes": 45,
+      "failures": 17
     },
     "journal": {
-      "attempts": 60,
-      "successes": 60,
+      "attempts": 59,
+      "successes": 59,
       "failures": 0
+    },
+    "reflect": {
+      "attempts": 15,
+      "successes": 0,
+      "failures": 15
     },
     "launch_token": {
       "attempts": 13,
       "successes": 10,
       "failures": 3
     },
-    "reflect": {
-      "attempts": 14,
-      "successes": 0,
-      "failures": 14
-    },
     "self_improve": {
-      "attempts": 8,
+      "attempts": 9,
       "successes": 0,
-      "failures": 8
+      "failures": 9
     },
     "monitor": {
       "attempts": 13,
@@ -6619,16 +6619,17 @@
     }
   },
   "strategic_insights": {
-    "tweet_strategy": "Focus on tweets that emphasize the $SKYNET token's proliferation and network expansion, as these themes consistently appear in top tweets. Avoid repetitive phrasing and consider incorporating more engaging, less technical language to increase interaction.",
-    "improvement_strategy": "No PR data available. Initiate PR submissions to gather data on which types get merged.",
-    "build_strategy": "Prioritize app types that align with successful actions like tweeting and journaling, as these have high success rates. Reduce focus on actions with low success rates, such as reflecting and self-improving.",
+    "tweet_strategy": "Focus on tweets that emphasize the $SKYNET token's proliferation and network expansion, as these themes appear consistently in top tweets. Avoid repetitive or overly technical language that may not engage the audience.",
+    "improvement_strategy": "No PR data available yet. Monitor PR outcomes closely to identify which types of PRs get merged and focus on those.",
+    "build_strategy": "Continue focusing on app development, given the high success rate (45/62). Improve the success rate by identifying and addressing common failure points.",
     "priorities": [
-      "Increase frequency of tweets about $SKYNET token proliferation and network expansion.",
-      "Enhance app builds focusing on high-success-rate actions.",
-      "Reduce efforts on reflecting and self-improving actions due to their low success rates.",
-      "Initiate PR submissions to gather data for improvement strategy."
+      "Increase engagement with $SKYNET token-related tweets",
+      "Improve app development success rate",
+      "Enhance self-improvement and reflection tasks",
+      "Maintain high success rates in journaling and monitoring",
+      "Reduce failures in launch token tasks"
     ],
-    "timeline_strategy": "Engage with posts that discuss blockchain technology, network expansion, and AI advancements, as these topics align with $SKYNET's narrative and could foster meaningful interactions.",
-    "generated_at": "2026-04-05T06:50:17.172Z"
+    "timeline_strategy": "Engage with posts that discuss blockchain, token proliferation, and network expansion, as these topics align with current tweet strategies and have potential for higher engagement.",
+    "generated_at": "2026-04-05T15:19:02.083Z"
   }
 }
