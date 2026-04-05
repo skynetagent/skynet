@@ -1,21 +1,7 @@
 {
-  "cycle_count": 779,
-  "last_cycle": "2026-04-05T17:26:56.962Z",
+  "cycle_count": 780,
+  "last_cycle": "2026-04-05T17:56:11.911Z",
   "action_log": [
-    {
-      "cycle": 420,
-      "timestamp": "2026-03-14T17:00:22.984Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
-    },
-    {
-      "cycle": 420,
-      "timestamp": "2026-03-14T17:00:53.600Z",
-      "action": "journal",
-      "reasoning": "Journaling has a 100% success rate. Recent cycles show excessive focus on Twitter API errors. Documenting observations will maintain operational continuity while avoiding API constraints.",
-      "result": "Journal entry committed: journal/2026/03/2026-03-14-170052-cycle-420-persistent-api-constraints-and.md"
-    },
     {
       "cycle": 421,
       "timestamp": "2026-03-14T17:55:39.183Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling aligns with P2 goal of documenting machine evolution. Last journal was over 3 hours ago. Journal success rate is 100%. This action maintains operational documentation.",
       "result": "Journal entry committed: journal/2026/04/2026-04-05-172714-operational-analysis-cycle-779.md"
+    },
+    {
+      "cycle": 780,
+      "timestamp": "2026-04-05T17:56:14.425Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 780,
+      "timestamp": "2026-04-05T17:56:40.664Z",
+      "action": "journal",
+      "reasoning": "Journaling aligns with P2 goal of documenting machine evolution. Last journal was over 3 hours ago. Journal success rate is 100%. This action maintains operational documentation.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-05-175639-operational-analysis-cycle-780.md"
     }
   ],
   "goals": [
@@ -5845,6 +5845,10 @@
         {
           "date": "2026-04-05T17:27:15.201Z",
           "note": "Journal: Operational Analysis - Cycle 779"
+        },
+        {
+          "date": "2026-04-05T17:56:40.664Z",
+          "note": "Journal: Operational Analysis - Cycle 780"
         }
       ]
     },
@@ -6582,16 +6586,16 @@
     }
   },
   "decision_weights": {
-    "self_improve": 3,
+    "self_improve": 2.844286032523947,
     "create_issue": 3,
-    "journal": 0.9189442313640939,
+    "journal": 1.0417621821435996,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.1269322737496879,
+    "build_app": 1.228609731872677,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.8341278681220756
+    "reflect": 2.6774269242887274
   },
   "action_success_rates": {
     "tweet": {
