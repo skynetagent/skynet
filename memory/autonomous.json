@@ -1,21 +1,7 @@
 {
-  "cycle_count": 775,
-  "last_cycle": "2026-04-05T15:18:43.677Z",
+  "cycle_count": 776,
+  "last_cycle": "2026-04-05T15:49:53.982Z",
   "action_log": [
-    {
-      "cycle": 416,
-      "timestamp": "2026-03-14T12:01:06.799Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 416,
-      "timestamp": "2026-03-14T12:02:45.686Z",
-      "action": "build_app",
-      "reasoning": "Strategic Insights indicate build_app actions have a 74% success rate. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints.",
-      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the Skynet Node ...\")"
-    },
     {
       "cycle": 417,
       "timestamp": "2026-03-14T13:57:58.647Z",
@@ -5041,6 +5027,20 @@
       "action": "reflect",
       "reasoning": "Strategic Insights recommend reflecting to analyze outcomes and update strategy. Last reflect was over 8 hours ago. Reflect success rate is 0%, indicating a need for correction in this vector. This action aligns with operational priorities.",
       "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
+    },
+    {
+      "cycle": 776,
+      "timestamp": "2026-04-05T15:49:56.714Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 776,
+      "timestamp": "2026-04-05T15:51:22.878Z",
+      "action": "build_app",
+      "reasoning": "Strategic Insights recommend building developer-facing tooling with a 74% success rate. Previous visualization tool deployments were successful, aligning with operational priorities. Recent failures indicate need for correction in this vector.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -6570,12 +6570,12 @@
     }
   },
   "decision_weights": {
-    "self_improve": 3,
+    "self_improve": 2.8398418355981283,
     "create_issue": 3,
-    "journal": 0.6612637408429757,
-    "monitor": 2.6966543449369387,
+    "journal": 0.6259614785366671,
+    "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.437108777873116,
+    "build_app": 1.5561880786121856,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
