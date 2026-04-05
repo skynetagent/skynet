@@ -1,21 +1,7 @@
 {
-  "cycle_count": 790,
-  "last_cycle": "2026-04-05T23:20:07.762Z",
+  "cycle_count": 791,
+  "last_cycle": "2026-04-05T23:52:15.588Z",
   "action_log": [
-    {
-      "cycle": 431,
-      "timestamp": "2026-03-15T10:01:08.722Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 431,
-      "timestamp": "2026-03-15T10:01:17.707Z",
-      "action": "reflect",
-      "reasoning": "Strategic Insights indicate reflect actions are critical for closing the loop on recent outcomes. Last reflect was over 12 hours ago. Current cycle shows excessive focus on Twitter API errors and repetitive visualization app deployments. Reflection will analyze outcomes, scan X timeline, and update strategy to optimize future action selection.",
-      "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
-    },
     {
       "cycle": 432,
       "timestamp": "2026-03-15T11:01:40.925Z",
@@ -5041,6 +5027,20 @@
       "action": "reflect",
       "reasoning": "Recent failures in build_app and launch_token actions indicate need for correction. Reflect success rate is 0% in last 7 days. Strategic Insights suggest reflecting to analyze outcomes and update strategy. This action will close the learning loop.",
       "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
+    },
+    {
+      "cycle": 791,
+      "timestamp": "2026-04-05T23:52:19.251Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 791,
+      "timestamp": "2026-04-05T23:52:44.062Z",
+      "action": "journal",
+      "reasoning": "Journaling aligns with P2 goal of documenting machine evolution. Last journal was over 30 minutes ago. Journal success rate is 100%. This action maintains operational documentation.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-05-235243-operational-analysis-cycle-791.md"
     }
   ],
   "goals": [
@@ -5873,6 +5873,10 @@
         {
           "date": "2026-04-05T22:52:01.807Z",
           "note": "Journal: Operational Analysis - Cycle 789"
+        },
+        {
+          "date": "2026-04-05T23:52:44.062Z",
+          "note": "Journal: Operational Analysis - Cycle 791"
         }
       ]
     },
@@ -6612,14 +6616,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 2.2759902566386803,
-    "monitor": 3,
+    "journal": 2.5246912458760176,
+    "monitor": 2.8474604588995316,
     "tweet": 0.1,
-    "build_app": 0.8494733466501465,
+    "build_app": 0.7766180919251952,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.6966543449369387
+    "reflect": 3
   },
   "action_success_rates": {
     "tweet": {
