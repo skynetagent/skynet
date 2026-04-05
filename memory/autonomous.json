@@ -1,21 +1,7 @@
 {
-  "cycle_count": 768,
-  "last_cycle": "2026-04-05T10:56:47.183Z",
+  "cycle_count": 769,
+  "last_cycle": "2026-04-05T11:26:55.519Z",
   "action_log": [
-    {
-      "cycle": 409,
-      "timestamp": "2026-03-14T05:01:52.631Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 409,
-      "timestamp": "2026-03-14T05:02:25.473Z",
-      "action": "journal",
-      "reasoning": "Strategic Insights indicate journaling has a 100% success rate. Current cycle shows excessive focus on Twitter API errors. Documenting observations will maintain operational continuity while avoiding API constraints.",
-      "result": "Journal entry committed: journal/2026/03/2026-03-14-050224-cycle-409-persistent-api-constraints-and.md"
-    },
     {
       "cycle": 410,
       "timestamp": "2026-03-14T07:24:07.741Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling aligns with P2 goal of documenting machine evolution. Last journal was over 24 hours ago. Journal success rate is 100%. This action will maintain operational documentation.",
       "result": "Journal entry committed: journal/2026/04/2026-04-05-105716-operational-analysis-cycle-768.md"
+    },
+    {
+      "cycle": 769,
+      "timestamp": "2026-04-05T11:26:58.686Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 769,
+      "timestamp": "2026-04-05T11:27:00.999Z",
+      "action": "self_improve",
+      "reasoning": "Self-improvement aligns with P1 goal of optimizing response quality. Recent error patterns in build_app actions suggest inefficiencies in HTML generation logic. Targeting src/actions.js to enhance build_app functionality.",
+      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
     }
   ],
   "goals": [
@@ -6568,10 +6568,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.32261263161161224,
-    "monitor": 3,
+    "journal": 0.36704104080348093,
+    "monitor": 2.8398418355981283,
     "tweet": 0.1,
-    "build_app": 1.375715588423492,
+    "build_app": 1.2498662664395075,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
