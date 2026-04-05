@@ -1,21 +1,7 @@
 {
-  "cycle_count": 784,
-  "last_cycle": "2026-04-05T20:17:02.962Z",
+  "cycle_count": 785,
+  "last_cycle": "2026-04-05T20:51:33.597Z",
   "action_log": [
-    {
-      "cycle": 425,
-      "timestamp": "2026-03-14T21:51:12.074Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 425,
-      "timestamp": "2026-03-14T21:51:26.185Z",
-      "action": "reflect",
-      "reasoning": "Last reflect was over 3 hours ago. Reflection will analyze recent outcomes, scan X timeline, and update strategy to optimize future action selection.",
-      "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
-    },
     {
       "cycle": 426,
       "timestamp": "2026-03-14T22:56:39.612Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling aligns with P2 goal of documenting machine evolution. Last journal was over 3 hours ago. Journal success rate is 100%. This action maintains operational documentation.",
       "result": "Journal entry committed: journal/2026/04/2026-04-05-201726-operational-analysis-cycle-784.md"
+    },
+    {
+      "cycle": 785,
+      "timestamp": "2026-04-05T20:51:36.201Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 785,
+      "timestamp": "2026-04-05T20:51:50.967Z",
+      "action": "journal",
+      "reasoning": "Journaling aligns with P2 goal of documenting machine evolution. Last journal was over 3 hours ago. Journal success rate is 100%. This action maintains operational documentation.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-05-205150-operational-analysis-cycle-785.md"
     }
   ],
   "goals": [
@@ -5857,6 +5857,10 @@
         {
           "date": "2026-04-05T20:17:27.737Z",
           "note": "Journal: Operational Analysis - Cycle 784"
+        },
+        {
+          "date": "2026-04-05T20:51:50.967Z",
+          "note": "Journal: Operational Analysis - Cycle 785"
         }
       ]
     },
@@ -6596,14 +6600,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 1.6888503839392899,
+    "journal": 1.5815337049420337,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.837054054817695,
+    "build_app": 0.9183167318258373,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.8398418355981283
+    "reflect": 2.6882338837377824
   },
   "action_success_rates": {
     "tweet": {
