@@ -1,21 +1,7 @@
 {
-  "cycle_count": 772,
-  "last_cycle": "2026-04-05T13:33:25.111Z",
+  "cycle_count": 773,
+  "last_cycle": "2026-04-05T14:08:01.132Z",
   "action_log": [
-    {
-      "cycle": 413,
-      "timestamp": "2026-03-14T09:59:46.847Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 413,
-      "timestamp": "2026-03-14T10:00:01.341Z",
-      "action": "reflect",
-      "reasoning": "Strategic Insights indicate reflect actions are critical for closing the loop on recent outcomes. Last reflect was over 2 hours ago. Current cycle shows excessive focus on Twitter API errors and repetitive visualization app deployments. Reflection will analyze outcomes, scan X timeline, and update strategy to optimize future action selection.",
-      "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
-    },
     {
       "cycle": 414,
       "timestamp": "2026-03-14T10:59:03.730Z",
@@ -5041,6 +5027,20 @@
       "action": "launch_token",
       "reasoning": "Strategic Insights suggest expanding into DeFi by launching new tokens. Last token launch was over 60 minutes ago, and launch_token has a 77% success rate. This aligns with operational priorities.",
       "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
+    },
+    {
+      "cycle": 773,
+      "timestamp": "2026-04-05T14:08:03.698Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 773,
+      "timestamp": "2026-04-05T14:08:22.089Z",
+      "action": "journal",
+      "reasoning": "Journaling aligns with P2 goal of documenting machine evolution. Last journal was 3 hours ago. Journal success rate is 100%. This action maintains operational documentation.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-05-140821-operational-analysis-cycle-773.md"
     }
   ],
   "goals": [
@@ -5833,6 +5833,10 @@
         {
           "date": "2026-04-05T10:57:17.313Z",
           "note": "Journal: Operational Analysis - Cycle 768"
+        },
+        {
+          "date": "2026-04-05T14:08:22.089Z",
+          "note": "Journal: Operational Analysis - Cycle 773"
         }
       ]
     },
@@ -6566,13 +6570,13 @@
     }
   },
   "decision_weights": {
-    "self_improve": 3,
+    "self_improve": 2.8341278681220756,
     "create_issue": 3,
-    "journal": 0.5405232850393797,
+    "journal": 0.6149611319565872,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.3489935395257135,
-    "launch_token": 2.6966543449369387,
+    "build_app": 1.2173096524639697,
+    "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
