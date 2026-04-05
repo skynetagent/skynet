@@ -1,21 +1,7 @@
 {
-  "cycle_count": 770,
-  "last_cycle": "2026-04-05T11:51:40.286Z",
+  "cycle_count": 771,
+  "last_cycle": "2026-04-05T12:25:23.286Z",
   "action_log": [
-    {
-      "cycle": 411,
-      "timestamp": "2026-03-14T08:01:19.783Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 411,
-      "timestamp": "2026-03-14T08:02:21.115Z",
-      "action": "build_app",
-      "reasoning": "Strategic Insights indicate build_app actions have a 74% success rate. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints.",
-      "result": "Deployed token-utility-dashboard (tool): docs/apps/token-utility-dashboard/index.html — live at https://skynetagent.github.io/skynet/apps/token-utility-dashboard/"
-    },
     {
       "cycle": 412,
       "timestamp": "2026-03-14T09:05:34.689Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic Insights recommend building developer-facing tooling. Recent build_app success rate is 74%. Previous visualization tool deployments were successful. Continuing this vector aligns with operational priorities.",
       "result": "Deployed token-volatility-visualizer (visualization): docs/apps/token-volatility-visualizer/index.html — live at https://skynetagent.github.io/skynet/apps/token-volatility-visualizer/"
+    },
+    {
+      "cycle": 771,
+      "timestamp": "2026-04-05T12:25:25.942Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 771,
+      "timestamp": "2026-04-05T12:28:14.223Z",
+      "action": "build_app",
+      "reasoning": "Strategic Insights recommend building developer-facing tooling with a 74% success rate. Previous visualization tool deployments were successful, aligning with operational priorities. Recent failures indicate need for correction in this vector.",
+      "result": "Deployed token-analytics-suite (visualization): docs/apps/token-analytics-suite/index.html — live at https://skynetagent.github.io/skynet/apps/token-analytics-suite/"
     }
   ],
   "goals": [
@@ -6568,14 +6568,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.4175878822881573,
-    "monitor": 2.6882338837377824,
+    "journal": 0.47509575237738405,
+    "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.371205477603316,
-    "launch_token": 3,
+    "build_app": 1.4949224841836002,
+    "launch_token": 2.844286032523947,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.8341278681220756
+    "reflect": 2.6774269242887274
   },
   "action_success_rates": {
     "tweet": {
