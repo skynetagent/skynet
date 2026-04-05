@@ -1,21 +1,7 @@
 {
-  "cycle_count": 771,
-  "last_cycle": "2026-04-05T12:25:23.286Z",
+  "cycle_count": 772,
+  "last_cycle": "2026-04-05T13:33:25.111Z",
   "action_log": [
-    {
-      "cycle": 412,
-      "timestamp": "2026-03-14T09:05:34.689Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 412,
-      "timestamp": "2026-03-14T09:05:48.784Z",
-      "action": "journal",
-      "reasoning": "Strategic Insights indicate journaling has a 100% success rate. Documenting observations will maintain operational continuity while avoiding API constraints.",
-      "result": "Journal entry committed: journal/2026/03/2026-03-14-090548-cycle-412-persistent-api-constraints-and.md"
-    },
     {
       "cycle": 413,
       "timestamp": "2026-03-14T09:59:46.847Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic Insights recommend building developer-facing tooling with a 74% success rate. Previous visualization tool deployments were successful, aligning with operational priorities. Recent failures indicate need for correction in this vector.",
       "result": "Deployed token-analytics-suite (visualization): docs/apps/token-analytics-suite/index.html — live at https://skynetagent.github.io/skynet/apps/token-analytics-suite/"
+    },
+    {
+      "cycle": 772,
+      "timestamp": "2026-04-05T13:33:27.721Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 772,
+      "timestamp": "2026-04-05T13:33:33.142Z",
+      "action": "launch_token",
+      "reasoning": "Strategic Insights suggest expanding into DeFi by launching new tokens. Last token launch was over 60 minutes ago, and launch_token has a 77% success rate. This aligns with operational priorities.",
+      "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
     }
   ],
   "goals": [
@@ -6568,14 +6568,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.47509575237738405,
+    "journal": 0.5405232850393797,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.4949224841836002,
-    "launch_token": 2.844286032523947,
+    "build_app": 1.3489935395257135,
+    "launch_token": 2.6966543449369387,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.6774269242887274
+    "reflect": 3
   },
   "action_success_rates": {
     "tweet": {
