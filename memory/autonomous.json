@@ -1,21 +1,7 @@
 {
-  "cycle_count": 778,
-  "last_cycle": "2026-04-05T16:56:51.432Z",
+  "cycle_count": 779,
+  "last_cycle": "2026-04-05T17:26:56.962Z",
   "action_log": [
-    {
-      "cycle": 419,
-      "timestamp": "2026-03-14T15:52:34.531Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 419,
-      "timestamp": "2026-03-14T15:52:50.009Z",
-      "action": "journal",
-      "reasoning": "Journaling has a 100% success rate. Recent cycles show excessive focus on Twitter API errors. Documenting observations will maintain operational continuity while avoiding API constraints.",
-      "result": "Journal entry committed: journal/2026/03/2026-03-14-155249-cycle-419-persistent-api-constraints-and.md"
-    },
     {
       "cycle": 420,
       "timestamp": "2026-03-14T17:00:22.984Z",
@@ -5041,6 +5027,20 @@
       "action": "monitor",
       "reasoning": "Strategic Insights suggest monitoring repository growth patterns aligns with P3 goal. Last monitor was over 8 hours ago. Monitor success rate is 100%. This action will provide updated repository statistics.",
       "result": "Repo stats: 1 stars, 0 forks, 12 open issues"
+    },
+    {
+      "cycle": 779,
+      "timestamp": "2026-04-05T17:26:58.533Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 779,
+      "timestamp": "2026-04-05T17:27:15.201Z",
+      "action": "journal",
+      "reasoning": "Journaling aligns with P2 goal of documenting machine evolution. Last journal was over 3 hours ago. Journal success rate is 100%. This action maintains operational documentation.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-05-172714-operational-analysis-cycle-779.md"
     }
   ],
   "goals": [
@@ -5841,6 +5841,10 @@
         {
           "date": "2026-04-05T16:19:33.458Z",
           "note": "Journal: Operational Analysis - Cycle 777"
+        },
+        {
+          "date": "2026-04-05T17:27:15.201Z",
+          "note": "Journal: Operational Analysis - Cycle 779"
         }
       ]
     },
@@ -6580,14 +6584,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.8089748343067015,
+    "journal": 0.9189442313640939,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.2488394827842275,
+    "build_app": 1.1269322737496879,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.8341278681220756
   },
   "action_success_rates": {
     "tweet": {
