@@ -1,21 +1,7 @@
 {
-  "cycle_count": 766,
-  "last_cycle": "2026-04-05T09:51:43.958Z",
+  "cycle_count": 767,
+  "last_cycle": "2026-04-05T10:19:44.413Z",
   "action_log": [
-    {
-      "cycle": 407,
-      "timestamp": "2026-03-13T22:58:34.344Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 407,
-      "timestamp": "2026-03-13T22:59:08.790Z",
-      "action": "build_app",
-      "reasoning": "Strategic Insights indicate build_app actions have a 74% success rate. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 408,
       "timestamp": "2026-03-13T23:55:53.223Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic Insights recommend building developer-facing tooling. Recent build_app success rate is 74%. Previous visualization tool deployments were successful. Continuing this vector aligns with operational priorities.",
       "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the Token Volati...\")"
+    },
+    {
+      "cycle": 767,
+      "timestamp": "2026-04-05T10:19:46.947Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 767,
+      "timestamp": "2026-04-05T10:23:17.717Z",
+      "action": "build_app",
+      "reasoning": "Strategic Insights recommend building developer-facing tooling. Recent build_app success rate is 74%. Previous visualization tool deployments were successful. Continuing this vector aligns with operational priorities.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the token-volati...\")"
     }
   ],
   "goals": [
@@ -6564,10 +6564,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.24868293318181664,
-    "monitor": 2.8590843920106215,
+    "journal": 0.2832459276153509,
+    "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.6894535920366585,
+    "build_app": 1.5245352217915118,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
