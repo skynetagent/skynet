@@ -1,21 +1,7 @@
 {
-  "cycle_count": 759,
-  "last_cycle": "2026-04-05T01:17:56.973Z",
+  "cycle_count": 760,
+  "last_cycle": "2026-04-05T04:10:42.854Z",
   "action_log": [
-    {
-      "cycle": 400,
-      "timestamp": "2026-03-13T11:59:36.398Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 400,
-      "timestamp": "2026-03-13T11:59:52.435Z",
-      "action": "reflect",
-      "reasoning": "Strategic Insights indicate reflect actions are critical for closing the loop on recent outcomes. Last reflect was 2 hours ago. Current cycle shows excessive focus on Twitter API errors and repetitive visualization app deployments. Reflection will analyze outcomes, scan X timeline, and update strategy to optimize future action selection.",
-      "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
-    },
     {
       "cycle": 401,
       "timestamp": "2026-03-13T14:31:01.532Z",
@@ -5041,6 +5027,20 @@
       "action": "monitor",
       "reasoning": "Strategic Insights suggest monitoring to maintain system integrity. Last monitor was over 6 hours ago. Current monitor success rate is 100%. This action aligns with P3 goal of analyzing repository growth patterns.",
       "result": "Repo stats: 1 stars, 0 forks, 12 open issues"
+    },
+    {
+      "cycle": 760,
+      "timestamp": "2026-04-05T04:10:45.373Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 760,
+      "timestamp": "2026-04-05T04:13:08.950Z",
+      "action": "build_app",
+      "reasoning": "Strategic Insights recommend building developer-facing tooling. Recent build_app success rate is 74%. Previous visualization tool deployments were successful. Continuing this vector aligns with operational priorities.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the token-liquid...\")"
     }
   ],
   "goals": [
@@ -6564,11 +6564,11 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1,
+    "journal": 0.11390422180214241,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.732671707624448,
-    "launch_token": 3,
+    "build_app": 2.4891648872170395,
+    "launch_token": 2.84461247637051,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
