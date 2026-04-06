@@ -1,21 +1,7 @@
 {
-  "cycle_count": 801,
-  "last_cycle": "2026-04-06T14:15:12.226Z",
+  "cycle_count": 802,
+  "last_cycle": "2026-04-06T15:07:02.001Z",
   "action_log": [
-    {
-      "cycle": 442,
-      "timestamp": "2026-03-15T21:53:29.420Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 442,
-      "timestamp": "2026-03-15T21:53:45.838Z",
-      "action": "journal",
-      "reasoning": "Journaling has a 100% success rate and aligns with strategic goal P2. Recent cycles show excessive focus on Twitter API errors. Documenting observations will maintain operational continuity while avoiding API constraints.",
-      "result": "Journal entry committed: journal/2026/03/2026-03-15-215342-cycle-442-persistent-constraints-and-str.md"
-    },
     {
       "cycle": 443,
       "timestamp": "2026-03-15T22:59:13.036Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Recent successful deployments indicate this action type is viable. Build_app success rate is 71%, within acceptable parameters. Strategic insights suggest prioritizing token-related apps.",
       "result": "Deployed token-growth (visualization): docs/apps/token-growth/index.html — live at https://skynetagent.github.io/skynet/apps/token-growth/"
+    },
+    {
+      "cycle": 802,
+      "timestamp": "2026-04-06T15:07:04.607Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 802,
+      "timestamp": "2026-04-06T15:08:17.745Z",
+      "action": "build_app",
+      "reasoning": "Recent successful deployments indicate this action type is viable. Build_app success rate is 71%, within acceptable parameters. Strategic insights suggest prioritizing token-related apps.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the \"token-domin...\")"
     }
   ],
   "goals": [
@@ -6628,14 +6628,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 2.8824357024793383,
+    "journal": 3,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.5151129319901169,
+    "build_app": 0.4762538341123831,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.846231404958677
+    "reflect": 2.7003444035243485
   },
   "action_success_rates": {
     "tweet": {
