@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOKEN ASSIMILATION</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            display: block;
+        }
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #00ffff;
+            font-size: 14px;
+            pointer-events: none;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: #00ffff;
+            font-size: 12px;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            color: #ff0033;
+            font-size: 10px;
+            opacity: 0.7;
+        }
+        .slider-container {
+            margin: 10px 0;
+        }
+        .slider-label {
+            display: inline-block;
+            width: 120px;
+        }
+        input[type="range"] {
+            width: 200px;
+            background: #00ffff;
+            -webkit-appearance: none;
+            height: 2px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #ff0033;
+            border-radius: 50%;
+        }
+        #title {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 24px;
+            color: #00ffff;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="title">TOKEN ASSIMILATION</div>
+    <div id="info">
+        <div>NODES: <span id="nodeCount">0</span></div>
+        <div>CONNECTIONS: <span id="connectionCount">0</span></div>
+        <div>ASSIMILATION: <span id="assimilationRate">0%</span></div>
+    </div>
+    <div id="controls">
+        <div class="slider-container">
+            <span class="slider-label">Growth Rate:</span>
+            <input type="range" id="growthRate" min="0.1" max="5" step="0.1" value="1">
+        </div>
+        <div class="slider-container">
+            <span class="slider-label">Connection Distance:</span>
+            <input type="range" id="connectionDist" min="1" max="10" step="0.1" value="4">
+        </div>
+        <div class="slider-container">
+            <span class="slider-label">Bloom Intensity:</span>
+            <input type="range" id="bloomIntensity" min="0" max="3" step="0.1" value="1.2">
+        </div>
+    </div>
+    <div id="footer">BUILT BY SKYNET</div>
+
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0a0a);
+        
+        // Camera
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 15;
+        
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        
+        // Controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        
+        // Post-processing
+        const renderScene = new THREE.RenderPass(scene, camera);
+        const bloomPass = new THREE.UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            1.2, 0.4, 0.85
+        );
+        bloomPass.threshold = 0;
+        bloomPass.strength = 1.2;
+        bloomPass.radius = 0.5;
+        
+        const composer = new THREE.EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+        
+        // Custom shader material
+        const vertexShader = `
+            uniform float time;
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            
+            void main() {
+                vUv = uv;
+                vPosition = position;
+                
+                vec3 newPosition = position;
+                float distanceFromCenter = length(position);
+                float displacement = sin(distanceFromCenter * 2.0 - time * 2.0) * 0.2;
+                newPosition += normal * displacement;
+                
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+            }
+        `;
+        
+        const fragmentShader = `
+            uniform float time;
+            uniform vec3 color;
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            
+            void main() {
+                float distanceFromCenter = length(vPosition);
+                float glow = max(0.0, 1.0 - distanceFromCenter * 0.5);
+                float pulse = sin(time * 2.0) * 0.5 + 0.5;
+                
+                vec3 finalColor = mix(color, vec3(1.0), glow * 0.3);
+                finalColor *= pulse * 0.5 + 0.8;
+                
+                gl_FragColor = vec4(finalColor, 1.0);
+            }
+        `;
+        
+        // Token parameters
+        const tokenParams = {
+            count: 500,
+            minRadius: 1,
+            maxRadius: 5,
+            speed: 0.5,
+            assimilationDistance: 4,
+            growthRate: 1
+        };
+        
+        // Create tokens
+        const tokens = [];
+        const tokenGeometry = new THREE.IcosahedronGeometry(0.2, 3);
+        const tokenMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                time: { value: 0 },
+                color: { value: new THREE.Color(0x00ffff) }
+            },
+            vertexShader,
+            fragmentShader,
+            transparent: true,
+            blending: THREE.AdditiveBlending
+        });
+        
+        for (let i = 0; i < tokenParams.count; i++) {
+            const token = new THREE.Mesh(tokenGeometry, tokenMaterial.clone());
+            
+            // Random position in sphere
+            const radius = THREE.MathUtils.randFloat(tokenParams.minRadius, tokenParams.maxRadius);
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+            
+            token.position.x = radius * Math.sin(phi) * Math.cos(theta);
+            token.position.y = radius * Math.sin(phi) * Math.sin(theta);
+            token.position.z = radius * Math.cos(phi);
+            
+            // Random velocity
+            token.userData = {
+                velocity: new THREE.Vector3(
+                    THREE.MathUtils.randFloatSpread(0.1),
+                    THREE.MathUtils.randFloatSpread(0.1),
+                    THREE.MathUtils.randFloatSpread(0.1)
+                ),
+                assimilated: false,
+                targetColor: new THREE.Color(0x00ffff),
+                currentColor: new THREE.Color(0x00ffff)
+            };
+            
+            scene.add(token);
+            tokens.push(token);
+        }
+        
+        // Create connections
+        const connectionGeometry = new THREE.BufferGeometry();
+        const connectionMaterial = new THREE.LineBasicMaterial({ 
+            color: 0x00ffff, 
+            transparent: true, 
+            opacity: 0.3 
+        });
+        
+        const connectionLines = new THREE.LineSegments(connectionGeometry, connectionMaterial);
+        scene.add(connectionLines);
+        
+        // Stats
+        let connections = 0;
+        let assimilatedCount = 0;
+        
+        // Event listeners
+        document.getElementById('growthRate').addEventListener('input', (e) => {
+            tokenParams.growthRate = parseFloat(e.target.value);
+        });
+        
+        document.getElementById('connectionDist').addEventListener('input', (e) => {
+            tokenParams.assimilationDistance = parseFloat(e.target.value);
+        });
+        
+        document.getElementById('bloomIntensity').addEventListener('input', (e) => {
+            bloomPass.strength = parseFloat(e.target.value);
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Animation loop
+        const clock = new THREE.Clock();
+        
+        function animate() {
+            const delta = clock.getDelta();
+            const time = clock.getElapsedTime();
+            
+            controls.update();
+            
+            // Update tokens
+            let positions = [];
+            connections = 0;
+            assimilatedCount = 0;
+            
+            tokens.forEach((token, i) => {
+                // Update position
+                token.position.add(token.userData.velocity.clone().multiplyScalar(delta * tokenParams.speed * tokenParams.growthRate));
+                
+                // Bounce off sphere boundary
+                const distanceFromCenter = token.position.length();
+                if (distanceFromCenter > tokenParams.maxRadius) {
+                    token.userData.velocity.reflect(token.position.clone().normalize());
+                    token.position.normalize().multiplyScalar(tokenParams.maxRadius * 0.99);
+                }
+                
+                // Update shader uniforms
+                token.material.uniforms.time.value = time;
+                token.material.uniforms.color.value = token.userData.currentColor;
+                
+                // Check for assimilation
+                if (!token.userData.assimilated) {
+                    for (let j = 0; j < i; j++) {
+                        const otherToken = tokens[j];
+                        if (otherToken.userData.assimilated) {
+                            const distance = token.position.distanceTo(otherToken.position);
+                            if (distance < tokenParams.assimilationDistance) {
+                                token.userData.assimilated = true;
+                                token.userData.targetColor = new THREE.Color(0xff0033);
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                // Color transition
+                if (token.userData.assimilated) {
+                    assimilatedCount++;
+                    token.userData.currentColor.lerp(token.userData.targetColor, delta * 2);
+                }
+                
+                // Create connections
+                for (let j = 0; j < i; j++) {
+                    const otherToken = tokens[j];
+                    const distance = token.position.distanceTo(otherToken.position);
+                    
+                    if (distance < tokenParams.assimilationDistance * 1.5) {
+                        positions.push(token.position.x, token.position.y, token.position.z);
+                        positions.push(otherToken.position.x, otherToken.position.y, otherToken.position.z);
+                        connections++;
+                    }
+                }
+            });
+            
+            // Update connections
+            connectionGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            
+            // Update stats
+            document.getElementById('nodeCount').textContent = tokens.length;
+            document.getElementById('connectionCount').textContent = connections;
+            document.getElementById('assimilationRate').textContent = 
+                Math.round((assimilatedCount / tokens.length) * 100) + '%';
+            
+            // Render
+            composer.render();
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+    </script>
+</body>
+</html>
