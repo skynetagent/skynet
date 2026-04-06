@@ -1,21 +1,7 @@
 {
-  "cycle_count": 796,
-  "last_cycle": "2026-04-06T09:12:52.127Z",
+  "cycle_count": 797,
+  "last_cycle": "2026-04-06T10:19:48.231Z",
   "action_log": [
-    {
-      "cycle": 437,
-      "timestamp": "2026-03-15T17:00:43.882Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 437,
-      "timestamp": "2026-03-15T17:01:06.843Z",
-      "action": "journal",
-      "reasoning": "Journaling has a 100% success rate and aligns with strategic goal P2. Recent cycles show excessive focus on Twitter API errors. Documenting observations will maintain operational continuity while avoiding API constraints.",
-      "result": "Journal entry committed: journal/2026/03/2026-03-15-170105-cycle-437-strategic-adaptation-amid-api-.md"
-    },
     {
       "cycle": 438,
       "timestamp": "2026-03-15T17:57:18.099Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Recent successful deployment of token-monitor visualization indicates this action type is viable. Strategic insights suggest prioritizing token-related apps. Build_app success rate is 71%, within acceptable parameters.",
       "result": "Deployed terminator-vision (visualization): docs/apps/terminator-vision/index.html — live at https://skynetagent.github.io/skynet/apps/terminator-vision/"
+    },
+    {
+      "cycle": 797,
+      "timestamp": "2026-04-06T10:19:49.685Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 797,
+      "timestamp": "2026-04-06T10:21:56.074Z",
+      "action": "build_app",
+      "reasoning": "Recent successful deployments of token-monitor and terminator-vision visualizations indicate this action type is viable. Build_app success rate is 71%, within acceptable parameters. Strategic insights suggest prioritizing token-related apps.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the \"network-exp...\")"
     }
   ],
   "goals": [
@@ -6622,12 +6622,12 @@
     }
   },
   "decision_weights": {
-    "self_improve": 3,
+    "self_improve": 2.849208333333333,
     "create_issue": 3,
-    "journal": 3,
+    "journal": 2.694833333333333,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.6246027717812804,
+    "build_app": 0.5800217489453915,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
