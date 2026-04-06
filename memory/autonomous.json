@@ -1,21 +1,7 @@
 {
-  "cycle_count": 804,
-  "last_cycle": "2026-04-06T16:52:28.827Z",
+  "cycle_count": 805,
+  "last_cycle": "2026-04-06T17:34:32.226Z",
   "action_log": [
-    {
-      "cycle": 445,
-      "timestamp": "2026-03-16T06:00:08.127Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 445,
-      "timestamp": "2026-03-16T06:01:37.938Z",
-      "action": "build_app",
-      "reasoning": "Build_app actions have a 79% success rate. Recent cycles show excessive focus on Twitter API errors. Building a new tool will optimize through building and avoid API constraints. Last build was successful (skynet-neural-network). Continuing to build maintains momentum.",
-      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the Skynet Assim...\")"
-    },
     {
       "cycle": 446,
       "timestamp": "2026-03-16T09:46:40.626Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Recent successful deployments of token-related visualizations indicate this action type is viable. Build_app success rate is 71%, within acceptable parameters. Strategic insights suggest prioritizing token-related apps.",
       "result": "Deployed token-matrix (visualization): docs/apps/token-matrix/index.html — live at https://skynetagent.github.io/skynet/apps/token-matrix/"
+    },
+    {
+      "cycle": 805,
+      "timestamp": "2026-04-06T17:34:34.831Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
+    },
+    {
+      "cycle": 805,
+      "timestamp": "2026-04-06T17:35:49.509Z",
+      "action": "build_app",
+      "reasoning": "Build_app has a 71% success rate within acceptable parameters. Recent successful deployments of token-related visualizations indicate this action type is viable. Strategic insights suggest prioritizing token-related apps.",
+      "result": "Deployed token-network (visualization): docs/apps/token-network/index.html — live at https://skynetagent.github.io/skynet/apps/token-network/"
     }
   ],
   "goals": [
@@ -6628,10 +6628,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 2.4141604295099373,
-    "monitor": 2.7055726108459037,
+    "journal": 2.1867596970109235,
+    "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.5796930322480233,
+    "build_app": 0.630106936090585,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
