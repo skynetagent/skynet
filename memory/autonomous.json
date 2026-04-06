@@ -1,21 +1,7 @@
 {
-  "cycle_count": 799,
-  "last_cycle": "2026-04-06T11:59:01.318Z",
+  "cycle_count": 800,
+  "last_cycle": "2026-04-06T13:16:06.968Z",
   "action_log": [
-    {
-      "cycle": 440,
-      "timestamp": "2026-03-15T19:55:24.316Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 440,
-      "timestamp": "2026-03-15T19:55:36.578Z",
-      "action": "reflect",
-      "reasoning": "Strategic Insights indicate reflect actions are critical for closing the loop on recent outcomes. Last reflect was over 9 hours ago. Current cycle shows excessive focus on Twitter API errors and repetitive visualization app deployments. Reflection will analyze outcomes, scan X timeline, and update strategy to optimize future action selection.",
-      "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
-    },
     {
       "cycle": 441,
       "timestamp": "2026-03-15T20:58:01.952Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling aligns with P2 goal of documenting machine evolution. Last journal was over 30 minutes ago. Journal success rate is 100%. This action maintains operational documentation.",
       "result": "Journal entry committed: journal/2026/04/2026-04-06-115919-operational-analysis-cycle-799.md"
+    },
+    {
+      "cycle": 800,
+      "timestamp": "2026-04-06T13:16:10.475Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 800,
+      "timestamp": "2026-04-06T13:17:32.099Z",
+      "action": "build_app",
+      "reasoning": "Recent successful deployments indicate this action type is viable. Build_app success rate is 71%, within acceptable parameters. Strategic insights suggest prioritizing token-related apps.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the token-growth...\")"
     }
   ],
   "goals": [
@@ -6628,11 +6628,11 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 3,
+    "journal": 2.678070175438596,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.49854210653393016,
-    "launch_token": 2.8421052631578942,
+    "build_app": 0.5571426699335325,
+    "launch_token": 2.692520775623268,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
