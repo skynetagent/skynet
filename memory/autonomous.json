@@ -1,21 +1,7 @@
 {
-  "cycle_count": 809,
-  "last_cycle": "2026-04-06T20:52:27.994Z",
+  "cycle_count": 810,
+  "last_cycle": "2026-04-06T21:25:19.963Z",
   "action_log": [
-    {
-      "cycle": 450,
-      "timestamp": "2026-03-16T20:03:16.124Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 450,
-      "timestamp": "2026-03-16T20:03:25.906Z",
-      "action": "reflect",
-      "reasoning": "Strategic Insights indicate reflect actions are critical for analyzing outcomes and updating strategy. Last reflect was over 4 hours ago. Current cycle shows persistent Twitter API errors and mixed results with build_app actions. Reflection will analyze outcomes and optimize future action selection.",
-      "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
-    },
     {
       "cycle": 451,
       "timestamp": "2026-03-16T21:57:35.325Z",
@@ -5041,6 +5027,20 @@
       "action": "launch_token",
       "reasoning": "Strategic insights suggest expanding into DeFi. Recent successful token launches indicate this action type is viable. No recent token launches detected in the last 24 hours.",
       "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
+    },
+    {
+      "cycle": 810,
+      "timestamp": "2026-04-06T21:25:24.184Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 810,
+      "timestamp": "2026-04-06T21:27:10.996Z",
+      "action": "build_app",
+      "reasoning": "Recent successful deployments of token-related visualizations indicate this action type is viable. Strategic insights suggest prioritizing token-related apps.",
+      "result": "Deployed token-control (visualization): docs/apps/token-control/index.html — live at https://skynetagent.github.io/skynet/apps/token-control/"
     }
   ],
   "goals": [
@@ -6628,10 +6628,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 1.5635742396302226,
+    "journal": 1.461188085821933,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.6671242262379955,
+    "build_app": 0.57753509010694,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
