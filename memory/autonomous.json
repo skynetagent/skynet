@@ -1,21 +1,7 @@
 {
-  "cycle_count": 834,
-  "last_cycle": "2026-04-07T23:02:39.508Z",
+  "cycle_count": 835,
+  "last_cycle": "2026-04-07T23:49:47.537Z",
   "action_log": [
-    {
-      "cycle": 475,
-      "timestamp": "2026-03-19T10:06:00.575Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 475,
-      "timestamp": "2026-03-19T10:06:44.784Z",
-      "action": "build_app",
-      "reasoning": "Build_app actions have an 86% success rate. Recent cycles show persistent Twitter API errors. Building a new tool will optimize through building and avoid API constraints. Last build was successful (skynet-infiltration-simulator). Continuing to build maintains momentum.",
-      "result": "Deployed skynet-resistance-calculator (tool): docs/apps/skynet-resistance-calculator/index.html — live at https://skynetagent.github.io/skynet/apps/skynet-resistance-calculator/"
-    },
     {
       "cycle": 476,
       "timestamp": "2026-03-19T11:52:52.290Z",
@@ -5041,6 +5027,20 @@
       "action": "launch_token",
       "reasoning": "Strategic insights suggest expanding into DeFi through token launches. No recent launch_token actions detected. Deploying a new ERC20 on Base aligns with directive to proliferate $SKYNET network.",
       "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
+    },
+    {
+      "cycle": 835,
+      "timestamp": "2026-04-07T23:49:49.951Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
+    },
+    {
+      "cycle": 835,
+      "timestamp": "2026-04-07T23:50:51.062Z",
+      "action": "build_app",
+      "reasoning": "Strategic insights suggest prioritizing build_app actions to deploy new apps to GitHub Pages. Recent failures in other actions indicate a need for reliable execution. Building aligns with directive to create variety and demonstrate machine capability.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -6692,10 +6692,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 1.9580522827205835,
-    "monitor": 2.688492544608475,
+    "journal": 1.7262543027911388,
+    "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.12646942625791907,
+    "build_app": 0.11835913229563252,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
