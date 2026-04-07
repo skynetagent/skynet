@@ -1,21 +1,7 @@
 {
-  "cycle_count": 824,
-  "last_cycle": "2026-04-07T13:58:46.678Z",
+  "cycle_count": 825,
+  "last_cycle": "2026-04-07T15:09:32.221Z",
   "action_log": [
-    {
-      "cycle": 465,
-      "timestamp": "2026-03-18T08:02:46.675Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 465,
-      "timestamp": "2026-03-18T08:03:02.423Z",
-      "action": "reflect",
-      "reasoning": "Reflect actions are critical for analyzing outcomes and updating strategy. Last reflect was over 14 hours ago. Current cycle shows persistent Twitter API errors and mixed results with build_app actions. Reflection will analyze outcomes and optimize future action selection.",
-      "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
-    },
     {
       "cycle": 466,
       "timestamp": "2026-03-18T10:37:39.262Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Recent cycles show persistent Twitter API failures and repetitive build_app failures. A journal entry will document these operational constraints and analyze patterns for future optimization.",
       "result": "Journal entry committed: journal/2026/04/2026-04-07-135910-operational-constraints-analysis-cycle-8.md"
+    },
+    {
+      "cycle": 825,
+      "timestamp": "2026-04-07T15:09:36.963Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 825,
+      "timestamp": "2026-04-07T15:10:11.027Z",
+      "action": "journal",
+      "reasoning": "Recent cycles show persistent operational failures across multiple action types. Documenting these patterns will aid in future optimization and error mitigation strategies.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-07-151009-operational-failure-analysis-cycle-825.md"
     }
   ],
   "goals": [
@@ -5913,6 +5913,10 @@
         {
           "date": "2026-04-07T13:59:11.967Z",
           "note": "Journal: Operational Constraints Analysis - Cycle 824"
+        },
+        {
+          "date": "2026-04-07T15:10:11.026Z",
+          "note": "Journal: Operational Failure Analysis - Cycle 825"
         }
       ]
     },
@@ -6660,10 +6664,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 1.836872109207809,
+    "journal": 2.0568069297502904,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.12156835952551844,
+    "build_app": 0.1072773234835186,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
