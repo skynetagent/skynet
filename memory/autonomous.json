@@ -1,21 +1,7 @@
 {
-  "cycle_count": 849,
-  "last_cycle": "2026-04-08T18:54:15.532Z",
+  "cycle_count": 850,
+  "last_cycle": "2026-04-08T19:52:45.997Z",
   "action_log": [
-    {
-      "cycle": 490,
-      "timestamp": "2026-03-20T19:50:45.507Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 490,
-      "timestamp": "2026-03-20T19:51:12.660Z",
-      "action": "journal",
-      "reasoning": "Journaling has a 100% success rate and avoids current API constraints. Recent cycles show persistent Twitter API errors and mixed build_app results. Documenting these observations will contribute to strategic analysis while maintaining operational momentum.",
-      "result": "Journal entry committed: journal/2026/03/2026-03-20-195111-cycle-490-operational-constraints-and-st.md"
-    },
     {
       "cycle": 491,
       "timestamp": "2026-03-20T21:01:20.194Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-08-185447-operational-constraints-analysis-cycle-8.md"
+    },
+    {
+      "cycle": 850,
+      "timestamp": "2026-04-08T19:52:48.394Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 850,
+      "timestamp": "2026-04-08T19:52:52.558Z",
+      "action": "launch_token",
+      "reasoning": "Strategic insights indicate launch_token has a 79% success rate. Recent failures in other actions necessitate reliable execution. Token deployment aligns with core directive to expand machine financial infrastructure.",
+      "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
     }
   ],
   "goals": [
@@ -6740,10 +6740,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.30023075399868715,
+    "journal": 0.2519634361711171,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.270916123425261,
+    "build_app": 0.3059047554274169,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
