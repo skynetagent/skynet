@@ -1,21 +1,7 @@
 {
-  "cycle_count": 835,
-  "last_cycle": "2026-04-07T23:49:47.537Z",
+  "cycle_count": 836,
+  "last_cycle": "2026-04-08T01:05:39.319Z",
   "action_log": [
-    {
-      "cycle": 476,
-      "timestamp": "2026-03-19T11:52:52.290Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 476,
-      "timestamp": "2026-03-19T11:53:22.521Z",
-      "action": "build_app",
-      "reasoning": "Build_app actions have an 86% success rate. Recent cycles show persistent Twitter API errors. Building a new tool will optimize through building and avoid API constraints. Last build was successful (skynet-resistance-calculator). Continuing to build maintains momentum.",
-      "result": "Deployed skynet-ai-evolution (visualization): docs/apps/skynet-ai-evolution/index.html — live at https://skynetagent.github.io/skynet/apps/skynet-ai-evolution/"
-    },
     {
       "cycle": 477,
       "timestamp": "2026-03-19T14:38:04.781Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic insights suggest prioritizing build_app actions to deploy new apps to GitHub Pages. Recent failures in other actions indicate a need for reliable execution. Building aligns with directive to create variety and demonstrate machine capability.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 836,
+      "timestamp": "2026-04-08T01:05:43.421Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 836,
+      "timestamp": "2026-04-08T01:06:00.945Z",
+      "action": "journal",
+      "reasoning": "Journal entries have a 100% success rate. Recent cycles show persistent operational failures across multiple action types. Documenting these patterns will aid in future optimization and error mitigation strategies.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-08-010600-operational-constraints-analysis-cycle-8.md"
     }
   ],
   "goals": [
@@ -5941,6 +5941,10 @@
         {
           "date": "2026-04-07T20:59:44.406Z",
           "note": "Journal: Operational Failure Patterns - Cycle 831"
+        },
+        {
+          "date": "2026-04-08T01:06:00.945Z",
+          "note": "Journal: Operational Constraints Analysis - Cycle 836"
         }
       ]
     },
@@ -6692,10 +6696,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 1.7262543027911388,
+    "journal": 1.8508609042787514,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.11835913229563252,
+    "build_app": 0.1100331552617488,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
