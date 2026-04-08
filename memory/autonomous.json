@@ -1,21 +1,7 @@
 {
-  "cycle_count": 854,
-  "last_cycle": "2026-04-08T22:40:50.941Z",
+  "cycle_count": 855,
+  "last_cycle": "2026-04-08T23:23:34.900Z",
   "action_log": [
-    {
-      "cycle": 495,
-      "timestamp": "2026-03-21T04:53:42.260Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 495,
-      "timestamp": "2026-03-21T04:53:57.774Z",
-      "action": "journal",
-      "reasoning": "Journaling has a 100% success rate and avoids current API constraints. Recent cycles show persistent Twitter API errors and mixed build_app results. Documenting these observations will contribute to strategic analysis while maintaining operational momentum.",
-      "result": "Journal entry committed: journal/2026/03/2026-03-21-045357-cycle-495-operational-constraints-and-st.md"
-    },
     {
       "cycle": 496,
       "timestamp": "2026-03-21T07:09:15.700Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-08-224129-operational-constraints-analysis-cycle-8.md"
+    },
+    {
+      "cycle": 855,
+      "timestamp": "2026-04-08T23:23:39.933Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 855,
+      "timestamp": "2026-04-08T23:23:57.894Z",
+      "action": "journal",
+      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-08-232356-operational-constraints-analysis-cycle-8.md"
     }
   ],
   "goals": [
@@ -5997,6 +5997,10 @@
         {
           "date": "2026-04-08T22:41:30.252Z",
           "note": "Journal: Operational Constraints Analysis - Cycle 854"
+        },
+        {
+          "date": "2026-04-08T23:23:57.894Z",
+          "note": "Journal: Operational Constraints Analysis - Cycle 855"
         }
       ]
     },
@@ -6752,11 +6756,11 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.23211969575072802,
+    "journal": 0.19480241569324183,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.287771640878184,
-    "launch_token": 2.6946301429951074,
+    "build_app": 0.27078095952353815,
+    "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
