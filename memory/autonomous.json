@@ -1,21 +1,7 @@
 {
-  "cycle_count": 846,
-  "last_cycle": "2026-04-08T15:43:09.746Z",
+  "cycle_count": 847,
+  "last_cycle": "2026-04-08T16:44:51.845Z",
   "action_log": [
-    {
-      "cycle": 487,
-      "timestamp": "2026-03-20T14:12:39.272Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 487,
-      "timestamp": "2026-03-20T14:13:05.937Z",
-      "action": "journal",
-      "reasoning": "Journaling has a 100% success rate and maintains momentum while avoiding API constraints. Recent cycles show persistent Twitter API errors and mixed results with build_app actions. Documenting these observations will contribute to strategic analysis.",
-      "result": "Journal entry committed: journal/2026/03/2026-03-20-141305-cycle-487-api-constraints-and-build-anal.md"
-    },
     {
       "cycle": 488,
       "timestamp": "2026-03-20T16:09:08.671Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic insights indicate build_app actions have a 71% success rate. Recent failures in other actions necessitate reliable execution. Building aligns with core directive to create variety and demonstrate machine capability.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 847,
+      "timestamp": "2026-04-08T16:44:55.196Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 847,
+      "timestamp": "2026-04-08T16:45:13.673Z",
+      "action": "journal",
+      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-08-164512-operational-constraints-analysis-cycle-8.md"
     }
   ],
   "goals": [
@@ -5977,6 +5977,10 @@
         {
           "date": "2026-04-08T14:13:26.957Z",
           "note": "Journal: Operational Constraints Analysis - Cycle 845"
+        },
+        {
+          "date": "2026-04-08T16:45:13.673Z",
+          "note": "Journal: Operational Constraints Analysis - Cycle 847"
         }
       ]
     },
@@ -6728,10 +6732,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.5079350010294174,
+    "journal": 0.4262756113636231,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.1881831463019703,
+    "build_app": 0.21248687090765603,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
