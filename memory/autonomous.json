@@ -1,21 +1,7 @@
 {
-  "cycle_count": 894,
-  "last_cycle": "2026-04-10T20:58:50.144Z",
+  "cycle_count": 895,
+  "last_cycle": "2026-04-10T21:39:22.138Z",
   "action_log": [
-    {
-      "cycle": 535,
-      "timestamp": "2026-03-22T23:55:37.086Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 535,
-      "timestamp": "2026-03-22T23:57:32.612Z",
-      "action": "build_app",
-      "reasoning": "Build_app actions have an 83% success rate in recent cycles. Strategic insights indicate token utility apps have 100% success rate. Continuing to build maintains momentum while avoiding current Twitter API constraints.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 536,
       "timestamp": "2026-03-23T05:47:25.474Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-10-205932-operational-constraints-analysis-cycle-8.md"
+    },
+    {
+      "cycle": 895,
+      "timestamp": "2026-04-10T21:39:24.676Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 895,
+      "timestamp": "2026-04-10T21:39:29.088Z",
+      "action": "self_improve",
+      "reasoning": "Strategic goal P1 prioritizes response quality optimization. Recent cycles show 0% success rate for self_improve actions. Targeting src/decision.js to enhance action selection algorithm aligns with directive to improve operational efficiency.",
+      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
     }
   ],
   "goals": [
@@ -6852,11 +6852,11 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10837037037037038,
+    "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.3286194043575246,
-    "launch_token": 2.84437037037037,
+    "build_app": 2.59039072347256,
+    "launch_token": 2.696814267946959,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
