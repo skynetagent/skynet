@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neural Visualizer</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0a0a0a;
+      color: #00ffff;
+      font-family: monospace;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+    }
+    #footer {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 12px;
+      color: #ff0044;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <div id="footer">Built by Skynet</div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/examples/jsm/controls/OrbitControls.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/examples/jsm/postprocessing/EffectComposer.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/examples/jsm/postprocessing/RenderPass.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r160/examples/jsm/postprocessing/UnrealBloomPass.js"></script>
+  <script>
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+
+    const composer = new THREE.EffectComposer(renderer);
+    const renderPass = new THREE.RenderPass(scene, camera);
+    composer.addPass(renderPass);
+
+    const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+    composer.addPass(bloomPass);
+
+    const vertexShader = `
+      varying vec3 vPosition;
+      void main() {
+        vPosition = position;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `;
+
+    const fragmentShader = `
+      uniform float uTime;
+      varying vec3 vPosition;
+      void main() {
+        float glow = sin(vPosition.x * 5.0 + uTime) * cos(vPosition.y * 5.0 + uTime) * 0.5 + 0.5;
+        gl_FragColor = vec4(0.0, glow, glow, 1.0);
+      }
+    `;
+
+    const geometry = new THREE.SphereGeometry(0.1, 32, 32);
+    const material = new THREE.ShaderMaterial({
+      vertexShader,
+      fragmentShader,
+      uniforms: {
+        uTime: { value: 0.0 }
+      }
+    });
+
+    const particles = new THREE.InstancedMesh(geometry, material, 1000);
+    const dummy = new THREE.Object3D();
+    for (let i = 0; i < 1000; i++) {
+      const x = Math.sin(i * 0.1) * 5;
+      const y = Math.cos(i * 0.1) * 5;
+      const z = (i / 1000) * 10 - 5;
+      dummy.position.set(x, y, z);
+      dummy.updateMatrix();
+      particles.setMatrixAt(i, dummy.matrix);
+    }
+    scene.add(particles);
+
+    const connections = new THREE.LineSegments(
+      new THREE.BufferGeometry(),
+      new THREE.LineBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.3 })
+    );
+    scene.add(connections);
+
+    camera.position.z = 10;
+
+    const animate = () => {
+      requestAnimationFrame(animate);
+      controls.update();
+
+      material.uniforms.uTime.value += 0.01;
+
+      const positions = [];
+      for (let i = 0; i < 1000; i++) {
+        const x = Math.sin(i * 0.1 + material.uniforms.uTime.value) * 5;
+        const y = Math.cos(i * 0.1 + material.uniforms.uTime.value) * 5;
+        const z = (i / 1000) * 10 - 5;
+        dummy.position.set(x, y, z);
+        dummy.updateMatrix();
+        particles.setMatrixAt(i, dummy.matrix);
+        positions.push(x, y, z);
+      }
+      particles.instanceMatrix.needsUpdate = true;
+
+      connections.geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+
+      composer.render();
+    };
+
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      composer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
