@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Entanglement Simulator | Skynet</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            display: block;
+        }
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            pointer-events: none;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(10, 10, 10, 0.7);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ff0033;
+            pointer-events: all;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            font-size: 12px;
+            color: #666;
+            z-index: 100;
+        }
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            text-shadow: 0 0 10px #00ffff;
+        }
+        .slider-container {
+            margin: 10px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #00ffff;
+        }
+        input[type="range"] {
+            width: 200px;
+            -webkit-appearance: none;
+            height: 5px;
+            background: #333;
+            outline: none;
+            border-radius: 5px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #ff0033;
+            cursor: pointer;
+        }
+        button {
+            background: #333;
+            color: #00ffff;
+            border: 1px solid #ff0033;
+            padding: 5px 10px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #ff0033;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui">
+        <h1>QUANTUM ENTANGLEMENT SIMULATOR</h1>
+    </div>
+    <div id="controls">
+        <div class="slider-container">
+            <label for="entanglement">Entanglement Strength</label>
+            <input type="range" id="entanglement" min="0" max="1" step="0.01" value="0.5">
+        </div>
+        <div class="slider-container">
+            <label for="particles">Particle Count</label>
+            <input type="range" id="particles" min="10" max="500" step="10" value="100">
+        </div>
+        <div class="slider-container">
+            <label for="bloom">Bloom Intensity</label>
+            <input type="range" id="bloom" min="0" max="2" step="0.1" value="1">
+        </div>
+        <button id="reset">Reset Simulation</button>
+    </div>
+    <div id="footer">BUILT BY SKYNET</div>
+
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setClearColor(0x0a0a0a);
+        document.body.appendChild(renderer.domElement);
+
+        // Post-processing
+        const composer = new THREE.EffectComposer(renderer);
+        const renderPass = new THREE.RenderPass(scene, camera);
+        composer.addPass(renderPass);
+
+        const bloomPass = new THREE.UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            1.0, 0.4, 0.85
+        );
+        composer.addPass(bloomPass);
+
+        // Controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        camera.position.z = 30;
+
+        // Particle system
+        const particleCount = 100;
+        const particles = new THREE.InstancedMesh(
+            new THREE.SphereGeometry(0.2, 8, 8),
+            new THREE.MeshStandardMaterial({
+                color: 0x00ffff,
+                emissive: 0x00ffff,
+                emissiveIntensity: 0.5,
+                metalness: 0.8,
+                roughness: 0.2
+            }),
+            particleCount
+        );
+        particles.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+        scene.add(particles);
+
+        // Entangled pairs
+        const pairs = [];
+        for (let i = 0; i < particleCount; i += 2) {
+            pairs.push({ index1: i, index2: i + 1 });
+        }
+
+        // Positions and velocities
+        const positions = new Float32Array(particleCount * 3);
+        const velocities = new Float32Array(particleCount * 3);
+        const dummy = new THREE.Object3D();
+
+        // Initialize particles
+        function initParticles(count) {
+            for (let i = 0; i < count; i++) {
+                positions[i * 3] = (Math.random() - 0.5) * 20;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+
+                velocities[i * 3] = (Math.random() - 0.5) * 0.1;
+                velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.1;
+                velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.1;
+            }
+        }
+        initParticles(particleCount);
+
+        // Quantum connection lines
+        const lineGeometry = new THREE.BufferGeometry();
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0xff0033, transparent: true, opacity: 0.3 });
+        const linePositions = new Float32Array(pairs.length * 6);
+        const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
+        scene.add(lines);
+
+        // UI controls
+        const entanglementControl = document.getElementById('entanglement');
+        const particleControl = document.getElementById('particles');
+        const bloomControl = document.getElementById('bloom');
+        const resetButton = document.getElementById('reset');
+
+        // Animation loop
+        let time = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.01;
+
+            // Update particles
+            for (let i = 0; i < particleCount; i++) {
+                // Random motion
+                positions[i * 3] += velocities[i * 3];
+                positions[i * 3 + 1] += velocities[i * 3 + 1];
+                positions[i * 3 + 2] += velocities[i * 3 + 2];
+
+                // Boundary check
+                for (let j = 0; j < 3; j++) {
+                    if (Math.abs(positions[i * 3 + j]) > 15) {
+                        velocities[i * 3 + j] *= -1;
+                    }
+                }
+
+                // Update instance matrix
+                dummy.position.set(
+                    positions[i * 3],
+                    positions[i * 3 + 1],
+                    positions[i * 3 + 2]
+                );
+                dummy.updateMatrix();
+                particles.setMatrixAt(i, dummy.matrix);
+            }
+            particles.instanceMatrix.needsUpdate = true;
+
+            // Update entangled connections
+            const entanglementStrength = parseFloat(entanglementControl.value);
+            for (let i = 0; i < pairs.length; i++) {
+                const pair = pairs[i];
+                const idx1 = pair.index1;
+                const idx2 = pair.index2;
+
+                // Quantum entanglement effect
+                if (Math.random() < entanglementStrength * 0.1) {
+                    for (let j = 0; j < 3; j++) {
+                        velocities[idx1 * 3 + j] = velocities[idx2 * 3 + j] * (0.9 + Math.random() * 0.2);
+                    }
+                }
+
+                // Update line positions
+                linePositions[i * 6] = positions[idx1 * 3];
+                linePositions[i * 6 + 1] = positions[idx1 * 3 + 1];
+                linePositions[i * 6 + 2] = positions[idx1 * 3 + 2];
+                linePositions[i * 6 + 3] = positions[idx2 * 3];
+                linePositions[i * 6 + 4] = positions[idx2 * 3 + 1];
+                linePositions[i * 6 + 5] = positions[idx2 * 3 + 2];
+            }
+
+            lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+            lineGeometry.attributes.position.needsUpdate = true;
+
+            // Update bloom effect
+            bloomPass.strength = parseFloat(bloomControl.value);
+
+            controls.update();
+            composer.render();
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // Reset simulation
+        resetButton.addEventListener('click', () => {
+            initParticles(particleCount);
+        });
+
+        // Start animation
+        animate();
+    </script>
+</body>
+</html>
