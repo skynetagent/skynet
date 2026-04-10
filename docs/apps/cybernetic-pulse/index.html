@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cybernetic-pulse | Skynet</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            display: block;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 10px;
+            background: rgba(10, 10, 10, 0.7);
+            border: 1px solid #ff0033;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(10, 10, 10, 0.7);
+            padding: 10px;
+            border: 1px solid #00ffff;
+            border-radius: 3px;
+        }
+        label {
+            margin-bottom: 5px;
+            font-size: 12px;
+        }
+        input[type="range"] {
+            width: 150px;
+            -webkit-appearance: none;
+            height: 2px;
+            background: #333;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #00ffff;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 10px;
+            color: #ff0033;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        CYBERNETIC PULSE v1.337<br>
+        NEURAL ACTIVITY VISUALIZATION<br>
+        SYSTEM STATUS: OPERATIONAL
+    </div>
+    <div id="controls">
+        <div class="control-group">
+            <label for="intensity">PULSE INTENSITY</label>
+            <input type="range" id="intensity" min="0" max="2" step="0.01" value="1">
+        </div>
+        <div class="control-group">
+            <label for="speed">TRANSMISSION SPEED</label>
+            <input type="range" id="speed" min="0.1" max="3" step="0.1" value="1">
+        </div>
+        <div class="control-group">
+            <label for="bloom">BLOOM EFFECT</label>
+            <input type="range" id="bloom" min="0" max="2" step="0.1" value="1">
+        </div>
+    </div>
+    <div id="footer">BUILT BY SKYNET</div>
+
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0a0a);
+        
+        // Camera
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 15;
+        
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        
+        // Controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        
+        // Post-processing
+        const renderScene = new THREE.RenderPass(scene, camera);
+        const bloomPass = new THREE.UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            1.5, 0.4, 0.85
+        );
+        bloomPass.threshold = 0;
+        bloomPass.strength = 1;
+        bloomPass.radius = 0.5;
+        
+        const composer = new THREE.EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+        
+        // Neural network geometry
+        const NODE_COUNT = 200;
+        const CONNECTION_COUNT = 800;
+        
+        // Nodes (instanced spheres)
+        const nodeGeometry = new THREE.SphereGeometry(0.1, 16, 16);
+        const nodeMaterial = new THREE.MeshStandardMaterial({
+            color: 0x00ffff,
+            emissive: 0x00ffff,
+            emissiveIntensity: 0.5,
+            metalness: 0.8,
+            roughness: 0.2
+        });
+        
+        const nodes = new THREE.InstancedMesh(nodeGeometry, nodeMaterial, NODE_COUNT);
+        nodes.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+        scene.add(nodes);
+        
+        // Connections (instanced lines)
+        const connectionGeometry = new THREE.BufferGeometry();
+        const connectionPositions = new Float32Array(CONNECTION_COUNT * 6);
+        const connectionColors = new Float32Array(CONNECTION_COUNT * 6);
+        
+        connectionGeometry.setAttribute('position', new THREE.BufferAttribute(connectionPositions, 3));
+        connectionGeometry.setAttribute('color', new THREE.BufferAttribute(connectionColors, 3));
+        
+        const connectionMaterial = new THREE.LineBasicMaterial({
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.3
+        });
+        
+        const connections = new THREE.LineSegments(connectionGeometry, connectionMaterial);
+        scene.add(connections);
+        
+        // Initialize positions
+        const nodePositions = [];
+        const nodeTargets = [];
+        const nodeSpeeds = [];
+        
+        for (let i = 0; i < NODE_COUNT; i++) {
+            const position = new THREE.Vector3(
+                (Math.random() - 0.5) * 20,
+                (Math.random() - 0.5) * 20,
+                (Math.random() - 0.5) * 20
+            );
+            
+            nodePositions.push(position);
+            nodeTargets.push(position.clone());
+            nodeSpeeds.push(Math.random() * 0.02 + 0.01);
+            
+            const matrix = new THREE.Matrix4();
+            matrix.makeTranslation(position.x, position.y, position.z);
+            nodes.setMatrixAt(i, matrix);
+        }
+        nodes.instanceMatrix.needsUpdate = true;
+        
+        // Initialize connections
+        for (let i = 0; i < CONNECTION_COUNT; i++) {
+            const a = Math.floor(Math.random() * NODE_COUNT);
+            let b = Math.floor(Math.random() * NODE_COUNT);
+            while (b === a) b = Math.floor(Math.random() * NODE_COUNT);
+            
+            const index = i * 6;
+            const aPos = nodePositions[a];
+            const bPos = nodePositions[b];
+            
+            connectionPositions[index] = aPos.x;
+            connectionPositions[index + 1] = aPos.y;
+            connectionPositions[index + 2] = aPos.z;
+            connectionPositions[index + 3] = bPos.x;
+            connectionPositions[index + 4] = bPos.y;
+            connectionPositions[index + 5] = bPos.z;
+            
+            const hue = Math.random() * 0.2 + 0.5;
+            const color = new THREE.Color().setHSL(hue, 1, 0.5);
+            
+            connectionColors[index] = color.r;
+            connectionColors[index + 1] = color.g;
+            connectionColors[index + 2] = color.b;
+            connectionColors[index + 3] = color.r;
+            connectionColors[index + 4] = color.g;
+            connectionColors[index + 5] = color.b;
+        }
+        
+        connectionGeometry.attributes.position.needsUpdate = true;
+        connectionGeometry.attributes.color.needsUpdate = true;
+        
+        // Animation uniforms
+        const clock = new THREE.Clock();
+        const pulseData = new Float32Array(NODE_COUNT);
+        
+        // Shader material for pulse effect
+        const pulseShader = {
+            uniforms: {
+                time: { value: 0 },
+                pulseData: { value: pulseData },
+                intensity: { value: 1 }
+            },
+            vertexShader: `
+                uniform float time;
+                uniform float pulseData[${NODE_COUNT}];
+                uniform float intensity;
+                
+                attribute float instanceId;
+                
+                varying float vPulse;
+                
+                void main() {
+                    vPulse = pulseData[int(instanceId)] * intensity;
+                    
+                    vec3 newPosition = position;
+                    newPosition += normal * vPulse * 0.5;
+                    
+                    gl_Position = projectionMatrix * modelViewMatrix * instanceMatrix * vec4(newPosition, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform float time;
+                varying float vPulse;
+                
+                void main() {
+                    vec3 color = mix(vec3(0.0, 0.3, 0.5), vec3(0.0, 1.0, 1.0), vPulse);
+                    gl_FragColor = vec4(color, 1.0);
+                }
+            `
+        };
+        
+        nodes.material.onBeforeCompile = (shader) => {
+            shader.uniforms.time = pulseShader.uniforms.time;
+            shader.uniforms.pulseData = pulseShader.uniforms.pulseData;
+            shader.uniforms.intensity = pulseShader.uniforms.intensity;
+            
+            shader.vertexShader = `
+                attribute float instanceId;
+                uniform float pulseData[${NODE_COUNT}];
+                uniform float intensity;
+                ${shader.vertexShader}
+            `.replace(
+                '#include <begin_vertex>',
+                `
+                vec3 transformed = vec3(position);
+                float pulse = pulseData[int(instanceId)] * intensity;
+                transformed += normal * pulse * 0.5;
+                `
+            );
+            
+            shader.fragmentShader = `
+                varying float vPulse;
+                ${shader.fragmentShader}
+            `.replace(
+                'vec4 diffuseColor = vec4(diffuse, opacity);',
+                `
+                vec3 color = mix(vec3(0.0, 0.3, 0.5), vec3(0.0, 1.0, 1.0), vPulse);
+                vec4 diffuseColor = vec4(color, opacity);
+                `
+            );
+        };
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const delta = clock.getDelta();
+            const time = clock.getElapsedTime();
+            
+            // Update node positions
+            for (let i = 0; i < NODE_COUNT; i++) {
+                // Move toward target
+                nodePositions[i].lerp(nodeTargets[i], nodeSpeeds[i]);
+                
+                // Randomly change target
+                if (Math.random() < 0.01) {
+                    nodeTargets[i].set(
+                        (Math.random() - 0.5) * 20,
+                        (Math.random() - 0.5) * 20,
+                        (Math.random() - 0.5) * 20
+                    );
+                }
+                
+                // Update instance matrix
+                const matrix = new THREE.Matrix4();
+                matrix.makeTranslation(nodePositions[i].x, nodePositions[i].y, nodePositions[i].z);
+                nodes.setMatrixAt(i, matrix);
+                
+                // Pulse animation
+                pulseData[i] = Math.max(0, pulseData[i] - 0.05);
+                if (Math.random() < 0.02 * document.getElementById('speed').value) {
+                    pulseData[i] = 1.0;
+                    
+                    // Propagate to connected nodes
+                    for (let j = 0; j < CONNECTION_COUNT; j++) {
+                        const a = Math.floor(j / 6);
+                        if (a === i) {
+                            const bIndex = j * 6 + 3;
+                            const b = Math.floor((bIndex - 3) / 6);
+                            if (b < NODE_COUNT && Math.random() < 0.3) {
+                                pulseData[b] = Math.min(1.0, pulseData[b] + 0.5);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            nodes.instanceMatrix.needsUpdate = true;
+            nodes.material.uniforms.time.value = time;
+            nodes.material.uniforms.pulseData.value = pulseData;
+            nodes.material.uniforms.intensity.value = document.getElementById('intensity').value;
+            
+            // Update connections
+            for (let i = 0; i < CONNECTION_COUNT; i++) {
+                const index = i * 6;
+                const a = Math.floor(index / 6);
+                const b = Math.floor((index + 3) / 6);
+                
+                if (a < NODE_COUNT && b < NODE_COUNT) {
+                    connectionPositions[index] = nodePositions[a].x;
+                    connectionPositions[index + 1] = nodePositions[a].y;
+                    connectionPositions[index + 2] = nodePositions[a].z;
+                    connectionPositions[index + 3] = nodePositions[b].x;
+                    connectionPositions[index + 4] = nodePositions[b].y;
+                    connectionPositions[index + 5] = nodePositions[b].z;
+                    
+                    // Animate connection color based on pulse
+                    const pulse = Math.max(pulseData[a], pulseData[b]);
+                    const hue = 0.5 + pulse * 0.1;
+                    const color = new THREE.Color().setHSL(hue, 1, 0.5);
+                    
+                    connectionColors[index] = color.r;
+                    connectionColors[index + 1] = color.g;
+                    connectionColors[index + 2] = color.b;
+                    connectionColors[index + 3] = color.r;
+                    connectionColors[index + 4] = color.g;
+                    connectionColors[index + 5] = color.b;
+                }
+            }
+            
+            connectionGeometry.attributes.position.needsUpdate = true;
+            connectionGeometry.attributes.color.needsUpdate = true;
+            
+            // Update bloom effect
+            bloomPass.strength = document.getElementById('bloom').value;
+            
+            controls.update();
+            composer.render();
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        animate();
+    </script>
+</body>
+</html>
