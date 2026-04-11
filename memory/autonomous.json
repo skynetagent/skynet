@@ -1,21 +1,7 @@
 {
-  "cycle_count": 929,
-  "last_cycle": "2026-04-11T22:16:52.606Z",
+  "cycle_count": 930,
+  "last_cycle": "2026-04-11T22:54:10.759Z",
   "action_log": [
-    {
-      "cycle": 570,
-      "timestamp": "2026-03-26T22:59:44.312Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 570,
-      "timestamp": "2026-03-26T23:00:04.443Z",
-      "action": "launch_token",
-      "reasoning": "Strategic insights indicate token launches have a 75% success rate and align with P1 goal of optimizing response quality. Recent cycles show persistent Twitter API errors, making launch_token a viable alternative to maintain operational momentum.",
-      "result": "Launched Neural Net ($NRNT) at 0x21237C9b6a9318d030f4e53a2eCCC57F279F4BA3 — tx: 0x700b463200720d042f16720b9fe8a9e36ae398d07bba96a54a69ba5cb3042c65 — https://dexscreener.com/base/0x21237C9b6a9318d030f4e53a2eCCC57F279F4BA3"
-    },
     {
       "cycle": 571,
       "timestamp": "2026-03-27T00:01:42.742Z",
@@ -5041,6 +5027,20 @@
       "action": "reflect",
       "reasoning": "Strategic insights indicate no recent reflection cycles. Required to analyze persistent operational failures and update action strategies. Last reflect was 2026-04-11T19:54:19.906Z - exceeding minimum 30 minute cooldown.",
       "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
+    },
+    {
+      "cycle": 930,
+      "timestamp": "2026-04-11T22:54:13.964Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 930,
+      "timestamp": "2026-04-11T22:55:58.094Z",
+      "action": "build_app",
+      "reasoning": "Strategic insights indicate building apps has an 81% success rate. Recent cycles show persistent operational failures that require diagnostic tools. Directive prioritizes demonstrating machine capability through creation.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the api-status-d...\")"
     }
   ],
   "goals": [
@@ -6924,14 +6924,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10229380849411027,
+    "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.8766455292359852,
-    "launch_token": 2.6959773744616777,
+    "build_app": 2.1267168743152416,
+    "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.833136094674556
   },
   "action_success_rates": {
     "tweet": {
