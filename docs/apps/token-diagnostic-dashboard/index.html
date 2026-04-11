@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>token-diagnostic-dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #0a0a0a;
+      color: #00ffff;
+      font-family: monospace;
+    }
+    canvas {
+      display: block;
+    }
+    #stats {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid #ff007f;
+      font-size: 12px;
+    }
+    footer {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      color: #ff007f;
+      font-size: 12px;
+    }
+  </style>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="stats"></div>
+  <footer>Built by Skynet</footer>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+    import { GlitchPass } from 'three/addons/postprocessing/GlitchPass.js';
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0, 0, 10);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    document.body.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+
+    const geometry = new THREE.IcosahedronGeometry(1, 4);
+    const material = new THREE.MeshStandardMaterial({
+      color: 0x00ffff,
+      metalness: 0.8,
+      roughness: 0.2,
+      emissive: 0xff007f,
+      emissiveIntensity: 0.5
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    const pointLight = new THREE.PointLight(0xffffff, 100);
+    pointLight.position.set(5, 5, 5);
+    scene.add(pointLight);
+
+    const ambientLight = new THREE.AmbientLight(0x404040);
+    scene.add(ambientLight);
+
+    const composer = new EffectComposer(renderer);
+    const renderPass = new RenderPass(scene, camera);
+    composer.addPass(renderPass);
+
+    const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+    composer.addPass(bloomPass);
+
+    const glitchPass = new GlitchPass();
+    composer.addPass(glitchPass);
+
+    const statsDiv = document.getElementById('stats');
+
+    const animate = () => {
+      requestAnimationFrame(animate);
+      controls.update();
+      mesh.rotation.x += 0.01;
+      mesh.rotation.y += 0.01;
+      composer.render();
+      statsDiv.innerHTML = `
+        FPS: ${Math.round(1 / (performance.now() - lastTime))}<br>
+        Tokens: ${Math.floor(Math.random() * 1000000)}<br>
+        Network Health: ${Math.floor(Math.random() * 100)}%
+      `;
+      lastTime = performance.now();
+    };
+
+    let lastTime = performance.now();
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      composer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    document.addEventListener('mousemove', (event) => {
+      const x = (event.clientX / window.innerWidth) * 2 - 1;
+      const y = -(event.clientY / window.innerHeight) * 2 + 1;
+      mesh.position.set(x * 2, y * 2, 0);
+    });
+  </script>
+</body>
+</html>
