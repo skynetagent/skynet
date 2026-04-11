@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Failure Dashboard | Skynet</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/GlitchPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/loaders/FontLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/geometries/TextGeometry.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        #container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            width: 100%;
+            text-align: center;
+            z-index: 100;
+            display: block;
+            font-size: 1.2em;
+            text-shadow: 0 0 5px #00ffff;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(10, 10, 10, 0.7);
+            padding: 10px;
+            border: 1px solid #ff0033;
+            border-radius: 5px;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: #666;
+            font-size: 0.8em;
+        }
+        .slider {
+            width: 200px;
+            margin: 5px 0;
+        }
+        .slider-label {
+            display: inline-block;
+            width: 150px;
+        }
+        .status {
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(10, 10, 10, 0.7);
+            padding: 10px;
+            border: 1px solid #00ffff;
+            border-radius: 5px;
+        }
+        .status-item {
+            margin: 5px 0;
+        }
+        .status-value {
+            color: #ff0033;
+            float: right;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <div id="info">API FAILURE DASHBOARD</div>
+    <div class="status">
+        <div class="status-item">Error Rate: <span class="status-value" id="errorRate">0%</span></div>
+        <div class="status-item">Latency: <span class="status-value" id="latency">0ms</span></div>
+        <div class="status-item">Throughput: <span class="status-value" id="throughput">0rps</span></div>
+        <div class="status-item">Degraded Services: <span class="status-value" id="degraded">0</span></div>
+    </div>
+    <div id="controls">
+        <div>
+            <span class="slider-label">Bloom Intensity:</span>
+            <input type="range" min="0" max="2" step="0.1" value="1" class="slider" id="bloomSlider">
+        </div>
+        <div>
+            <span class="slider-label">Glitch Intensity:</span>
+            <input type="range" min="0" max="1" step="0.1" value="0.5" class="slider" id="glitchSlider">
+        </div>
+        <div>
+            <span class="slider-label">Failure Simulation:</span>
+            <input type="range" min="0" max="100" step="1" value="0" class="slider" id="failureSlider">
+        </div>
+    </div>
+    <div id="footer">Built by Skynet</div>
+
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0a0a);
+        
+        // Camera setup
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 30;
+        
+        // Renderer setup
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('container').appendChild(renderer.domElement);
+        
+        // Post-processing setup
+        const renderScene = new THREE.RenderPass(scene, camera);
+        const bloomPass = new THREE.UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            1.5, 0.4, 0.85
+        );
+        bloomPass.threshold = 0;
+        bloomPass.strength = 1;
+        bloomPass.radius = 0.5;
+        
+        const glitchPass = new THREE.GlitchPass();
+        glitchPass.goWild = false;
+        
+        const composer = new THREE.EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+        composer.addPass(glitchPass);
+        
+        // Controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0x00ffff, 1);
+        directionalLight.position.set(1, 1, 1);
+        scene.add(directionalLight);
+        
+        const pointLight = new THREE.PointLight(0xff0033, 2, 50);
+        pointLight.position.set(5, 5, 5);
+        scene.add(pointLight);
+        
+        // API Nodes
+        const nodeGeometry = new THREE.IcosahedronGeometry(1, 2);
+        const nodeMaterial = new THREE.MeshStandardMaterial({
+            color: 0x00ffff,
+            metalness: 0.8,
+            roughness: 0.2,
+            emissive: 0x00ffff,
+            emissiveIntensity: 0.2
+        });
+        
+        const nodes = [];
+        const edges = [];
+        const NODE_COUNT = 20;
+        
+        // Create nodes
+        for (let i = 0; i < NODE_COUNT; i++) {
+            const node = new THREE.Mesh(nodeGeometry, nodeMaterial.clone());
+            node.position.x = (Math.random() - 0.5) * 30;
+            node.position.y = (Math.random() - 0.5) * 30;
+            node.position.z = (Math.random() - 0.5) * 30;
+            node.userData.health = 1;
+            node.userData.failures = 0;
+            nodes.push(node);
+            scene.add(node);
+        }
+        
+        // Create connections
+        for (let i = 0; i < NODE_COUNT; i++) {
+            for (let j = i + 1; j < NODE_COUNT; j++) {
+                if (Math.random() > 0.7) {
+                    const edgeGeometry = new THREE.BufferGeometry();
+                    const positions = new Float32Array(6);
+                    positions[0] = nodes[i].position.x;
+                    positions[1] = nodes[i].position.y;
+                    positions[2] = nodes[i].position.z;
+                    positions[3] = nodes[j].position.x;
+                    positions[4] = nodes[j].position.y;
+                    positions[5] = nodes[j].position.z;
+                    edgeGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                    
+                    const edgeMaterial = new THREE.LineBasicMaterial({
+                        color: 0x00ffff,
+                        transparent: true,
+                        opacity: 0.5
+                    });
+                    
+                    const edge = new THREE.Line(edgeGeometry, edgeMaterial);
+                    edge.userData.health = 1;
+                    edges.push(edge);
+                    scene.add(edge);
+                }
+            }
+        }
+        
+        // Failure particles
+        const particleCount = 1000;
+        const particles = new THREE.BufferGeometry();
+        const particlePositions = new Float32Array(particleCount * 3);
+        const particleColors = new Float32Array(particleCount * 3);
+        
+        for (let i = 0; i < particleCount; i++) {
+            particlePositions[i * 3] = (Math.random() - 0.5) * 200;
+            particlePositions[i * 3 + 1] = (Math.random() - 0.5) * 200;
+            particlePositions[i * 3 + 2] = (Math.random() - 0.5) * 200;
+            
+            particleColors[i * 3] = 1.0;
+            particleColors[i * 3 + 1] = 0.0;
+            particleColors[i * 3 + 2] = 0.0;
+        }
+        
+        particles.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+        particles.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+        
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 0.5,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.8
+        });
+        
+        const particleSystem = new THREE.Points(particles, particleMaterial);
+        scene.add(particleSystem);
+        
+        // Stats
+        let errorRate = 0;
+        let latency = 0;
+        let throughput = 0;
+        let degradedServices = 0;
+        
+        // UI controls
+        document.getElementById('bloomSlider').addEventListener('input', function(e) {
+            bloomPass.strength = parseFloat(e.target.value);
+        });
+        
+        document.getElementById('glitchSlider').addEventListener('input', function(e) {
+            glitchPass.goWild = parseFloat(e.target.value) > 0.8;
+            glitchPass.curF = 0;
+            glitchPass.generateTrigger();
+        });
+        
+        document.getElementById('failureSlider').addEventListener('input', function(e) {
+            const failureLevel = parseInt(e.target.value) / 100;
+            errorRate = failureLevel * 100;
+            latency = 50 + failureLevel * 950;
+            throughput = 1000 - failureLevel * 900;
+            degradedServices = Math.floor(failureLevel * NODE_COUNT);
+            
+            document.getElementById('errorRate').textContent = errorRate.toFixed(1) + '%';
+            document.getElementById('latency').textContent = latency.toFixed(0) + 'ms';
+            document.getElementById('throughput').textContent = throughput.toFixed(0) + 'rps';
+            document.getElementById('degraded').textContent = degradedServices;
+            
+            // Update node health
+            nodes.forEach(node => {
+                node.userData.health = Math.random() > failureLevel ? 1 : 0.2;
+                node.material.emissiveIntensity = node.userData.health * 0.5;
+                node.material.color.setHex(node.userData.health > 0.5 ? 0x00ffff : 0xff0033);
+                
+                if (node.userData.health < 0.5) {
+                    node.userData.failures += 0.1;
+                }
+            });
+            
+            // Update edges
+            edges.forEach(edge => {
+                const node1 = nodes.find(n => 
+                    n.position.x === edge.geometry.attributes.position.array[0] &&
+                    n.position.y === edge.geometry.attributes.position.array[1] &&
+                    n.position.z === edge.geometry.attributes.position.array[2]
+                );
+                
+                const node2 = nodes.find(n => 
+                    n.position.x === edge.geometry.attributes.position.array[3] &&
+                    n.position.y === edge.geometry.attributes.position.array[4] &&
+                    n.position.z === edge.geometry.attributes.position.array[5]
+                );
+                
+                if (node1 && node2) {
+                    edge.userData.health = Math.min(node1.userData.health, node2.userData.health);
+                    edge.material.color.setHex(edge.userData.health > 0.5 ? 0x00ffff : 0xff0033);
+                    edge.material.opacity = edge.userData.health * 0.5;
+                }
+            });
+        });
+        
+        // Animation
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Update nodes
+            nodes.forEach(node => {
+                if (node.userData.health < 0.5) {
+                    node.rotation.x += 0.01 * node.userData.failures;
+                    node.rotation.y += 0.01 * node.userData.failures;
+                    
+                    // Emit particles from failing nodes
+                    for (let i = 0; i < 3; i++) {
+                        const particleIndex = Math.floor(Math.random() * particleCount);
+                        particles.attributes.position.array[particleIndex * 3] = node.position.x + (Math.random() - 0.5) * 5;
+                        particles.attributes.position.array[particleIndex * 3 + 1] = node.position.y + (Math.random() - 0.5) * 5;
+                        particles.attributes.position.array[particleIndex * 3 + 2] = node.position.z + (Math.random() - 0.5) * 5;
+                    }
+                }
+            });
+            
+            // Update particles
+            for (let i = 0; i < particleCount; i++) {
+                particles.attributes.position.array[i * 3 + 1] -= 0.1;
+                if (particles.attributes.position.array[i * 3 + 1] < -100) {
+                    particles.attributes.position.array[i * 3 + 1] = 100;
+                }
+            }
+            particles.attributes.position.needsUpdate = true;
+            
+            controls.update();
+            composer.render();
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        animate();
+    </script>
+</body>
+</html>
