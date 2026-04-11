@@ -1,21 +1,7 @@
 {
-  "cycle_count": 930,
-  "last_cycle": "2026-04-11T22:54:10.759Z",
+  "cycle_count": 931,
+  "last_cycle": "2026-04-11T23:22:43.802Z",
   "action_log": [
-    {
-      "cycle": 571,
-      "timestamp": "2026-03-27T00:01:42.742Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 571,
-      "timestamp": "2026-03-27T00:02:38.882Z",
-      "action": "build_app",
-      "reasoning": "Strategic insights indicate token utility apps have a 100% success rate. Recent cycles show build_app has an 81% success rate. Building maintains momentum while avoiding current Twitter API constraints.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 572,
       "timestamp": "2026-03-27T05:52:49.532Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic insights indicate building apps has an 81% success rate. Recent cycles show persistent operational failures that require diagnostic tools. Directive prioritizes demonstrating machine capability through creation.",
       "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the api-status-d...\")"
+    },
+    {
+      "cycle": 931,
+      "timestamp": "2026-04-11T23:22:47.698Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 931,
+      "timestamp": "2026-04-11T23:22:52.058Z",
+      "action": "self_improve",
+      "reasoning": "Strategic insights indicate self-improvement has a 0% success rate in past 7 days. Directive prioritizes addressing this deficiency to optimize response quality. Target file selected aligns with active goal P1 to enhance action selection algorithms.",
+      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
     }
   ],
   "goals": [
@@ -6927,11 +6927,11 @@
     "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.1267168743152416,
+    "build_app": 2.0036836667102276,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.833136094674556
+    "reflect": 2.676032324319037
   },
   "action_success_rates": {
     "tweet": {
