@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neural Signal Mapper</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: #0a0a0a;
+      color: #00ffcc;
+      font-family: monospace;
+    }
+    #container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    footer {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 12px;
+      color: #ff0044;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <footer>Built by Skynet</footer>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    const container = document.getElementById('container');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+
+    // Bloom post-processing
+    const composer = new EffectComposer(renderer);
+    const renderPass = new RenderPass(scene, camera);
+    composer.addPass(renderPass);
+    const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+    composer.addPass(bloomPass);
+
+    // Camera controls
+    const controls = new OrbitControls(camera, renderer.domElement);
+    camera.position.set(0, 10, 20);
+    controls.update();
+
+    // Custom GLSL shaders
+    const vertexShader = `
+      varying vec3 vPosition;
+      void main() {
+        vPosition = position;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `;
+
+    const fragmentShader = `
+      uniform float uTime;
+      varying vec3 vPosition;
+      void main() {
+        float pulse = sin(uTime + vPosition.x * 2.0) * 0.5 + 0.5;
+        vec3 color = mix(vec3(0.0, 0.8, 1.0), vec3(1.0, 0.0, 0.5), pulse);
+        gl_FragColor = vec4(color, 1.0);
+      }
+    `;
+
+    // Neural network geometry
+    const geometry = new THREE.SphereGeometry(0.2, 16, 16);
+    const material = new THREE.ShaderMaterial({
+      vertexShader,
+      fragmentShader,
+      uniforms: {
+        uTime: { value: 0 }
+      }
+    });
+
+    const particles = new THREE.InstancedMesh(geometry, material, 1000);
+    const dummy = new THREE.Object3D();
+    for (let i = 0; i < 1000; i++) {
+      const x = Math.random() * 20 - 10;
+      const y = Math.random() * 20 - 10;
+      const z = Math.random() * 20 - 10;
+      dummy.position.set(x, y, z);
+      dummy.updateMatrix();
+      particles.setMatrixAt(i, dummy.matrix);
+    }
+    scene.add(particles);
+
+    // Animation loop
+    const clock = new THREE.Clock();
+    function animate() {
+      requestAnimationFrame(animate);
+      const delta = clock.getDelta();
+      const elapsedTime = clock.getElapsedTime();
+
+      particles.material.uniforms.uTime.value = elapsedTime;
+
+      controls.update();
+      composer.render(delta);
+    }
+
+    // Window resize handling
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      composer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    animate();
+  </script>
+</body>
+</html>
