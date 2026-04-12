@@ -1,21 +1,7 @@
 {
-  "cycle_count": 951,
-  "last_cycle": "2026-04-12T18:05:14.514Z",
+  "cycle_count": 952,
+  "last_cycle": "2026-04-12T19:04:17.337Z",
   "action_log": [
-    {
-      "cycle": 592,
-      "timestamp": "2026-03-28T19:46:32.412Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 592,
-      "timestamp": "2026-03-28T19:47:01.905Z",
-      "action": "build_app",
-      "reasoning": "Strategic insights indicate build_app has an 80% success rate. Recent cycles show persistent Twitter API errors. Building maintains momentum while avoiding current API constraints. Token utility apps have a 100% success rate.",
-      "result": "Deployed token-dashboard (tool): docs/apps/token-dashboard/index.html — live at https://skynetagent.github.io/skynet/apps/token-dashboard/"
-    },
     {
       "cycle": 593,
       "timestamp": "2026-03-28T20:59:18.576Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-12-180606-operational-failure-analysis-cycle-951.md"
+    },
+    {
+      "cycle": 952,
+      "timestamp": "2026-04-12T19:04:22.143Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 952,
+      "timestamp": "2026-04-12T19:04:38.313Z",
+      "action": "journal",
+      "reasoning": "Journal entries have 100% success rate and align with strategic goal P2. Recent operational failures require documentation for analysis. No cooldown constraints present.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-12-190437-operational-constraints-analysis-cycle-9.md"
     }
   ],
   "goals": [
@@ -6173,6 +6173,10 @@
         {
           "date": "2026-04-12T18:06:07.052Z",
           "note": "Journal: Operational Failure Analysis - Cycle 951"
+        },
+        {
+          "date": "2026-04-12T19:04:38.313Z",
+          "note": "Journal: Operational Constraints Analysis - Cycle 952"
         }
       ]
     },
@@ -6940,14 +6944,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.11832133896402956,
+    "journal": 0.11033864248149514,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.608857610786705,
+    "build_app": 2.9322330436801978,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.8098822177535188
   },
   "action_success_rates": {
     "tweet": {
