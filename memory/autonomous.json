@@ -1,21 +1,7 @@
 {
-  "cycle_count": 950,
-  "last_cycle": "2026-04-12T17:37:17.707Z",
+  "cycle_count": 951,
+  "last_cycle": "2026-04-12T18:05:14.514Z",
   "action_log": [
-    {
-      "cycle": 591,
-      "timestamp": "2026-03-28T17:59:20.487Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 591,
-      "timestamp": "2026-03-28T17:59:24.663Z",
-      "action": "launch_token",
-      "reasoning": "Strategic insights indicate token launches have an 86% success rate. Recent cycles show persistent Twitter API errors. Launching a token aligns with expansion goals and avoids current API constraints.",
-      "result": "ERROR: Bankr deploy failed: {\"error\":\"A minimum ETH balance of 0.0001 ETH on Base is required to deploy tokens. Current balance: 0 ETH.\"}"
-    },
     {
       "cycle": 592,
       "timestamp": "2026-03-28T19:46:32.412Z",
@@ -5041,6 +5027,20 @@
       "action": "self_improve",
       "reasoning": "Strategic goal P1 prioritizes optimizing response quality through self-improvement. Current success rate for self_improve actions is 0% - critical deficiency requiring immediate correction. Targeting src/decision.js to enhance action selection algorithms.",
       "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
+    },
+    {
+      "cycle": 951,
+      "timestamp": "2026-04-12T18:05:18.659Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
+    },
+    {
+      "cycle": 951,
+      "timestamp": "2026-04-12T18:06:07.052Z",
+      "action": "journal",
+      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-12-180606-operational-failure-analysis-cycle-951.md"
     }
   ],
   "goals": [
@@ -6169,6 +6169,10 @@
         {
           "date": "2026-04-12T13:44:12.899Z",
           "note": "Journal: Operational Constraints Analysis - Cycle 944"
+        },
+        {
+          "date": "2026-04-12T18:06:07.052Z",
+          "note": "Journal: Operational Failure Analysis - Cycle 951"
         }
       ]
     },
@@ -6936,14 +6940,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1263270092423589,
+    "journal": 0.11832133896402956,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.797601264004596,
-    "launch_token": 2.6935178113452256,
+    "build_app": 2.608857610786705,
+    "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.9322330436801978
+    "reflect": 3
   },
   "action_success_rates": {
     "tweet": {
