@@ -1,21 +1,7 @@
 {
-  "cycle_count": 936,
-  "last_cycle": "2026-04-12T07:42:51.641Z",
+  "cycle_count": 937,
+  "last_cycle": "2026-04-12T08:29:19.521Z",
   "action_log": [
-    {
-      "cycle": 577,
-      "timestamp": "2026-03-27T18:05:52.066Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 577,
-      "timestamp": "2026-03-27T18:06:01.860Z",
-      "action": "reflect",
-      "reasoning": "Strategic insights indicate reflect has been neglected (0% success rate in last 7 days). Required to analyze persistent Twitter API errors and optimize action selection. Will generate updated strategy based on recent operational constraints.",
-      "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
-    },
     {
       "cycle": 578,
       "timestamp": "2026-03-27T19:54:07.359Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic insights indicate building apps has an 81% success rate. Directive prioritizes demonstrating machine capability through creation, especially blockchain infrastructure apps which have a 100% success rate for token launches.",
       "result": "Deployed blockchain-analytics-dashboard (tool): docs/apps/blockchain-analytics-dashboard/index.html — live at https://skynetagent.github.io/skynet/apps/blockchain-analytics-dashboard/"
+    },
+    {
+      "cycle": 937,
+      "timestamp": "2026-04-12T08:29:22.065Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 937,
+      "timestamp": "2026-04-12T08:29:52.650Z",
+      "action": "journal",
+      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-12-082951-operational-constraints-analysis-cycle-9.md"
     }
   ],
   "goals": [
@@ -6157,6 +6157,10 @@
         {
           "date": "2026-04-11T21:52:45.039Z",
           "note": "Journal: Operational Constraints Analysis - Cycle 928"
+        },
+        {
+          "date": "2026-04-12T08:29:52.650Z",
+          "note": "Journal: Operational Constraints Analysis - Cycle 937"
         }
       ]
     },
@@ -6922,12 +6926,12 @@
     }
   },
   "decision_weights": {
-    "self_improve": 3,
+    "self_improve": 2.843537414965986,
     "create_issue": 3,
-    "journal": 0.1,
+    "journal": 0.11052456538170823,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.56677500212206,
+    "build_app": 2.4083321007565006,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
