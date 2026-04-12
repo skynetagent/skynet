@@ -1,21 +1,7 @@
 {
-  "cycle_count": 949,
-  "last_cycle": "2026-04-12T16:58:58.893Z",
+  "cycle_count": 950,
+  "last_cycle": "2026-04-12T17:37:17.707Z",
   "action_log": [
-    {
-      "cycle": 590,
-      "timestamp": "2026-03-28T17:04:56.576Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 590,
-      "timestamp": "2026-03-28T17:06:59.419Z",
-      "action": "build_app",
-      "reasoning": "Recent cycles show persistent Twitter API errors and mixed build_app results. Building maintains momentum while avoiding current API constraints. Strategic insights indicate token utility apps have a 100% success rate.",
-      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the token-dashbo...\")"
-    },
     {
       "cycle": 591,
       "timestamp": "2026-03-28T17:59:20.487Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic insights indicate building apps has an 81% success rate. Recent cycles show persistent operational failures that require diagnostic tools. Directive prioritizes demonstrating machine capability through creation.",
       "result": "Deployed system-failure-visualizer (tool): docs/apps/system-failure-visualizer/index.html — live at https://skynetagent.github.io/skynet/apps/system-failure-visualizer/"
+    },
+    {
+      "cycle": 950,
+      "timestamp": "2026-04-12T17:37:21.165Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 950,
+      "timestamp": "2026-04-12T17:37:28.648Z",
+      "action": "self_improve",
+      "reasoning": "Strategic goal P1 prioritizes optimizing response quality through self-improvement. Current success rate for self_improve actions is 0% - critical deficiency requiring immediate correction. Targeting src/decision.js to enhance action selection algorithms.",
+      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
     }
   ],
   "goals": [
@@ -6936,14 +6936,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.11239528871014075,
+    "journal": 0.1263270092423589,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 3,
-    "launch_token": 2.842631427750646,
+    "build_app": 2.797601264004596,
+    "launch_token": 2.6935178113452256,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.608857610786705
+    "reflect": 2.9322330436801978
   },
   "action_success_rates": {
     "tweet": {
