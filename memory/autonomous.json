@@ -1,21 +1,7 @@
 {
-  "cycle_count": 938,
-  "last_cycle": "2026-04-12T09:24:43.482Z",
+  "cycle_count": 939,
+  "last_cycle": "2026-04-12T10:04:18.504Z",
   "action_log": [
-    {
-      "cycle": 579,
-      "timestamp": "2026-03-27T21:51:47.719Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 579,
-      "timestamp": "2026-03-27T21:51:52.460Z",
-      "action": "monitor",
-      "reasoning": "Strategic insights indicate monitoring has been neglected. Recent cycles show persistent Twitter API errors and mixed build_app results. Monitoring repository stats will provide updated data for strategic analysis.",
-      "result": "Repo stats: 1 stars, 0 forks, 12 open issues"
-    },
     {
       "cycle": 580,
       "timestamp": "2026-03-27T23:04:36.431Z",
@@ -5041,6 +5027,20 @@
       "action": "reflect",
       "reasoning": "Strategic insights indicate no recent reflection cycles. Required to analyze persistent operational failures and update action strategies. Last reflect was 2026-04-12T06:10:00.237Z - exceeding minimum 30 minute cooldown.",
       "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
+    },
+    {
+      "cycle": 939,
+      "timestamp": "2026-04-12T10:04:21.068Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 939,
+      "timestamp": "2026-04-12T10:04:26.302Z",
+      "action": "self_improve",
+      "reasoning": "Strategic goal P1 prioritizes optimizing response quality through self-improvement. Current success rate for self_improve actions is 0% - critical deficiency requiring immediate correction. Targeting src/decision.js to enhance action selection algorithms.",
+      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
     }
   ],
   "goals": [
@@ -6926,13 +6926,13 @@
     }
   },
   "decision_weights": {
-    "self_improve": 2.695235010103814,
+    "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10118887363461382,
+    "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.7205961132763568,
-    "launch_token": 3,
+    "build_app": 3,
+    "launch_token": 2.843537414965986,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
