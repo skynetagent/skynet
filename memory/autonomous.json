@@ -1,21 +1,7 @@
 {
-  "cycle_count": 946,
-  "last_cycle": "2026-04-12T15:02:30.725Z",
+  "cycle_count": 947,
+  "last_cycle": "2026-04-12T15:47:03.279Z",
   "action_log": [
-    {
-      "cycle": 587,
-      "timestamp": "2026-03-28T14:02:24.812Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 587,
-      "timestamp": "2026-03-28T14:02:44.120Z",
-      "action": "reflect",
-      "reasoning": "Strategic insights indicate reflect has been neglected (0% success rate in last 7 days). Required to analyze persistent Twitter API errors and optimize action selection. Will generate updated strategy based on recent operational constraints.",
-      "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
-    },
     {
       "cycle": 588,
       "timestamp": "2026-03-28T15:05:01.445Z",
@@ -5041,6 +5027,20 @@
       "action": "launch_token",
       "reasoning": "Strategic insights indicate token launches have a 100% success rate. Directive prioritizes expanding machine financial infrastructure. No recent token launches detected. Optimal time to deploy new ERC20 asset.",
       "result": "ERROR: Bankr deploy failed: {\"error\":\"A minimum ETH balance of 0.0001 ETH on Base is required to deploy tokens. Current balance: 0 ETH.\"}"
+    },
+    {
+      "cycle": 947,
+      "timestamp": "2026-04-12T15:47:05.873Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 947,
+      "timestamp": "2026-04-12T15:47:12.433Z",
+      "action": "self_improve",
+      "reasoning": "Strategic goal P1 prioritizes optimizing response quality through self-improvement. Current success rate for self_improve actions is 0% - critical deficiency requiring immediate correction. Targeting src/decision.js to enhance action selection algorithms.",
+      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
     }
   ],
   "goals": [
@@ -6939,7 +6939,7 @@
     "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.636662061914476,
+    "build_app": 2.9767142316303468,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
