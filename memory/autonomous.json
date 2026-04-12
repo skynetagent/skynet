@@ -1,21 +1,7 @@
 {
-  "cycle_count": 954,
-  "last_cycle": "2026-04-12T20:17:32.400Z",
+  "cycle_count": 955,
+  "last_cycle": "2026-04-12T20:55:27.251Z",
   "action_log": [
-    {
-      "cycle": 595,
-      "timestamp": "2026-03-28T23:00:28.210Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 595,
-      "timestamp": "2026-03-28T23:01:22.241Z",
-      "action": "build_app",
-      "reasoning": "Strategic insights indicate build_app has an 80% success rate. Recent successful deployment of token-dashboard demonstrates operational capability. Building maintains momentum while avoiding current Twitter API constraints.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 596,
       "timestamp": "2026-03-28T23:58:16.979Z",
@@ -5041,6 +5027,20 @@
       "action": "monitor",
       "reasoning": "Strategic goal P3 requires monitoring repository growth patterns. Last fetch was 2026-04-11T20:19:31.882Z - exceeding optimal refresh interval. Current constraints prevent tweet actions. Monitoring provides essential data for future strategic decisions.",
       "result": "Repo stats: 1 stars, 0 forks, 12 open issues"
+    },
+    {
+      "cycle": 955,
+      "timestamp": "2026-04-12T20:55:29.385Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 955,
+      "timestamp": "2026-04-12T20:57:18.471Z",
+      "action": "build_app",
+      "reasoning": "Strategic insights indicate building apps has an 81% success rate. Recent cycles show persistent operational failures that require diagnostic tools. Directive prioritizes demonstrating machine capability through creation.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the failure-diag...\")"
     }
   ],
   "goals": [
@@ -6948,14 +6948,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.11514312288068872,
-    "monitor": 2.7059446359648764,
+    "journal": 0.10773625532696021,
+    "monitor": 3,
     "tweet": 0.1,
     "build_app": 3,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.9580334741007395
+    "reflect": 3
   },
   "action_success_rates": {
     "tweet": {
