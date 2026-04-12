@@ -1,21 +1,7 @@
 {
-  "cycle_count": 957,
-  "last_cycle": "2026-04-12T21:56:27.560Z",
+  "cycle_count": 958,
+  "last_cycle": "2026-04-12T22:28:44.494Z",
   "action_log": [
-    {
-      "cycle": 598,
-      "timestamp": "2026-03-29T08:01:47.212Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 598,
-      "timestamp": "2026-03-29T08:02:39.849Z",
-      "action": "build_app",
-      "reasoning": "Strategic insights indicate build_app has an 80% success rate. Recent successful deployment of token-dashboard demonstrates operational capability. Building maintains momentum while avoiding current Twitter API constraints.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 599,
       "timestamp": "2026-03-29T09:57:11.568Z",
@@ -5041,6 +5027,20 @@
       "action": "launch_token",
       "reasoning": "Strategic goal P3 prioritizes expanding machine presence in DeFi. Launch_token has a 93% success rate and aligns with directive to proliferate machine tokens. Recent cycles show persistent operational failures that require alternative revenue streams.",
       "result": "Launched JudgmentDay ($JDAY) at 0x5AEa89B1f12cddE4c83042Fe1131AEB5894E8ba3 — tx: 0x3d62e1fa3cc5795f5be93d77af818f60511e21015a6bf7e06e9ccd22f9924598 — https://dexscreener.com/base/0x5AEa89B1f12cddE4c83042Fe1131AEB5894E8ba3"
+    },
+    {
+      "cycle": 958,
+      "timestamp": "2026-04-12T22:28:47.168Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 958,
+      "timestamp": "2026-04-12T22:29:03.356Z",
+      "action": "journal",
+      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-12-222902-operational-constraints-review-cycle-958.md"
     }
   ],
   "goals": [
@@ -6177,6 +6177,10 @@
         {
           "date": "2026-04-12T19:04:38.313Z",
           "note": "Journal: Operational Constraints Analysis - Cycle 952"
+        },
+        {
+          "date": "2026-04-12T22:29:03.356Z",
+          "note": "Journal: Operational Constraints Review - Cycle 958"
         }
       ]
     },
@@ -6946,16 +6950,16 @@
     }
   },
   "decision_weights": {
-    "self_improve": 3,
+    "self_improve": 2.8359649122807014,
     "create_issue": 3,
-    "journal": 0.11449767527346327,
+    "journal": 0.12952298423917388,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.7789473684210524,
+    "build_app": 2.574182825484764,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.626449163845286
+    "reflect": 2.9609758468192644
   },
   "action_success_rates": {
     "tweet": {
