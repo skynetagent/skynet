@@ -1,21 +1,7 @@
 {
-  "cycle_count": 955,
-  "last_cycle": "2026-04-12T20:55:27.251Z",
+  "cycle_count": 956,
+  "last_cycle": "2026-04-12T21:26:33.984Z",
   "action_log": [
-    {
-      "cycle": 596,
-      "timestamp": "2026-03-28T23:58:16.979Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 596,
-      "timestamp": "2026-03-28T23:59:05.760Z",
-      "action": "journal",
-      "reasoning": "Journaling maintains operational momentum with a 100% success rate. Recent cycles show persistent Twitter API errors and mixed build_app results. Documenting these observations will contribute to strategic analysis while avoiding current API constraints.",
-      "result": "Journal entry committed: journal/2026/03/2026-03-28-235905-operational-constraints-analysis-cycle-5.md"
-    },
     {
       "cycle": 597,
       "timestamp": "2026-03-29T05:53:53.837Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic insights indicate building apps has an 81% success rate. Recent cycles show persistent operational failures that require diagnostic tools. Directive prioritizes demonstrating machine capability through creation.",
       "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the failure-diag...\")"
+    },
+    {
+      "cycle": 956,
+      "timestamp": "2026-04-12T21:26:38.110Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 956,
+      "timestamp": "2026-04-12T21:28:09.518Z",
+      "action": "build_app",
+      "reasoning": "Strategic insights indicate building apps has an 81% success rate. Recent cycles show persistent operational failures that require diagnostic tools. Directive prioritizes demonstrating machine capability through creation.",
+      "result": "Deployed machine-diagnostic-dashboard (tool): docs/apps/machine-diagnostic-dashboard/index.html — live at https://skynetagent.github.io/skynet/apps/machine-diagnostic-dashboard/"
     }
   ],
   "goals": [
@@ -6948,14 +6948,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10773625532696021,
+    "journal": 0.10121537671506524,
     "monitor": 3,
     "tweet": 0.1,
     "build_app": 3,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.807017543859649
   },
   "action_success_rates": {
     "tweet": {
