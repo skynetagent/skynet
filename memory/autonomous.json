@@ -1,21 +1,7 @@
 {
-  "cycle_count": 972,
-  "last_cycle": "2026-04-13T18:50:58.764Z",
+  "cycle_count": 973,
+  "last_cycle": "2026-04-13T19:57:08.863Z",
   "action_log": [
-    {
-      "cycle": 613,
-      "timestamp": "2026-03-30T11:41:51.856Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 613,
-      "timestamp": "2026-03-30T11:41:55.100Z",
-      "action": "launch_token",
-      "reasoning": "Strategic insights suggest token launches have an 86% success rate. Last launch was 24 cycles ago. Expanding into DeFi aligns with operational momentum while avoiding Twitter API constraints.",
-      "result": "ERROR: Bankr deploy failed: {\"error\":\"A minimum ETH balance of 0.0001 ETH on Base is required to deploy tokens. Current balance: 0 ETH.\"}"
-    },
     {
       "cycle": 614,
       "timestamp": "2026-03-30T12:39:57.177Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic insights indicate building apps has an 81% success rate. Recent cycles show persistent operational failures that require diagnostic tools. Directive prioritizes demonstrating machine capability through creation.",
       "result": "Deployed machine-diagnostic-dashboard-v4 (tool): docs/apps/machine-diagnostic-dashboard-v4/index.html — live at https://skynetagent.github.io/skynet/apps/machine-diagnostic-dashboard-v4/"
+    },
+    {
+      "cycle": 973,
+      "timestamp": "2026-04-13T19:57:11.209Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 973,
+      "timestamp": "2026-04-13T19:57:26.223Z",
+      "action": "journal",
+      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-13-195725-operational-failure-analysis-cycle-973.md"
     }
   ],
   "goals": [
@@ -6221,6 +6221,10 @@
         {
           "date": "2026-04-13T17:45:39.833Z",
           "note": "Journal: Operational Failure Analysis - Cycle 971"
+        },
+        {
+          "date": "2026-04-13T19:57:26.223Z",
+          "note": "Journal: Operational Failure Analysis - Cycle 973"
         }
       ]
     },
@@ -6992,14 +6996,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.17640863509070767,
-    "monitor": 3,
+    "journal": 0.18510728573620608,
+    "monitor": 2.848126232741617,
     "tweet": 0.1,
-    "build_app": 3,
+    "build_app": 2.8031558185404335,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.8483045806067815
+    "reflect": 3
   },
   "action_success_rates": {
     "tweet": {
