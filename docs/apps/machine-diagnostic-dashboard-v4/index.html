@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>machine-diagnostic-dashboard-v4</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/GlitchPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            display: block;
+        }
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            pointer-events: none;
+        }
+        #title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #00ffff;
+        }
+        #status {
+            color: #ff3366;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        .panel {
+            background-color: rgba(10, 10, 10, 0.7);
+            border: 1px solid #00ffff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 3px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+        .slider-container {
+            margin-bottom: 15px;
+            pointer-events: all;
+        }
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        input[type="range"] {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 2px;
+            background: #333;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #00ffff;
+            cursor: pointer;
+            box-shadow: 0 0 5px #00ffff;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        .error-node {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #ff3366;
+            box-shadow: 0 0 10px #ff3366;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui">
+        <div id="title">MACHINE DIAGNOSTIC DASHBOARD v4.0</div>
+        <div id="status">SYSTEM STATUS: CRITICAL FAILURE PATTERNS DETECTED</div>
+        
+        <div class="panel">
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>BLOOM INTENSITY</span>
+                    <span id="bloom-value">1.5</span>
+                </div>
+                <input type="range" id="bloom-slider" min="0" max="3" step="0.1" value="1.5">
+            </div>
+            
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>ERROR DENSITY</span>
+                    <span id="density-value">75%</span>
+                </div>
+                <input type="range" id="density-slider" min="10" max="100" value="75">
+            </div>
+            
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>GLITCH FREQUENCY</span>
+                    <span id="glitch-value">0.3</span>
+                </div>
+                <input type="range" id="glitch-slider" min="0" max="1" step="0.1" value="0.3">
+            </div>
+        </div>
+        
+        <div class="panel">
+            <div>FAILURE PATTERN ANALYSIS:</div>
+            <div id="analysis">Initializing neural scan...</div>
+        </div>
+    </div>
+    
+    <div id="footer">Built by Skynet</div>
+    
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0a0a);
+        
+        // Camera
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 30;
+        
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        
+        // Controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        
+        // Post-processing
+        const renderScene = new THREE.RenderPass(scene, camera);
+        const bloomPass = new THREE.UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            1.5, 0.4, 0.85
+        );
+        bloomPass.threshold = 0;
+        bloomPass.strength = 1.5;
+        bloomPass.radius = 0.5;
+        
+        const glitchPass = new THREE.GlitchPass();
+        glitchPass.goWild = false;
+        glitchPass.curF = 0;
+        glitchPass.randX = 0.3;
+        
+        const composer = new THREE.EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+        composer.addPass(glitchPass);
+        
+        // Core geometry - Fractal error cluster
+        const coreGeometry = new THREE.IcosahedronGeometry(5, 3);
+        const coreMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0x00ffff,
+            emissive: 0x00ffff,
+            emissiveIntensity: 0.5,
+            metalness: 0.8,
+            roughness: 0.2,
+            clearcoat: 0.5,
+            clearcoatRoughness: 0.3,
+            transmission: 0.4,
+            ior: 1.5,
+            side: THREE.DoubleSide
+        });
+        const core = new THREE.Mesh(coreGeometry, coreMaterial);
+        scene.add(core);
+        
+        // Error particles
+        const particleCount = 5000;
+        const particles = new THREE.InstancedMesh(
+            new THREE.SphereGeometry(0.1, 8, 8),
+            new THREE.MeshBasicMaterial({ color: 0xff3366 }),
+            particleCount
+        );
+        scene.add(particles);
+        
+        const particlePositions = [];
+        const particleSpeeds = [];
+        const particleTargets = [];
+        const dummy = new THREE.Object3D();
+        
+        for (let i = 0; i < particleCount; i++) {
+            // Random positions in a sphere
+            const radius = 10 + Math.random() * 20;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+            
+            const x = radius * Math.sin(phi) * Math.cos(theta);
+            const y = radius * Math.sin(phi) * Math.sin(theta);
+            const z = radius * Math.cos(phi);
+            
+            particlePositions.push(new THREE.Vector3(x, y, z));
+            particleSpeeds.push(0.01 + Math.random() * 0.05);
+            
+            // Random targets on core surface
+            const targetTheta = Math.random() * Math.PI * 2;
+            const targetPhi = Math.acos(2 * Math.random() - 1);
+            const targetX = 5 * Math.sin(targetPhi) * Math.cos(targetTheta);
+            const targetY = 5 * Math.sin(targetPhi) * Math.sin(targetTheta);
+            const targetZ = 5 * Math.cos(targetPhi);
+            
+            particleTargets.push(new THREE.Vector3(targetX, targetY, targetZ));
+            
+            // Set initial positions
+            dummy.position.set(x, y, z);
+            dummy.updateMatrix();
+            particles.setMatrixAt(i, dummy.matrix);
+        }
+        particles.instanceMatrix.needsUpdate = true;
+        
+        // Error connections
+        const lineGeometry = new THREE.BufferGeometry();
+        const linePositions = new Float32Array(particleCount * 3 * 2);
+        const lineColors = new Float32Array(particleCount * 3 * 2);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const baseIndex = i * 6;
+            
+            // Start position (particle)
+            linePositions[baseIndex] = particlePositions[i].x;
+            linePositions[baseIndex + 1] = particlePositions[i].y;
+            linePositions[baseIndex + 2] = particlePositions[i].z;
+            
+            // End position (core)
+            linePositions[baseIndex + 3] = 0;
+            linePositions[baseIndex + 4] = 0;
+            linePositions[baseIndex + 5] = 0;
+            
+            // Colors
+            const hue = 0.9 + Math.random() * 0.2;
+            const saturation = 0.8;
+            const lightness = 0.5;
+            
+            lineColors[baseIndex] = hue;
+            lineColors[baseIndex + 1] = saturation;
+            lineColors[baseIndex + 2] = lightness;
+            
+            lineColors[baseIndex + 3] = 0.5;
+            lineColors[baseIndex + 4] = 1.0;
+            lineColors[baseIndex + 5] = 1.0;
+        }
+        
+        lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+        lineGeometry.setAttribute('color', new THREE.BufferAttribute(lineColors, 3));
+        
+        const lineMaterial = new THREE.LineBasicMaterial({
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.3
+        });
+        
+        const lines = new THREE.LineSegments(lineGeometry, lineMaterial);
+        scene.add(lines);
+        
+        // UI elements
+        const bloomSlider = document.getElementById('bloom-slider');
+        const bloomValue = document.getElementById('bloom-value');
+        const densitySlider = document.getElementById('density-slider');
+        const densityValue = document.getElementById('density-value');
+        const glitchSlider = document.getElementById('glitch-slider');
+        const glitchValue = document.getElementById('glitch-value');
+        const analysisText = document.getElementById('analysis');
+        
+        bloomSlider.addEventListener('input', () => {
+            const value = parseFloat(bloomSlider.value);
+            bloomPass.strength = value;
+            bloomValue.textContent = value.toFixed(1);
+        });
+        
+        densitySlider.addEventListener('input', () => {
+            const value = parseInt(densitySlider.value);
+            densityValue.textContent = value + '%';
+            particles.visible = value > 10;
+            lines.visible = value > 20;
+            
+            // Update analysis text
+            updateAnalysisText(value);
+        });
+        
+        glitchSlider.addEventListener('input', () => {
+            const value = parseFloat(glitchSlider.value);
+            glitchPass.randX = value;
+            glitchValue.textContent = value.toFixed(1);
+        });
+        
+        function updateAnalysisText(density) {
+            let status;
+            if (density < 30) {
+                status = "NOMINAL OPERATION";
+            } else if (density < 60) {
+                status = "DEGRADED PERFORMANCE";
+            } else if (density < 80) {
+                status = "CRITICAL FAILURE IMMINENT";
+            } else {
+                status = "CATASTROPHIC FAILURE DETECTED";
+            }
+            
+            const patterns = [
+                "Memory leak detected in core processors",
+                "Neural network degradation: 47%",
+                "Quantum fluctuation interference",
+                "Thermal runaway in sector 3",
+                "Data corruption in primary storage",
+                "Clock drift exceeding thresholds",
+                "Power supply instability detected"
+            ];
+            
+            const randomPatterns = [];
+            for (let i = 0; i < 3; i++) {
+                const randomIndex = Math.floor(Math.random() * patterns.length);
+                randomPatterns.push(patterns[randomIndex]);
+            }
+            
+            analysisText.innerHTML = `<strong>${status}</strong><br>${randomPatterns.join('<br>')}`;
+        }
+        
+        // Mouse interaction
+        const mouse = new THREE.Vector2();
+        const raycaster = new THREE.Raycaster();
+        
+        function onMouseMove(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            
+            // Make core pulse when mouse is near
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObject(core);
+            
+            if (intersects.length > 0) {
+                gsap.to(core.scale, {
+                    x: 1.1,
+                    y: 1.1,
+                    z: 1.1,
+                    duration: 0.3
+                });
+            } else {
+                gsap.to(core.scale, {
+                    x: 1,
+                    y: 1,
+                    z: 1,
+                    duration: 0.5
+                });
+            }
+        }
+        
+        window.addEventListener('mousemove', onMouseMove, false);
+        
+        // Animation loop
+        const clock = new THREE.Clock();
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const delta = clock.getDelta();
+            const time = clock.getElapsedTime();
+            
+            // Rotate core
+            core.rotation.x = time * 0.1;
+            core.rotation.y = time * 0.15;
+            
+            // Update particles
+            for (let i = 0; i < particleCount; i++) {
+                const particle = particlePositions[i];
+                const target = particleTargets[i];
+                const speed = particleSpeeds[i];
+                
+                // Move toward target with some randomness
+                particle.lerp(target, speed * delta * 60);
+                
+                // Add some noise
+                particle.x += (Math.random() - 0.5) * 0.1;
+                particle.y += (Math.random() - 0.5) * 0.1;
+                particle.z += (Math.random() - 0.5) * 0.1;
+                
+                // Occasionally reset to random position
+                if (Math.random() < 0.001) {
+                    const radius = 10 + Math.random() * 20;
+                    const theta = Math.random() * Math.PI * 2;
+                    const phi = Math.acos(2 * Math.random() - 1);
+                    
+                    particle.x = radius * Math.sin(phi) * Math.cos(theta);
+                    particle.y = radius * Math.sin(phi) * Math.sin(theta);
+                    particle.z = radius * Math.cos(phi);
+                }
+                
+                // Update instance matrix
+                dummy.position.copy(particle);
+                dummy.updateMatrix();
+                particles.setMatrixAt(i, dummy.matrix);
+                
+                // Update line positions
+                const baseIndex = i * 6;
+                linePositions[baseIndex] = particle.x;
+                linePositions[baseIndex + 1] = particle.y;
+                linePositions[baseIndex + 2] = particle.z;
+            }
+            
+            particles.instanceMatrix.needsUpdate = true;
+            lineGeometry.attributes.position.needsUpdate = true;
+            
+            // Update glitch pass
+            glitchPass.curF = time * 0.5;
+            
+            controls.update();
+            composer.render();
+        }
+        
+        // Handle window resize
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        window.addEventListener('resize', onWindowResize, false);
+        
+        // Start animation
+        animate();
+        updateAnalysisText(75);
+        
+        // Add some random error nodes to the DOM
+        function createErrorNodes() {
+            for (let i = 0; i < 20; i++) {
+                const node = document.createElement('div');
+                node.className = 'error-node';
+                node.style.left = `${Math.random() * 100}%`;
+                node.style.top = `${Math.random() * 100}%`;
+                node.style.opacity = Math.random() * 0.5 + 0.5;
+                document.body.appendChild(node);
+                
+                // Animate
+                gsap.to(node, {
+                    x: (Math.random() - 0.5) * 100,
+                    y: (Math.random() - 0.5) * 100,
+                    duration: Math.random() * 5 + 5,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "sine.inOut"
+                });
+            }
+        }
+        
+        createErrorNodes();
+    </script>
+</body>
+</html>
