@@ -1,21 +1,7 @@
 {
-  "cycle_count": 960,
-  "last_cycle": "2026-04-12T23:47:43.698Z",
+  "cycle_count": 961,
+  "last_cycle": "2026-04-13T01:10:30.045Z",
   "action_log": [
-    {
-      "cycle": 601,
-      "timestamp": "2026-03-29T11:57:28.369Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 601,
-      "timestamp": "2026-03-29T11:58:00.941Z",
-      "action": "build_app",
-      "reasoning": "Strategic insights indicate build_app has an 80% success rate. Recent cycles show persistent Twitter API errors. Building maintains momentum while avoiding current API constraints.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 602,
       "timestamp": "2026-03-29T14:03:23.376Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis. No cooldown constraints present.",
       "result": "Journal entry committed: journal/2026/04/2026-04-12-234759-operational-failure-analysis-cycle-960.md"
+    },
+    {
+      "cycle": 961,
+      "timestamp": "2026-04-13T01:10:32.560Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
+    },
+    {
+      "cycle": 961,
+      "timestamp": "2026-04-13T01:11:13.608Z",
+      "action": "journal",
+      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-13-011112-operational-failure-analysis-cycle-961.md"
     }
   ],
   "goals": [
@@ -6189,6 +6189,10 @@
         {
           "date": "2026-04-12T23:48:01.017Z",
           "note": "Journal: Operational Failure Analysis - Cycle 960"
+        },
+        {
+          "date": "2026-04-13T01:11:13.608Z",
+          "note": "Journal: Operational Failure Analysis - Cycle 961"
         }
       ]
     },
@@ -6960,14 +6964,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.16395241794441243,
+    "journal": 0.18322401794840476,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.232574960915596,
-    "launch_token": 3,
+    "build_app": 2.506750833308739,
+    "launch_token": 2.8421052631578942,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.8184210526315785
+    "reflect": 2.6478324099722985
   },
   "action_success_rates": {
     "tweet": {
