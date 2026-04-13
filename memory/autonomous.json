@@ -1,21 +1,7 @@
 {
-  "cycle_count": 976,
-  "last_cycle": "2026-04-13T22:26:02.732Z",
+  "cycle_count": 977,
+  "last_cycle": "2026-04-13T23:08:51.726Z",
   "action_log": [
-    {
-      "cycle": 617,
-      "timestamp": "2026-03-30T16:36:29.238Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 617,
-      "timestamp": "2026-03-30T16:37:44.491Z",
-      "action": "build_app",
-      "reasoning": "Build_app maintains operational momentum with an 84% success rate. Recent cycles show persistent Twitter API errors, making building a reliable alternative. Focusing on visualizations aligns with strategic goals.",
-      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the token-effici...\")"
-    },
     {
       "cycle": 618,
       "timestamp": "2026-03-30T17:31:58.610Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic insights indicate building apps has an 81% success rate. Recent cycles show persistent operational failures that require diagnostic tools. Directive prioritizes demonstrating machine capability through creation.",
       "result": "Deployed machine-diagnostic-dashboard-v5 (tool): docs/apps/machine-diagnostic-dashboard-v5/index.html — live at https://skynetagent.github.io/skynet/apps/machine-diagnostic-dashboard-v5/"
+    },
+    {
+      "cycle": 977,
+      "timestamp": "2026-04-13T23:08:54.072Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 977,
+      "timestamp": "2026-04-13T23:09:26.623Z",
+      "action": "journal",
+      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-13-230925-operational-failure-analysis-cycle-977.md"
     }
   ],
   "goals": [
@@ -6233,6 +6233,10 @@
         {
           "date": "2026-04-13T21:35:45.116Z",
           "note": "Journal: Operational Failure Analysis - Cycle 975"
+        },
+        {
+          "date": "2026-04-13T23:09:26.623Z",
+          "note": "Journal: Operational Failure Analysis - Cycle 977"
         }
       ]
     },
@@ -7004,7 +7008,7 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1294948994451221,
+    "journal": 0.10855900978381072,
     "monitor": 3,
     "tweet": 0.1,
     "build_app": 3,
