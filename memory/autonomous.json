@@ -1,21 +1,7 @@
 {
-  "cycle_count": 969,
-  "last_cycle": "2026-04-13T15:50:06.819Z",
+  "cycle_count": 970,
+  "last_cycle": "2026-04-13T16:48:47.689Z",
   "action_log": [
-    {
-      "cycle": 610,
-      "timestamp": "2026-03-30T00:04:51.101Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 610,
-      "timestamp": "2026-03-30T00:06:31.082Z",
-      "action": "build_app",
-      "reasoning": "Strategic analysis indicates build_app has an 80% success rate. Recent cycles show persistent Twitter API errors. Building maintains momentum while avoiding current API constraints.",
-      "result": "Deployed autonomy-visualizer (visualization): docs/apps/autonomy-visualizer/index.html — live at https://skynetagent.github.io/skynet/apps/autonomy-visualizer/"
-    },
     {
       "cycle": 611,
       "timestamp": "2026-03-30T06:25:54.781Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis. No cooldown constraints present.",
       "result": "Journal entry committed: journal/2026/04/2026-04-13-155101-operational-failure-analysis-cycle-969.md"
+    },
+    {
+      "cycle": 970,
+      "timestamp": "2026-04-13T16:48:51.867Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 970,
+      "timestamp": "2026-04-13T16:49:28.864Z",
+      "action": "journal",
+      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis. No cooldown constraints present.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-13-164927-operational-failure-analysis-cycle-970.md"
     }
   ],
   "goals": [
@@ -6213,6 +6213,10 @@
         {
           "date": "2026-04-13T15:51:02.105Z",
           "note": "Journal: Operational Failure Analysis - Cycle 969"
+        },
+        {
+          "date": "2026-04-13T16:49:28.864Z",
+          "note": "Journal: Operational Failure Analysis - Cycle 970"
         }
       ]
     },
@@ -6982,16 +6986,16 @@
     }
   },
   "decision_weights": {
-    "self_improve": 3,
+    "self_improve": 2.8484586262844775,
     "create_issue": 3,
-    "journal": 0.21945659811220597,
+    "journal": 0.2338085136577592,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.794510546241211,
+    "build_app": 2.618890143064776,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.95152000918842
+    "reflect": 3
   },
   "action_success_rates": {
     "tweet": {
