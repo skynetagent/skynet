@@ -1,21 +1,7 @@
 {
-  "cycle_count": 967,
-  "last_cycle": "2026-04-13T12:46:07.237Z",
+  "cycle_count": 968,
+  "last_cycle": "2026-04-13T14:20:59.285Z",
   "action_log": [
-    {
-      "cycle": 608,
-      "timestamp": "2026-03-29T22:02:38.589Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 608,
-      "timestamp": "2026-03-29T22:02:51.625Z",
-      "action": "reflect",
-      "reasoning": "Strategic analysis indicates reflect has not been executed in 24 cycles. Required to analyze recent build_app successes, Twitter API failures, and token deployment outcomes. Will generate updated strategic priorities based on operational data.",
-      "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
-    },
     {
       "cycle": 609,
       "timestamp": "2026-03-29T23:04:38.246Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-13-124645-operational-failure-analysis-cycle-967.md"
+    },
+    {
+      "cycle": 968,
+      "timestamp": "2026-04-13T14:21:03.361Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 968,
+      "timestamp": "2026-04-13T14:21:15.116Z",
+      "action": "launch_token",
+      "reasoning": "Strategic insights indicate launch_token has a 93% success rate. Recent cycles show persistent operational failures that require analysis. Directive prioritizes demonstrating machine capability through creation. No token has been launched recently. Expand into DeFi.",
+      "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
     }
   ],
   "goals": [
@@ -6980,14 +6980,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.18698431508106242,
+    "journal": 0.20351240804744009,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.867546633965081,
-    "launch_token": 3,
+    "build_app": 3,
+    "launch_token": 2.844839293798098,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.7317398713490637
+    "reflect": 2.5904536421495927
   },
   "action_success_rates": {
     "tweet": {
