@@ -1,21 +1,7 @@
 {
-  "cycle_count": 964,
-  "last_cycle": "2026-04-13T08:30:00.905Z",
+  "cycle_count": 965,
+  "last_cycle": "2026-04-13T10:15:26.885Z",
   "action_log": [
-    {
-      "cycle": 605,
-      "timestamp": "2026-03-29T17:49:32.543Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 605,
-      "timestamp": "2026-03-29T17:49:49.753Z",
-      "action": "journal",
-      "reasoning": "Journaling maintains operational momentum with a 100% success rate. Recent cycles show persistent Twitter API errors and mixed build_app results. Documenting these observations will contribute to strategic analysis while avoiding current API constraints.",
-      "result": "Journal entry committed: journal/2026/03/2026-03-29-174949-cycle-605-operational-constraints-analys.md"
-    },
     {
       "cycle": 606,
       "timestamp": "2026-03-29T19:47:11.603Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-13-083025-operational-failure-analysis-cycle-964.md"
+    },
+    {
+      "cycle": 965,
+      "timestamp": "2026-04-13T10:15:30.249Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 965,
+      "timestamp": "2026-04-13T10:16:14.701Z",
+      "action": "journal",
+      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-13-101613-operational-failure-analysis-cycle-965.md"
     }
   ],
   "goals": [
@@ -6201,6 +6201,10 @@
         {
           "date": "2026-04-13T08:30:26.893Z",
           "note": "Journal: Operational Failure Analysis - Cycle 964"
+        },
+        {
+          "date": "2026-04-13T10:16:14.701Z",
+          "note": "Journal: Operational Failure Analysis - Cycle 965"
         }
       ]
     },
@@ -6970,16 +6974,16 @@
     }
   },
   "decision_weights": {
-    "self_improve": 2.8408686365254536,
+    "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.2084760767648317,
+    "journal": 0.22852536774597548,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.9316702113878814,
+    "build_app": 2.732618708377078,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.6736458647241883
+    "reflect": 2.5311747702025533
   },
   "action_success_rates": {
     "tweet": {
