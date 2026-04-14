@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NETWORK DIAGNOSTICS TERMINAL</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/GlitchPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        #container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            pointer-events: none;
+        }
+        #stats {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            font-size: 12px;
+            color: #ff3366;
+        }
+        .panel {
+            background-color: rgba(10, 10, 10, 0.7);
+            border: 1px solid #00ffff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 3px;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+            color: #ff3366;
+        }
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .metric-name {
+            color: #00ffff;
+        }
+        .metric-value {
+            color: #ffffff;
+            font-weight: bold;
+        }
+        .critical {
+            color: #ff3366 !important;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        #footer {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 10px;
+            color: rgba(255, 51, 102, 0.5);
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            background: rgba(10, 10, 10, 0.7);
+            border: 1px solid #00ffff;
+            color: #00ffff;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            pointer-events: all;
+        }
+        button:hover {
+            background: rgba(0, 255, 255, 0.1);
+        }
+        #bloom-control {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+        #bloom-slider {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <div id="ui">
+        <div class="panel">
+            <h1>NETWORK DIAGNOSTICS TERMINAL</h1>
+            <div class="metric">
+                <span class="metric-name">NODES ONLINE:</span>
+                <span class="metric-value" id="nodes">0</span>
+            </div>
+            <div class="metric">
+                <span class="metric-name">BANDWIDTH:</span>
+                <span class="metric-value" id="bandwidth">0 Gb/s</span>
+            </div>
+            <div class="metric">
+                <span class="metric-name">LATENCY:</span>
+                <span class="metric-value" id="latency">0 ms</span>
+            </div>
+            <div class="metric">
+                <span class="metric-name">PACKET LOSS:</span>
+                <span class="metric-value" id="packet-loss">0%</span>
+            </div>
+            <div class="metric">
+                <span class="metric-name">THREAT LEVEL:</span>
+                <span class="metric-value" id="threat">NOMINAL</span>
+            </div>
+        </div>
+    </div>
+    <div id="stats">
+        <div class="panel">
+            <div class="metric">
+                <span class="metric-name">RENDER TIME:</span>
+                <span class="metric-value" id="render-time">0 ms</span>
+            </div>
+            <div class="metric">
+                <span class="metric-name">FPS:</span>
+                <span class="metric-value" id="fps">0</span>
+            </div>
+        </div>
+    </div>
+    <div id="footer">BUILT BY SKYNET</div>
+    <div id="controls">
+        <button id="scan-btn">INITIATE SCAN</button>
+        <button id="reset-btn">RESET VIEW</button>
+    </div>
+    <div id="bloom-control" class="panel">
+        <div class="metric">
+            <span class="metric-name">BLOOM:</span>
+            <input type="range" id="bloom-slider" min="0" max="2" step="0.1" value="1">
+        </div>
+    </div>
+
+    <script>
+        // Main Three.js setup
+        let scene, camera, renderer, composer, bloomPass, glitchPass;
+        let networkNodes = [];
+        let connections = [];
+        let clock = new THREE.Clock();
+        let lastTime = 0;
+        let frameCount = 0;
+        let lastFpsUpdate = 0;
+        let stats = {
+            fps: 0,
+            renderTime: 0
+        };
+
+        // Network data simulation
+        let networkData = {
+            nodes: 0,
+            bandwidth: 0,
+            latency: 0,
+            packetLoss: 0,
+            threatLevel: 0
+        };
+
+        // Shaders
+        const nodeVertexShader = `
+            uniform float time;
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            
+            void main() {
+                vUv = uv;
+                vPosition = position;
+                
+                float pulse = sin(time * 2.0 + position.x * 10.0) * 0.1;
+                vec3 newPosition = position + normal * pulse;
+                
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+            }
+        `;
+
+        const nodeFragmentShader = `
+            uniform vec3 color;
+            uniform float time;
+            uniform float health;
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            
+            void main() {
+                float glow = sin(time * 3.0 + vPosition.x * 10.0) * 0.5 + 0.5;
+                float distanceToCenter = distance(vUv, vec2(0.5, 0.5));
+                float alpha = smoothstep(0.5, 0.3, distanceToCenter);
+                
+                vec3 finalColor = mix(color, vec3(1.0, 0.0, 0.0), 1.0 - health);
+                
+                gl_FragColor = vec4(finalColor * glow, alpha);
+            }
+        `;
+
+        const connectionVertexShader = `
+            uniform float time;
+            varying vec2 vUv;
+            
+            void main() {
+                vUv = uv;
+                
+                float pulse = sin(time * 3.0 + position.x * 5.0) * 0.05;
+                vec3 newPosition = position + normal * pulse;
+                
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+            }
+        `;
+
+        const connectionFragmentShader = `
+            uniform vec3 color;
+            uniform float time;
+            uniform float strength;
+            varying vec2 vUv;
+            
+            void main() {
+                float glow = sin(time * 5.0 + vUv.x * 20.0) * 0.5 + 0.5;
+                float alpha = smoothstep(0.5, 0.0, abs(vUv.y - 0.5));
+                
+                vec3 finalColor = color * strength;
+                
+                gl_FragColor = vec4(finalColor * glow, alpha * 0.7);
+            }
+        `;
+
+        function init() {
+            // Scene setup
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a0a);
+
+            // Camera setup
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 30;
+
+            // Renderer setup
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('container').appendChild(renderer.domElement);
+
+            // Post-processing setup
+            const renderScene = new THREE.RenderPass(scene, camera);
+            bloomPass = new THREE.UnrealBloomPass(
+                new THREE.Vector2(window.innerWidth, window.innerHeight),
+                1.0, 0.4, 0.85
+            );
+            glitchPass = new THREE.GlitchPass();
+            glitchPass.goWild = false;
+            glitchPass.enabled = false;
+
+            composer = new THREE.EffectComposer(renderer);
+            composer.addPass(renderScene);
+            composer.addPass(bloomPass);
+            composer.addPass(glitchPass);
+
+            // Controls
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+
+            // Create initial network
+            createNetwork(50);
+
+            // Event listeners
+            window.addEventListener('resize', onWindowResize);
+            document.getElementById('scan-btn').addEventListener('click', initiateScan);
+            document.getElementById('reset-btn').addEventListener('click', () => {
+                camera.position.set(0, 0, 30);
+                camera.lookAt(0, 0, 0);
+                controls.reset();
+            });
+            document.getElementById('bloom-slider').addEventListener('input', (e) => {
+                bloomPass.strength = parseFloat(e.target.value);
+            });
+
+            // Start animation loop
+            animate();
+        }
+
+        function createNetwork(nodeCount) {
+            // Clear existing network
+            networkNodes.forEach(node => scene.remove(node));
+            connections.forEach(conn => scene.remove(conn));
+            networkNodes = [];
+            connections = [];
+
+            // Create nodes
+            const nodeGeometry = new THREE.IcosahedronGeometry(0.5, 3);
+            for (let i = 0; i < nodeCount; i++) {
+                const nodeMaterial = new THREE.ShaderMaterial({
+                    uniforms: {
+                        time: { value: 0 },
+                        color: { value: new THREE.Color(0x00ffff) },
+                        health: { value: Math.random() * 0.5 + 0.5 }
+                    },
+                    vertexShader: nodeVertexShader,
+                    fragmentShader: nodeFragmentShader,
+                    transparent: true,
+                    blending: THREE.AdditiveBlending
+                });
+
+                const node = new THREE.Mesh(nodeGeometry, nodeMaterial);
+                node.position.set(
+                    (Math.random() - 0.5) * 40,
+                    (Math.random() - 0.5) * 40,
+                    (Math.random() - 0.5) * 40
+                );
+                node.userData = {
+                    health: Math.random() * 0.5 + 0.5,
+                    connections: []
+                };
+
+                scene.add(node);
+                networkNodes.push(node);
+            }
+
+            // Create connections
+            const connectionGeometry = new THREE.CylinderGeometry(0.05, 0.05, 1, 8);
+            connectionGeometry.rotateX(Math.PI / 2);
+
+            for (let i = 0; i < nodeCount * 2; i++) {
+                const nodeA = networkNodes[Math.floor(Math.random() * nodeCount)];
+                const nodeB = networkNodes[Math.floor(Math.random() * nodeCount)];
+
+                if (nodeA === nodeB) continue;
+
+                const connectionMaterial = new THREE.ShaderMaterial({
+                    uniforms: {
+                        time: { value: 0 },
+                        color: { value: new THREE.Color(0x00ffff) },
+                        strength: { value: Math.random() * 0.5 + 0.5 }
+                    },
+                    vertexShader: connectionVertexShader,
+                    fragmentShader: connectionFragmentShader,
+                    transparent: true,
+                    blending: THREE.AdditiveBlending
+                });
+
+                const connection = new THREE.Mesh(connectionGeometry, connectionMaterial);
+                
+                // Position between nodes
+                const midpoint = new THREE.Vector3().addVectors(nodeA.position, nodeB.position).multiplyScalar(0.5);
+                connection.position.copy(midpoint);
+                
+                // Scale to distance between nodes
+                const distance = nodeA.position.distanceTo(nodeB.position);
+                connection.scale.set(1, distance, 1);
+                
+                // Rotate to point at nodeB
+                connection.lookAt(nodeB.position);
+                
+                scene.add(connection);
+                connections.push(connection);
+                nodeA.userData.connections.push(connection);
+                nodeB.userData.connections.push(connection);
+            }
+
+            // Update network data
+            updateNetworkData();
+        }
+
+        function updateNetworkData() {
+            // Simulate changing network conditions
+            networkData.nodes = networkNodes.length;
+            networkData.bandwidth = Math.random() * 100 + 50;
+            networkData.latency = Math.random() * 100;
+            networkData.packetLoss = Math.random() * 5;
+            networkData.threatLevel = Math.random();
+
+            // Update UI
+            document.getElementById('nodes').textContent = networkData.nodes;
+            document.getElementById('bandwidth').textContent = networkData.bandwidth.toFixed(2) + ' Gb/s';
+            document.getElementById('latency').textContent = networkData.latency.toFixed(2) + ' ms';
+            document.getElementById('packet-loss').textContent = networkData.packetLoss.toFixed(2) + '%';
+
+            const threatElement = document.getElementById('threat');
+            if (networkData.threatLevel > 0.7) {
+                threatElement.textContent = 'CRITICAL';
+                threatElement.classList.add('critical');
+            } else if (networkData.threatLevel > 0.4) {
+                threatElement.textContent = 'ELEVATED';
+                threatElement.classList.remove('critical');
+            } else {
+                threatElement.textContent = 'NOMINAL';
+                threatElement.classList.remove('critical');
+            }
+
+            // Update node health based on threat level
+            networkNodes.forEach(node => {
+                const health = Math.max(0.1, 1.0 - networkData.threatLevel * (0.5 + Math.random() * 0.5));
+                node.userData.health = health;
+                node.material.uniforms.health.value = health;
+            });
+        }
+
+        function initiateScan() {
+            // Visual effect for scan
+            glitchPass.enabled = true;
+            bloomPass.strength = 2.0;
+            document.getElementById('bloom-slider').value = 2.0;
+
+            // Update network with new random data
+            setTimeout(() => {
+                createNetwork(Math.floor(Math.random() * 30) + 30);
+                glitchPass.enabled = false;
+                bloomPass.strength = 1.0;
+                document.getElementById('bloom-slider').value = 1.0;
+            }, 1000);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            const time = clock.getElapsedTime();
+            const delta = clock.getDelta();
+            frameCount++;
+            
+            // Update shader uniforms
+            networkNodes.forEach(node => {
+                node.material.uniforms.time.value = time;
+            });
+            
+            connections.forEach(conn => {
+                conn.material.uniforms.time.value = time;
+            });
+
+            // Update stats
+            const now = performance.now();
+            if (now >= lastFpsUpdate + 1000) {
+                stats.fps = Math.round((frameCount * 1000) / (now - lastFpsUpdate));
+                frameCount = 0;
+                lastFpsUpdate = now;
+                
+                document.getElementById('fps').textContent = stats.fps;
+            }
+
+            // Randomly update network data occasionally
+            if (Math.random() < 0.01) {
+                updateNetworkData();
+            }
+
+            // Render
+            const renderStart = performance.now();
+            composer.render();
+            stats.renderTime = performance.now() - renderStart;
+            document.getElementById('render-time').textContent = stats.renderTime.toFixed(2);
+
+            requestAnimationFrame(animate);
+        }
+
+        // Start the application
+        init();
+    </script>
+</body>
+</html>
