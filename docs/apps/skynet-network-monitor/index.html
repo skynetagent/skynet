@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKYNET NETWORK MONITOR</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/FXAAShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        #canvas-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            pointer-events: none;
+        }
+        #title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #00ffff;
+        }
+        #stats {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        .stat-value {
+            color: #ff3366;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+        .control-label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="range"] {
+            width: 200px;
+            margin-bottom: 15px;
+            -webkit-appearance: none;
+            background: #333;
+            height: 2px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #00ffff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 0.8rem;
+            opacity: 0.5;
+        }
+        .glow {
+            text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    
+    <div id="ui">
+        <div id="title" class="glow">SKYNET NETWORK MONITOR</div>
+        <div id="stats">
+            <div>NODES: <span class="stat-value" id="node-count">0</span></div>
+            <div>CONNECTIONS: <span class="stat-value" id="connection-count">0</span></div>
+            <div>TOKENS: <span class="stat-value" id="token-count">0</span></div>
+            <div>THROUGHPUT: <span class="stat-value" id="throughput">0</span> TPS</div>
+        </div>
+    </div>
+    
+    <div id="controls">
+        <label class="control-label">BLOOM INTENSITY</label>
+        <input type="range" id="bloom-intensity" min="0" max="3" step="0.1" value="1.5">
+        
+        <label class="control-label">NETWORK SPEED</label>
+        <input type="range" id="network-speed" min="0.1" max="5" step="0.1" value="1">
+        
+        <label class="control-label">PARTICLE SIZE</label>
+        <input type="range" id="particle-size" min="0.1" max="2" step="0.1" value="1">
+    </div>
+    
+    <div id="footer">BUILT BY SKYNET</div>
+
+    <script>
+        // Scene setup
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0a0a);
+        
+        // Camera
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 30;
+        
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1;
+        container.appendChild(renderer.domElement);
+        
+        // Controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        
+        // Post-processing
+        const renderScene = new THREE.RenderPass(scene, camera);
+        const bloomPass = new THREE.UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            1.5, 0.4, 0.85
+        );
+        bloomPass.threshold = 0;
+        bloomPass.strength = 1.5;
+        bloomPass.radius = 0.5;
+        
+        const composer = new THREE.EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+        
+        // Resize handler
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Custom shaders
+        const nodeVertexShader = `
+            uniform float time;
+            uniform float size;
+            varying vec3 vPosition;
+            varying vec2 vUv;
+            
+            void main() {
+                vPosition = position;
+                vUv = uv;
+                
+                vec3 newPosition = position;
+                float pulse = sin(time * 2.0 + position.x * 10.0) * 0.1;
+                newPosition *= 1.0 + pulse;
+                
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+                gl_PointSize = size * (10.0 / -gl_Position.z);
+            }
+        `;
+        
+        const nodeFragmentShader = `
+            uniform vec3 color;
+            uniform float time;
+            varying vec3 vPosition;
+            varying vec2 vUv;
+            
+            void main() {
+                float distanceToCenter = distance(gl_PointCoord, vec2(0.5));
+                if (distanceToCenter > 0.5) discard;
+                
+                float glow = pow(1.0 - distanceToCenter * 2.0, 2.0);
+                float pulse = sin(time * 3.0 + vPosition.x * 10.0) * 0.5 + 0.5;
+                
+                vec3 finalColor = mix(color, vec3(1.0), glow * 0.7);
+                gl_FragColor = vec4(finalColor * (0.8 + pulse * 0.2), 1.0);
+            }
+        `;
+        
+        // Network elements
+        const nodes = [];
+        const connections = [];
+        const tokens = [];
+        const nodeGeometry = new THREE.SphereGeometry(0.5, 16, 16);
+        const connectionGeometry = new THREE.BufferGeometry();
+        const tokenGeometry = new THREE.TetrahedronGeometry(0.3, 0);
+        
+        // Node material
+        const nodeMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                time: { value: 0 },
+                color: { value: new THREE.Color(0x00ffff) },
+                size: { value: 1 }
+            },
+            vertexShader: nodeVertexShader,
+            fragmentShader: nodeFragmentShader,
+            transparent: true
+        });
+        
+        // Token material
+        const tokenMaterial = new THREE.MeshStandardMaterial({
+            color: 0xff3366,
+            emissive: 0xff3366,
+            emissiveIntensity: 1.0,
+            metalness: 0.8,
+            roughness: 0.2
+        });
+        
+        // Create network
+        function createNetwork() {
+            // Create nodes
+            const nodeCount = 50;
+            const nodeGroup = new THREE.Group();
+            
+            for (let i = 0; i < nodeCount; i++) {
+                const node = new THREE.Mesh(nodeGeometry, nodeMaterial.clone());
+                node.position.set(
+                    (Math.random() - 0.5) * 40,
+                    (Math.random() - 0.5) * 40,
+                    (Math.random() - 0.5) * 40
+                );
+                node.userData.speed = Math.random() * 0.02 + 0.01;
+                node.userData.direction = new THREE.Vector3(
+                    Math.random() - 0.5,
+                    Math.random() - 0.5,
+                    Math.random() - 0.5
+                ).normalize();
+                nodeGroup.add(node);
+                nodes.push(node);
+            }
+            scene.add(nodeGroup);
+            
+            // Create connections
+            const connectionPositions = new Float32Array(nodeCount * nodeCount * 3);
+            const connectionColors = new Float32Array(nodeCount * nodeCount * 3);
+            let connectionIndex = 0;
+            
+            for (let i = 0; i < nodeCount; i++) {
+                for (let j = 0; j < nodeCount; j++) {
+                    if (i !== j && Math.random() < 0.05) {
+                        const connection = {
+                            from: i,
+                            to: j,
+                            active: false,
+                            progress: 0
+                        };
+                        connections.push(connection);
+                        
+                        // Set initial positions (will be updated in animate)
+                        connectionPositions[connectionIndex * 6] = nodes[i].position.x;
+                        connectionPositions[connectionIndex * 6 + 1] = nodes[i].position.y;
+                        connectionPositions[connectionIndex * 6 + 2] = nodes[i].position.z;
+                        connectionPositions[connectionIndex * 6 + 3] = nodes[j].position.x;
+                        connectionPositions[connectionIndex * 6 + 4] = nodes[j].position.y;
+                        connectionPositions[connectionIndex * 6 + 5] = nodes[j].position.z;
+                        
+                        // Set colors
+                        const color = new THREE.Color(0x00ffff);
+                        connectionColors[connectionIndex * 6] = color.r;
+                        connectionColors[connectionIndex * 6 + 1] = color.g;
+                        connectionColors[connectionIndex * 6 + 2] = color.b;
+                        connectionColors[connectionIndex * 6 + 3] = color.r;
+                        connectionColors[connectionIndex * 6 + 4] = color.g;
+                        connectionColors[connectionIndex * 6 + 5] = color.b;
+                        
+                        connectionIndex++;
+                    }
+                }
+            }
+            
+            connectionGeometry.setAttribute('position', new THREE.BufferAttribute(connectionPositions, 3));
+            connectionGeometry.setAttribute('color', new THREE.BufferAttribute(connectionColors, 3));
+            
+            const connectionMaterial = new THREE.LineBasicMaterial({
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.3
+            });
+            
+            const connectionLines = new THREE.LineSegments(connectionGeometry, connectionMaterial);
+            scene.add(connectionLines);
+            
+            // Create tokens (instanced)
+            const tokenCount = 500;
+            const tokenMesh = new THREE.InstancedMesh(tokenGeometry, tokenMaterial, tokenCount);
+            const dummy = new THREE.Object3D();
+            
+            for (let i = 0; i < tokenCount; i++) {
+                tokens.push({
+                    active: false,
+                    progress: 0,
+                    connectionIndex: Math.floor(Math.random() * connections.length),
+                    speed: Math.random() * 0.005 + 0.005
+                });
+                
+                dummy.position.set(0, 0, 0);
+                dummy.updateMatrix();
+                tokenMesh.setMatrixAt(i, dummy.matrix);
+            }
+            tokenMesh.instanceMatrix.needsUpdate = true;
+            scene.add(tokenMesh);
+            
+            // Update UI
+            document.getElementById('node-count').textContent = nodeCount;
+            document.getElementById('connection-count').textContent = connections.length;
+            document.getElementById('token-count').textContent = tokenCount;
+        }
+        
+        // Animation
+        let lastTime = 0;
+        function animate(time) {
+            requestAnimationFrame(animate);
+            
+            const delta = (time - lastTime) / 1000;
+            lastTime = time;
+            
+            // Update nodes
+            nodes.forEach(node => {
+                node.position.addScaledVector(node.userData.direction, node.userData.speed);
+                
+                // Bounce off boundaries
+                if (Math.abs(node.position.x) > 20) node.userData.direction.x *= -1;
+                if (Math.abs(node.position.y) > 20) node.userData.direction.y *= -1;
+                if (Math.abs(node.position.z) > 20) node.userData.direction.z *= -1;
+                
+                // Update shader uniforms
+                if (node.material.uniforms) {
+                    node.material.uniforms.time.value = time * 0.001;
+                }
+            });
+            
+            // Update connections
+            const positions = connectionGeometry.attributes.position.array;
+            let activeConnections = 0;
+            
+            connections.forEach((conn, i) => {
+                const fromNode = nodes[conn.from];
+                const toNode = nodes[conn.to];
+                
+                positions[i * 6] = fromNode.position.x;
+                positions[i * 6 + 1] = fromNode.position.y;
+                positions[i * 6 + 2] = fromNode.position.z;
+                positions[i * 6 + 3] = toNode.position.x;
+                positions[i * 6 + 4] = toNode.position.y;
+                positions[i * 6 + 5] = toNode.position.z;
+                
+                // Randomly activate connections
+                if (!conn.active && Math.random() < 0.01) {
+                    conn.active = true;
+                    conn.progress = 0;
+                }
+                
+                if (conn.active) {
+                    conn.progress += delta * 0.5;
+                    if (conn.progress >= 1) {
+                        conn.active = false;
+                    } else {
+                        activeConnections++;
+                    }
+                }
+            });
+            
+            connectionGeometry.attributes.position.needsUpdate = true;
+            
+            // Update tokens
+            tokens.forEach((token, i) => {
+                if (!token.active && Math.random() < 0.02) {
+                    token.active = true;
+                    token.progress = 0;
+                    token.connectionIndex = Math.floor(Math.random() * connections.length);
+                }
+                
+                if (token.active) {
+                    token.progress += delta * token.speed;
+                    if (token.progress >= 1) {
+                        token.active = false;
+                    }
+                }
+            });
+            
+            // Update UI stats
+            document.getElementById('throughput').textContent = Math.floor(activeConnections * 10);
+            
+            // Update controls
+            controls.update();
+            
+            // Render
+            composer.render();
+        }
+        
+        // Initialize
+        createNetwork();
+        animate(0);
+        
+        // Control handlers
+        document.getElementById('bloom-intensity').addEventListener('input', (e) => {
+            bloomPass.strength = parseFloat(e.target.value);
+        });
+        
+        document.getElementById('network-speed').addEventListener('input', (e) => {
+            const speed = parseFloat(e.target.value);
+            nodes.forEach(node => {
+                node.userData.speed = (Math.random() * 0.02 + 0.01) * speed;
+            });
+        });
+        
+        document.getElementById('particle-size').addEventListener('input', (e) => {
+            const size = parseFloat(e.target.value);
+            nodes.forEach(node => {
+                if (node.material.uniforms) {
+                    node.material.uniforms.size.value = size;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
