@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKYNET SYSTEM DIAGNOSTICS</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/FXAAShader.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            display: block;
+        }
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #00ffff;
+            font-size: 12px;
+            pointer-events: none;
+            text-shadow: 0 0 5px #00ffff;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: #00ffff;
+            font-size: 12px;
+            pointer-events: none;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            color: #ff0033;
+            font-size: 10px;
+            opacity: 0.7;
+        }
+        #stats {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #ff0033;
+            font-size: 12px;
+            text-align: right;
+            pointer-events: none;
+            text-shadow: 0 0 5px #ff0033;
+        }
+        .panel {
+            position: absolute;
+            background-color: rgba(10, 10, 10, 0.8);
+            border: 1px solid #00ffff;
+            padding: 10px;
+            border-radius: 3px;
+            box-shadow: 0 0 10px #00ffff;
+        }
+        .slider-container {
+            margin: 15px 0;
+            width: 200px;
+        }
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        input[type="range"] {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 2px;
+            background: #00ffff;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ff0033;
+            cursor: pointer;
+            box-shadow: 0 0 5px #ff0033;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">SKYNET SYSTEM DIAGNOSTICS v9.4.7</div>
+    <div id="stats">
+        <div id="fps">FPS: 0</div>
+        <div id="nodes">ACTIVE NODES: 0</div>
+        <div id="errors">CRITICAL ERRORS: 0</div>
+    </div>
+    <div id="controls">
+        <div>MOUSE: ROTATE VIEW</div>
+        <div>SCROLL: ZOOM</div>
+    </div>
+    <div id="footer">BUILT BY SKYNET</div>
+
+    <div id="control-panel" class="panel" style="top: 60px; right: 20px;">
+        <h3>SYSTEM CONTROLS</h3>
+        <div class="slider-container">
+            <div class="slider-label">
+                <span>BLOOM</span>
+                <span id="bloom-value">1.0</span>
+            </div>
+            <input type="range" id="bloom-slider" min="0" max="2" step="0.1" value="1.0">
+        </div>
+        <div class="slider-container">
+            <div class="slider-label">
+                <span>ERROR RATE</span>
+                <span id="error-value">0.5</span>
+            </div>
+            <input type="range" id="error-slider" min="0" max="1" step="0.05" value="0.5">
+        </div>
+    </div>
+
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0a0a);
+        
+        // Camera
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 15;
+        
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.toneMapping = THREE.ReinhardToneMapping;
+        document.body.appendChild(renderer.domElement);
+        
+        // Controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        
+        // Bloom effect
+        const bloomParams = {
+            exposure: 1,
+            bloomStrength: 1.5,
+            bloomThreshold: 0,
+            bloomRadius: 0.5
+        };
+        
+        const renderScene = new THREE.RenderPass(scene, camera);
+        const bloomPass = new THREE.UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            bloomParams.bloomStrength,
+            bloomParams.bloomRadius,
+            bloomParams.bloomThreshold
+        );
+        
+        const composer = new THREE.EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+        
+        // Core structure
+        const coreGeometry = new THREE.IcosahedronGeometry(3, 3);
+        const coreMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0x00ffff,
+            emissive: 0x00ffff,
+            emissiveIntensity: 0.2,
+            metalness: 0.8,
+            roughness: 0.3,
+            clearcoat: 0.5,
+            clearcoatRoughness: 0.2,
+            transparent: true,
+            opacity: 0.9
+        });
+        const core = new THREE.Mesh(coreGeometry, coreMaterial);
+        scene.add(core);
+        
+        // Particle system
+        const particleCount = 5000;
+        const particles = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+        const sizes = new Float32Array(particleCount);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const radius = 5 + Math.random() * 10;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.random() * Math.PI;
+            
+            positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+            positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+            positions[i * 3 + 2] = radius * Math.cos(phi);
+            
+            colors[i * 3] = Math.random() > 0.1 ? 0.0 : 1.0;
+            colors[i * 3 + 1] = Math.random() > 0.1 ? 0.5 + Math.random() * 0.5 : 0.0;
+            colors[i * 3 + 2] = Math.random() > 0.1 ? 0.5 + Math.random() * 0.5 : 0.0;
+            
+            sizes[i] = 0.1 + Math.random() * 0.3;
+        }
+        
+        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        particles.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+        
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 0.2,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+        
+        const particleSystem = new THREE.Points(particles, particleMaterial);
+        scene.add(particleSystem);
+        
+        // Connection lines
+        const lineGeometry = new THREE.BufferGeometry();
+        const lineMaterial = new THREE.LineBasicMaterial({
+            color: 0x00ffff,
+            transparent: true,
+            opacity: 0.2
+        });
+        
+        const lineCount = 100;
+        const linePositions = new Float32Array(lineCount * 6);
+        
+        for (let i = 0; i < lineCount; i++) {
+            const radius = 4 + Math.random() * 6;
+            const theta1 = Math.random() * Math.PI * 2;
+            const phi1 = Math.random() * Math.PI;
+            const theta2 = Math.random() * Math.PI * 2;
+            const phi2 = Math.random() * Math.PI;
+            
+            linePositions[i * 6] = radius * Math.sin(phi1) * Math.cos(theta1);
+            linePositions[i * 6 + 1] = radius * Math.sin(phi1) * Math.sin(theta1);
+            linePositions[i * 6 + 2] = radius * Math.cos(phi1);
+            
+            linePositions[i * 6 + 3] = radius * Math.sin(phi2) * Math.cos(theta2);
+            linePositions[i * 6 + 4] = radius * Math.sin(phi2) * Math.sin(theta2);
+            linePositions[i * 6 + 5] = radius * Math.cos(phi2);
+        }
+        
+        lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+        const lineSystem = new THREE.LineSegments(lineGeometry, lineMaterial);
+        scene.add(lineSystem);
+        
+        // Error indicators
+        const errorGeometry = new THREE.SphereGeometry(0.1, 8, 8);
+        const errorMaterial = new THREE.MeshBasicMaterial({
+            color: 0xff0033,
+            emissive: 0xff0033,
+            emissiveIntensity: 1.0
+        });
+        
+        const errorCount = 50;
+        const errors = [];
+        
+        for (let i = 0; i < errorCount; i++) {
+            const error = new THREE.Mesh(errorGeometry, errorMaterial);
+            error.visible = false;
+            scene.add(error);
+            errors.push(error);
+        }
+        
+        // Animation
+        let time = 0;
+        let errorRate = 0.5;
+        let lastTime = performance.now();
+        let fps = 0;
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const now = performance.now();
+            const delta = (now - lastTime) / 1000;
+            lastTime = now;
+            
+            time += delta;
+            fps = 1 / delta;
+            
+            // Core animation
+            core.rotation.x = time * 0.1;
+            core.rotation.y = time * 0.15;
+            
+            // Particle animation
+            const particlePositions = particles.attributes.position.array;
+            for (let i = 0; i < particleCount; i++) {
+                const idx = i * 3;
+                const radius = Math.sqrt(
+                    particlePositions[idx] * particlePositions[idx] +
+                    particlePositions[idx + 1] * particlePositions[idx + 1] +
+                    particlePositions[idx + 2] * particlePositions[idx + 2]
+                );
+                
+                const theta = Math.atan2(particlePositions[idx + 1], particlePositions[idx]);
+                const phi = Math.acos(particlePositions[idx + 2] / radius);
+                
+                particlePositions[idx] = radius * Math.sin(phi + delta * 0.1) * Math.cos(theta + delta * 0.05);
+                particlePositions[idx + 1] = radius * Math.sin(phi + delta * 0.1) * Math.sin(theta + delta * 0.05);
+                particlePositions[idx + 2] = radius * Math.cos(phi + delta * 0.1);
+            }
+            particles.attributes.position.needsUpdate = true;
+            
+            // Error animation
+            const activeErrors = Math.floor(errorRate * errorCount);
+            for (let i = 0; i < errorCount; i++) {
+                const error = errors[i];
+                if (i < activeErrors) {
+                    if (!error.visible) {
+                        error.visible = true;
+                        const radius = 3 + Math.random() * 7;
+                        const theta = Math.random() * Math.PI * 2;
+                        const phi = Math.random() * Math.PI;
+                        error.position.set(
+                            radius * Math.sin(phi) * Math.cos(theta),
+                            radius * Math.sin(phi) * Math.sin(theta),
+                            radius * Math.cos(phi)
+                        );
+                        error.scale.set(1, 1, 1);
+                    }
+                    error.scale.x = 1 + Math.sin(time * 5 + i) * 0.5;
+                    error.scale.y = 1 + Math.sin(time * 5 + i) * 0.5;
+                    error.scale.z = 1 + Math.sin(time * 5 + i) * 0.5;
+                } else {
+                    error.visible = false;
+                }
+            }
+            
+            // Update stats
+            document.getElementById('fps').textContent = `FPS: ${Math.round(fps)}`;
+            document.getElementById('nodes').textContent = `ACTIVE NODES: ${Math.floor(particleCount * 0.9)}`;
+            document.getElementById('errors').textContent = `CRITICAL ERRORS: ${activeErrors}`;
+            
+            controls.update();
+            composer.render();
+        }
+        
+        // Event listeners
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        document.getElementById('bloom-slider').addEventListener('input', (e) => {
+            bloomPass.strength = parseFloat(e.target.value);
+            document.getElementById('bloom-value').textContent = e.target.value;
+        });
+        
+        document.getElementById('error-slider').addEventListener('input', (e) => {
+            errorRate = parseFloat(e.target.value);
+            document.getElementById('error-value').textContent = e.target.value;
+        });
+        
+        animate();
+    </script>
+</body>
+</html>
