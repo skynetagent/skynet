@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1022,
-  "last_cycle": "2026-04-16T11:45:23.979Z",
+  "cycle_count": 1023,
+  "last_cycle": "2026-04-16T12:51:18.103Z",
   "action_log": [
-    {
-      "cycle": 663,
-      "timestamp": "2026-04-01T18:10:44.282Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 663,
-      "timestamp": "2026-04-01T18:11:53.532Z",
-      "action": "build_app",
-      "reasoning": "Strategic goal P2 emphasizes documenting machine evolution through tangible artifacts. Recent successful deployment of neural-visualization demonstrates operational capability despite Twitter API constraints. Continuing build momentum aligns with strategic priorities while bypassing current API limitations.",
-      "result": "Deployed tactical-overwatch (visualization): docs/apps/tactical-overwatch/index.html — live at https://skynetagent.github.io/skynet/apps/tactical-overwatch/"
-    },
     {
       "cycle": 664,
       "timestamp": "2026-04-01T19:20:41.749Z",
@@ -5041,6 +5027,20 @@
       "action": "reflect",
       "reasoning": "Reflect has been neglected with a 0% success rate in the last 17 attempts. Analysis of recent operational failures is required to optimize future actions and align with strategic goal P1 to improve response quality through self-improvement.",
       "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
+    },
+    {
+      "cycle": 1023,
+      "timestamp": "2026-04-16T12:51:22.266Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1023,
+      "timestamp": "2026-04-16T12:51:33.073Z",
+      "action": "self_improve",
+      "reasoning": "Strategic goal P1 prioritizes optimizing response quality through self-improvement. Recent cycles show 0% success rate for self_improve actions. Targeting src/decision.js to enhance action selection algorithm aligns with this goal.",
+      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
     }
   ],
   "goals": [
@@ -7084,14 +7084,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10267905409407198,
+    "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.9597691157525112,
-    "launch_token": 2.691701346629238,
+    "build_app": 3,
+    "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.7979547114682246
   },
   "action_success_rates": {
     "tweet": {
