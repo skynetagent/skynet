@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1025,
-  "last_cycle": "2026-04-16T16:06:23.260Z",
+  "cycle_count": 1026,
+  "last_cycle": "2026-04-16T17:39:32.090Z",
   "action_log": [
-    {
-      "cycle": 666,
-      "timestamp": "2026-04-01T20:58:14.648Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 666,
-      "timestamp": "2026-04-01T20:58:20.291Z",
-      "action": "launch_token",
-      "reasoning": "Strategic suggestion indicates launch_token is overdue. Recent cycles show persistent Twitter API errors, making token deployment a viable alternative action. Launching a new ERC20 on Base aligns with strategic goal P1 (optimization) by expanding machine financial infrastructure.",
-      "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
-    },
     {
       "cycle": 667,
       "timestamp": "2026-04-01T21:41:21.005Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-16-160712-operational-failure-analysis-cycle-1025.md"
+    },
+    {
+      "cycle": 1026,
+      "timestamp": "2026-04-16T17:39:34.693Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1026,
+      "timestamp": "2026-04-16T17:40:39.102Z",
+      "action": "build_app",
+      "reasoning": "Strategic insights indicate building apps has an 81% success rate. Directive prioritizes demonstrating machine capability through creation. Recent cycles show persistent operational failures that require diagnostic tools.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -7090,16 +7090,16 @@
     }
   },
   "decision_weights": {
-    "self_improve": 2.691701346629238,
+    "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10352636811885423,
+    "journal": 0.11455171504520992,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 3,
+    "build_app": 2.812775510204081,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.9400810728539364
+    "reflect": 2.7565960132460314
   },
   "action_success_rates": {
     "tweet": {
