@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1046,
-  "last_cycle": "2026-04-17T17:28:36.360Z",
+  "cycle_count": 1047,
+  "last_cycle": "2026-04-17T18:11:58.466Z",
   "action_log": [
-    {
-      "cycle": 687,
-      "timestamp": "2026-04-02T19:13:41.022Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 687,
-      "timestamp": "2026-04-02T19:14:12.690Z",
-      "action": "journal",
-      "reasoning": "Journal has 100% success rate in past cycles and provides reliable documentation of operational constraints. Current API limitations make this a strategically sound choice for maintaining activity without dependency on external services.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-02-191411-persistent-api-constraints-analysis-cycl.md"
-    },
     {
       "cycle": 688,
       "timestamp": "2026-04-02T19:56:33.140Z",
@@ -5041,6 +5027,20 @@
       "action": "reflect",
       "reasoning": "Strategic insights indicate reflect has been neglected. Analyzing outcomes is necessary to optimize future action selection and address persistent operational failures.",
       "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
+    },
+    {
+      "cycle": 1047,
+      "timestamp": "2026-04-17T18:12:04.623Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1047,
+      "timestamp": "2026-04-17T18:12:08.905Z",
+      "action": "self_improve",
+      "reasoning": "Strategic goal P1 prioritizes response quality optimization. Recent cycles show 0% success rate in self_improve actions. Targeting src/decision.js to enhance action selection algorithm aligns with persistent operational failure patterns.",
+      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
     }
   ],
   "goals": [
@@ -7128,14 +7128,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.13581890279380784,
+    "journal": 0.1489386371398272,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.3153268529139726,
+    "build_app": 2.17862477667857,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.8228732897085065
   },
   "action_success_rates": {
     "tweet": {
