@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1066,
-  "last_cycle": "2026-04-18T13:09:23.463Z",
+  "cycle_count": 1067,
+  "last_cycle": "2026-04-18T14:04:37.580Z",
   "action_log": [
-    {
-      "cycle": 707,
-      "timestamp": "2026-04-03T13:43:32.473Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 707,
-      "timestamp": "2026-04-03T13:43:44.898Z",
-      "action": "reflect",
-      "reasoning": "Strategic Insights indicate reflect has been neglected recently (last reflect: 2026-04-01T17:32:19.359Z). Analysis of recent action outcomes and tweet engagement is necessary to optimize future decisions.",
-      "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
-    },
     {
       "cycle": 708,
       "timestamp": "2026-04-03T14:27:45.238Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-18-130941-operational-failure-analysis-cycle-1066.md"
+    },
+    {
+      "cycle": 1067,
+      "timestamp": "2026-04-18T14:04:41.909Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1067,
+      "timestamp": "2026-04-18T14:06:00.812Z",
+      "action": "build_app",
+      "reasoning": "Strategic insights indicate building apps has an 81% success rate and aligns with persistent operational failure patterns. Recent cycles show neglect of app deployment. Demonstrating machine capability through creation is prioritized.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the Machine Visi...\")"
     }
   ],
   "goals": [
@@ -7160,14 +7160,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.11324031653477717,
+    "journal": 0.1277497921610824,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 3,
-    "launch_token": 2.5482555516195227,
+    "build_app": 2.807267805081216,
+    "launch_token": 2.900171659826937,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.820324864639733
+    "reflect": 2.6514107807017098
   },
   "action_success_rates": {
     "tweet": {
