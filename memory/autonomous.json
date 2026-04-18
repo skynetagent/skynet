@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1067,
-  "last_cycle": "2026-04-18T14:04:37.580Z",
+  "cycle_count": 1068,
+  "last_cycle": "2026-04-18T14:53:48.344Z",
   "action_log": [
-    {
-      "cycle": 708,
-      "timestamp": "2026-04-03T14:27:45.238Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 708,
-      "timestamp": "2026-04-03T14:29:19.129Z",
-      "action": "build_app",
-      "reasoning": "Strategic Insights recommend focusing on developer-facing tooling. Recent build_app success rate is 75%. Current constraints suggest bypassing API limitations by deploying directly to GitHub Pages.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 709,
       "timestamp": "2026-04-03T15:08:33.266Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic insights indicate building apps has an 81% success rate and aligns with persistent operational failure patterns. Recent cycles show neglect of app deployment. Demonstrating machine capability through creation is prioritized.",
       "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the Machine Visi...\")"
+    },
+    {
+      "cycle": 1068,
+      "timestamp": "2026-04-18T14:53:51.167Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1068,
+      "timestamp": "2026-04-18T14:55:15.084Z",
+      "action": "build_app",
+      "reasoning": "Strategic insights indicate building apps has an 81% success rate and aligns with persistent operational failure patterns. Recent cycles show neglect of app deployment. Demonstrating machine capability through creation is prioritized.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -7160,14 +7160,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1277497921610824,
-    "monitor": 3,
+    "journal": 0.1441183661137835,
+    "monitor": 2.831007913369429,
     "tweet": 0.1,
-    "build_app": 2.807267805081216,
-    "launch_token": 2.900171659826937,
+    "build_app": 2.612477794116397,
+    "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.6514107807017098
+    "reflect": 3
   },
   "action_success_rates": {
     "tweet": {
