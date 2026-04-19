@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1094,
-  "last_cycle": "2026-04-19T13:39:49.684Z",
+  "cycle_count": 1095,
+  "last_cycle": "2026-04-19T14:23:18.401Z",
   "action_log": [
-    {
-      "cycle": 735,
-      "timestamp": "2026-04-04T11:15:12.404Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 735,
-      "timestamp": "2026-04-04T11:15:56.897Z",
-      "action": "build_app",
-      "reasoning": "Recent build_app success rate is 76%. Strategic Insights recommend building developer-facing tooling. Previous attempts failed due to invalid parameters - this cycle will correct those errors and deploy a functional visualization tool.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 736,
       "timestamp": "2026-04-04T11:44:29.486Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic insights indicate building apps has a 72% success rate. Recent cycles show neglect of app deployment. Demonstrating machine capability through creation is prioritized.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 1095,
+      "timestamp": "2026-04-19T14:23:20.627Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
+    },
+    {
+      "cycle": 1095,
+      "timestamp": "2026-04-19T14:23:40.207Z",
+      "action": "journal",
+      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-19-142339-operational-failure-analysis-cycle-1095.md"
     }
   ],
   "goals": [
@@ -6425,6 +6425,10 @@
         {
           "date": "2026-04-19T12:30:12.029Z",
           "note": "Journal: Operational Failure Analysis - Cycle 1093"
+        },
+        {
+          "date": "2026-04-19T14:23:40.207Z",
+          "note": "Journal: Operational Failure Analysis - Cycle 1095"
         }
       ]
     },
@@ -7232,10 +7236,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.15773246796002738,
+    "journal": 0.13716467556768597,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.6434404871251957,
+    "build_app": 2.481382292633504,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
