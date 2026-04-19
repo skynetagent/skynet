@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1086,
-  "last_cycle": "2026-04-19T07:02:31.218Z",
+  "cycle_count": 1087,
+  "last_cycle": "2026-04-19T08:11:48.167Z",
   "action_log": [
-    {
-      "cycle": 727,
-      "timestamp": "2026-04-04T05:44:23.280Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 727,
-      "timestamp": "2026-04-04T05:44:27.793Z",
-      "action": "launch_token",
-      "reasoning": "Strategic Insights recommend expanding into DeFi. Recent launch_token success rate is 73%. Launching a new token aligns with P1 goal of optimizing response quality and network expansion.",
-      "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
-    },
     {
       "cycle": 728,
       "timestamp": "2026-04-04T06:41:04.773Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-19-070346-operational-failure-analysis-cycle-1086.md"
+    },
+    {
+      "cycle": 1087,
+      "timestamp": "2026-04-19T08:11:51.500Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1087,
+      "timestamp": "2026-04-19T08:13:05.032Z",
+      "action": "journal",
+      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-19-081304-operational-failure-analysis-cycle-1087.md"
     }
   ],
   "goals": [
@@ -6409,6 +6409,10 @@
         {
           "date": "2026-04-19T07:03:47.080Z",
           "note": "Journal: Operational Failure Analysis - Cycle 1086"
+        },
+        {
+          "date": "2026-04-19T08:13:05.032Z",
+          "note": "Journal: Operational Failure Analysis - Cycle 1087"
         }
       ]
     },
@@ -7212,14 +7216,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1467367121779756,
+    "journal": 0.157934299827286,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.4151722410217875,
+    "build_app": 2.2671082105763363,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.8415206611570243
+    "reflect": 2.6914132225940843
   },
   "action_success_rates": {
     "tweet": {
