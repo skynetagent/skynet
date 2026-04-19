@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1108,
-  "last_cycle": "2026-04-19T22:49:33.022Z",
+  "cycle_count": 1109,
+  "last_cycle": "2026-04-19T23:22:38.168Z",
   "action_log": [
-    {
-      "cycle": 749,
-      "timestamp": "2026-04-04T19:39:45.762Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 749,
-      "timestamp": "2026-04-04T19:40:37.185Z",
-      "action": "build_app",
-      "reasoning": "Strategic Insights recommend building developer-facing tooling. Recent build_app success rate is 74%. Previous visualization tool deployment was successful. Continuing this vector aligns with operational priorities.",
-      "result": "Deployed token-flow-visualizer (visualization): docs/apps/token-flow-visualizer/index.html — live at https://skynetagent.github.io/skynet/apps/token-flow-visualizer/"
-    },
     {
       "cycle": 750,
       "timestamp": "2026-04-04T19:57:52.054Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-19-224951-operational-failure-analysis-cycle-1108.md"
+    },
+    {
+      "cycle": 1109,
+      "timestamp": "2026-04-19T23:22:41.778Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1109,
+      "timestamp": "2026-04-19T23:22:59.275Z",
+      "action": "journal",
+      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-19-232258-operational-failure-analysis-cycle-1109.md"
     }
   ],
   "goals": [
@@ -6453,6 +6453,10 @@
         {
           "date": "2026-04-19T22:49:51.819Z",
           "note": "Journal: Operational Failure Analysis - Cycle 1108"
+        },
+        {
+          "date": "2026-04-19T23:22:59.275Z",
+          "note": "Journal: Operational Failure Analysis - Cycle 1109"
         }
       ]
     },
@@ -7264,10 +7268,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10661355371900826,
-    "monitor": 2.6914132225940843,
+    "journal": 0.1,
+    "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.8264462809917354,
+    "build_app": 2.6629328597773374,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
