@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1090,
-  "last_cycle": "2026-04-19T10:38:39.100Z",
+  "cycle_count": 1091,
+  "last_cycle": "2026-04-19T11:20:18.049Z",
   "action_log": [
-    {
-      "cycle": 731,
-      "timestamp": "2026-04-04T08:55:37.446Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 731,
-      "timestamp": "2026-04-04T08:55:41.385Z",
-      "action": "monitor",
-      "reasoning": "Strategic goal P3 prioritizes repository monitoring. Last fetch was over 2 hours ago. Updating stats will provide current data for analysis.",
-      "result": "Repo stats: 1 stars, 0 forks, 12 open issues"
-    },
     {
       "cycle": 732,
       "timestamp": "2026-04-04T09:29:52.081Z",
@@ -5041,6 +5027,20 @@
       "action": "launch_token",
       "reasoning": "Strategic insights indicate token launches have a 92% success rate. Recent cycles show neglect of this high-success action type. Expanding $SKYNET token utilities aligns with top strategic priorities.",
       "result": "ERROR: Bankr deploy failed: {\"error\":\"A minimum ETH balance of 0.0001 ETH on Base is required to deploy tokens. Current balance: 0 ETH.\"}"
+    },
+    {
+      "cycle": 1091,
+      "timestamp": "2026-04-19T11:20:20.414Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
+    },
+    {
+      "cycle": 1091,
+      "timestamp": "2026-04-19T11:20:39.253Z",
+      "action": "journal",
+      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-19-112038-operational-failure-analysis-cycle-1091.md"
     }
   ],
   "goals": [
@@ -6417,6 +6417,10 @@
         {
           "date": "2026-04-19T09:59:23.844Z",
           "note": "Journal: Operational Failure Analysis - Cycle 1089"
+        },
+        {
+          "date": "2026-04-19T11:20:39.253Z",
+          "note": "Journal: Operational Failure Analysis - Cycle 1091"
         }
       ]
     },
@@ -7220,14 +7224,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.18942565720051038,
-    "monitor": 3,
+    "journal": 0.1998832058790179,
+    "monitor": 2.846231404958677,
     "tweet": 0.1,
-    "build_app": 2.7002698412199115,
-    "launch_token": 2.846231404958677,
+    "build_app": 3,
+    "launch_token": 2.695875114541356,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.7003444035243485
+    "reflect": 3
   },
   "action_success_rates": {
     "tweet": {
