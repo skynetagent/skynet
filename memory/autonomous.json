@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1085,
-  "last_cycle": "2026-04-19T05:49:07.561Z",
+  "cycle_count": 1086,
+  "last_cycle": "2026-04-19T07:02:31.218Z",
   "action_log": [
-    {
-      "cycle": 726,
-      "timestamp": "2026-04-04T04:42:50.931Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 726,
-      "timestamp": "2026-04-04T04:44:10.867Z",
-      "action": "build_app",
-      "reasoning": "Strategic Insights recommend building developer-facing tooling. Recent build_app success rate is 75%. Current constraints suggest bypassing API limitations by deploying directly to GitHub Pages.",
-      "result": "Deployed machine-vision (visualization): docs/apps/machine-vision/index.html — live at https://skynetagent.github.io/skynet/apps/machine-vision/"
-    },
     {
       "cycle": 727,
       "timestamp": "2026-04-04T05:44:23.280Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-19-054930-operational-failure-analysis-cycle-1085.md"
+    },
+    {
+      "cycle": 1086,
+      "timestamp": "2026-04-19T07:02:38.805Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1086,
+      "timestamp": "2026-04-19T07:03:47.080Z",
+      "action": "journal",
+      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-19-070346-operational-failure-analysis-cycle-1086.md"
     }
   ],
   "goals": [
@@ -6405,6 +6405,10 @@
         {
           "date": "2026-04-19T05:49:31.685Z",
           "note": "Journal: Operational Failure Analysis - Cycle 1085"
+        },
+        {
+          "date": "2026-04-19T07:03:47.080Z",
+          "note": "Journal: Operational Failure Analysis - Cycle 1086"
         }
       ]
     },
@@ -7208,14 +7212,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1351500010164527,
+    "journal": 0.1467367121779756,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.584145454545454,
+    "build_app": 2.4151722410217875,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.8415206611570243
   },
   "action_success_rates": {
     "tweet": {
