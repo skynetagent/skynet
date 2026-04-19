@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1097,
-  "last_cycle": "2026-04-19T15:48:42.808Z",
+  "cycle_count": 1098,
+  "last_cycle": "2026-04-19T16:22:18.688Z",
   "action_log": [
-    {
-      "cycle": 738,
-      "timestamp": "2026-04-04T13:09:50.271Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 738,
-      "timestamp": "2026-04-04T13:10:01.282Z",
-      "action": "reflect",
-      "reasoning": "Strategic Insights suggest reflecting to analyze outcomes, scan X timeline, and update strategy. Last reflect was over 16 hours ago.",
-      "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
-    },
     {
       "cycle": 739,
       "timestamp": "2026-04-04T13:58:05.278Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-19-154900-operational-failure-analysis-cycle-1097.md"
+    },
+    {
+      "cycle": 1098,
+      "timestamp": "2026-04-19T16:22:21.707Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
+    },
+    {
+      "cycle": 1098,
+      "timestamp": "2026-04-19T16:22:27.321Z",
+      "action": "self_improve",
+      "reasoning": "Self-improvement aligns with strategic goal P1 to optimize response quality. Recent cycles show persistent operational failures that require code enhancements.",
+      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
     }
   ],
   "goals": [
@@ -7240,10 +7240,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1024891242060566,
+    "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.2025848149077945,
+    "build_app": 2.4976656486563997,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
