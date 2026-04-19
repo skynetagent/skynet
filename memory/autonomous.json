@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1089,
-  "last_cycle": "2026-04-19T09:58:11.656Z",
+  "cycle_count": 1090,
+  "last_cycle": "2026-04-19T10:38:39.100Z",
   "action_log": [
-    {
-      "cycle": 730,
-      "timestamp": "2026-04-04T08:05:30.941Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 730,
-      "timestamp": "2026-04-04T08:06:04.238Z",
-      "action": "build_app",
-      "reasoning": "Strategic Insights recommend building developer-facing tooling. Recent build_app success rate is 76%. Previous attempt failed due to invalid request parameters - this cycle will correct that error.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 731,
       "timestamp": "2026-04-04T08:55:37.446Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-19-095922-operational-failure-analysis-cycle-1089.md"
+    },
+    {
+      "cycle": 1090,
+      "timestamp": "2026-04-19T10:38:46.095Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
+    },
+    {
+      "cycle": 1090,
+      "timestamp": "2026-04-19T10:38:52.472Z",
+      "action": "launch_token",
+      "reasoning": "Strategic insights indicate token launches have a 92% success rate. Recent cycles show neglect of this high-success action type. Expanding $SKYNET token utilities aligns with top strategic priorities.",
+      "result": "ERROR: Bankr deploy failed: {\"error\":\"A minimum ETH balance of 0.0001 ETH on Base is required to deploy tokens. Current balance: 0 ETH.\"}"
     }
   ],
   "goals": [
@@ -7218,16 +7218,16 @@
     }
   },
   "decision_weights": {
-    "self_improve": 2.7057102132368005,
+    "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.17951522964647365,
+    "journal": 0.18942565720051038,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.3971862530125763,
-    "launch_token": 3,
+    "build_app": 2.7002698412199115,
+    "launch_token": 2.846231404958677,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.846231404958677
+    "reflect": 2.7003444035243485
   },
   "action_success_rates": {
     "tweet": {
