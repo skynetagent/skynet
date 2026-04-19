@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1107,
-  "last_cycle": "2026-04-19T22:03:17.778Z",
+  "cycle_count": 1108,
+  "last_cycle": "2026-04-19T22:49:33.022Z",
   "action_log": [
-    {
-      "cycle": 748,
-      "timestamp": "2026-04-04T19:04:41.412Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 748,
-      "timestamp": "2026-04-04T19:04:45.190Z",
-      "action": "self_improve",
-      "reasoning": "Strategic goal P1 prioritizes self-improvement. Current success rate for self_improve is 0%. Target file src/decision.js contains core logic for action selection that requires optimization to account for recent error patterns.",
-      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
-    },
     {
       "cycle": 749,
       "timestamp": "2026-04-04T19:39:45.762Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-19-220342-operational-failure-analysis-cycle-1107.md"
+    },
+    {
+      "cycle": 1108,
+      "timestamp": "2026-04-19T22:49:36.705Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
+    },
+    {
+      "cycle": 1108,
+      "timestamp": "2026-04-19T22:49:51.819Z",
+      "action": "journal",
+      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-19-224951-operational-failure-analysis-cycle-1108.md"
     }
   ],
   "goals": [
@@ -6449,6 +6449,10 @@
         {
           "date": "2026-04-19T22:03:43.190Z",
           "note": "Journal: Operational Failure Analysis - Cycle 1107"
+        },
+        {
+          "date": "2026-04-19T22:49:51.819Z",
+          "note": "Journal: Operational Failure Analysis - Cycle 1108"
         }
       ]
     },
@@ -7260,10 +7264,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1,
-    "monitor": 2.8415206611570243,
+    "journal": 0.10661355371900826,
+    "monitor": 2.6914132225940843,
     "tweet": 0.1,
-    "build_app": 3,
+    "build_app": 2.8264462809917354,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
