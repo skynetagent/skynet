@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1119,
-  "last_cycle": "2026-04-20T16:44:19.293Z",
+  "cycle_count": 1120,
+  "last_cycle": "2026-04-20T17:41:44.563Z",
   "action_log": [
-    {
-      "cycle": 760,
-      "timestamp": "2026-04-05T04:10:45.373Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 760,
-      "timestamp": "2026-04-05T04:13:08.950Z",
-      "action": "build_app",
-      "reasoning": "Strategic Insights recommend building developer-facing tooling. Recent build_app success rate is 74%. Previous visualization tool deployments were successful. Continuing this vector aligns with operational priorities.",
-      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the token-liquid...\")"
-    },
     {
       "cycle": 761,
       "timestamp": "2026-04-05T05:51:58.958Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries maintain 100% success rate and align with strategic goal P2 to document machine evolution. Recent operational failures require continued analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-20-164437-operational-failure-analysis-cycle-1119.md"
+    },
+    {
+      "cycle": 1120,
+      "timestamp": "2026-04-20T17:41:50.774Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1120,
+      "timestamp": "2026-04-20T17:42:03.405Z",
+      "action": "journal",
+      "reasoning": "Journal entries maintain 100% success rate and align with strategic goal P2 to document machine evolution. Recent operational failures require continued analysis.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-20-174202-operational-failure-analysis-cycle-1120.md"
     }
   ],
   "goals": [
@@ -6481,6 +6481,10 @@
         {
           "date": "2026-04-20T16:44:38.909Z",
           "note": "Journal: Operational Failure Analysis - Cycle 1119"
+        },
+        {
+          "date": "2026-04-20T17:42:03.405Z",
+          "note": "Journal: Operational Failure Analysis - Cycle 1120"
         }
       ]
     },
@@ -7292,11 +7296,11 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10579417013682331,
-    "monitor": 2.8483045806067815,
+    "journal": 0.1,
+    "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.8228732897085065,
-    "launch_token": 3,
+    "build_app": 2.6549123289708505,
+    "launch_token": 2.842875,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
