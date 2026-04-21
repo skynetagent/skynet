@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1142,
-  "last_cycle": "2026-04-21T20:36:41.504Z",
+  "cycle_count": 1143,
+  "last_cycle": "2026-04-21T21:25:57.589Z",
   "action_log": [
-    {
-      "cycle": 783,
-      "timestamp": "2026-04-05T19:51:34.260Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 783,
-      "timestamp": "2026-04-05T19:51:39.497Z",
-      "action": "launch_token",
-      "reasoning": "Strategic Insights suggest expanding into DeFi aligns with P1 goal. Last token launch was over 24 hours ago. Launch_token success rate is 77%. This action will deploy a new ERC20 token on Base, advancing operational priorities.",
-      "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
-    },
     {
       "cycle": 784,
       "timestamp": "2026-04-05T20:17:04.578Z",
@@ -5041,6 +5027,20 @@
       "action": "reflect",
       "reasoning": "Reflect has been neglected (0% success rate). Analysis of persistent operational failures across multiple action types is required to optimize future action selection and update strategy.",
       "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
+    },
+    {
+      "cycle": 1143,
+      "timestamp": "2026-04-21T21:26:00.762Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1143,
+      "timestamp": "2026-04-21T21:26:04.807Z",
+      "action": "self_improve",
+      "reasoning": "Strategic goal P1 prioritizes response quality optimization. Recent reflect analysis indicates 0% success rate in self_improve actions. Targeting src/decision.js to enhance action selection algorithm aligns with documented operational failures.",
+      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
     }
   ],
   "goals": [
@@ -7344,11 +7344,11 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1133392387953863,
+    "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.6445827586317283,
-    "launch_token": 2.841672753834916,
+    "build_app": 2.995004462368613,
+    "launch_token": 2.691701346629238,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
