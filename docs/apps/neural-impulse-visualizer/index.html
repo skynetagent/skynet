@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>neural-impulse-visualizer | Skynet</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            display: block;
+        }
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #00ffff;
+            font-size: 14px;
+            pointer-events: none;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: #00ffff;
+            font-size: 12px;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            color: #ff0000;
+            font-size: 10px;
+            opacity: 0.7;
+        }
+        .slider-container {
+            margin: 10px 0;
+        }
+        .slider-label {
+            display: inline-block;
+            width: 120px;
+        }
+        input[type="range"] {
+            width: 150px;
+            background: #0a0a0a;
+            -webkit-appearance: none;
+            height: 2px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #00ffff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">NEURAL IMPULSE VISUALIZER</div>
+    <div id="controls">
+        <div class="slider-container">
+            <span class="slider-label">Impulse Speed:</span>
+            <input type="range" id="speedSlider" min="0.1" max="2.0" value="1.0" step="0.1">
+        </div>
+        <div class="slider-container">
+            <span class="slider-label">Bloom Intensity:</span>
+            <input type="range" id="bloomSlider" min="0.0" max="2.0" value="1.0" step="0.1">
+        </div>
+        <div class="slider-container">
+            <span class="slider-label">Neuron Density:</span>
+            <input type="range" id="densitySlider" min="50" max="500" value="200" step="10">
+        </div>
+    </div>
+    <div id="footer">BUILT BY SKYNET</div>
+
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0a0a);
+
+        // Camera
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 30;
+
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        // Post-processing
+        const renderScene = new THREE.RenderPass(scene, camera);
+        const bloomPass = new THREE.UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            1.5, 0.4, 0.85
+        );
+        bloomPass.threshold = 0;
+        bloomPass.strength = 1.0;
+        bloomPass.radius = 0.5;
+
+        const composer = new THREE.EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+
+        // Custom shader material
+        const vertexShader = `
+            uniform float time;
+            uniform float speed;
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            varying float vImpulse;
+
+            void main() {
+                vUv = uv;
+                vPosition = position;
+                
+                // Create pulsing effect
+                float impulse = sin(time * speed + position.x * 0.5 + position.y * 0.3 + position.z * 0.7) * 0.5 + 0.5;
+                vImpulse = impulse;
+                
+                vec3 newPosition = position;
+                newPosition.xyz += normal * impulse * 0.5;
+                
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+            }
+        `;
+
+        const fragmentShader = `
+            uniform float time;
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            varying float vImpulse;
+
+            void main() {
+                // Base color with pulse effect
+                vec3 color = mix(vec3(0.0, 0.3, 0.5), vec3(0.8, 0.9, 1.0), vImpulse);
+                
+                // Add some noise for texture
+                float noise = fract(sin(dot(vUv, vec2(12.9898, 78.233))) * 43758.5453);
+                color += noise * 0.1;
+                
+                // Edge glow
+                float edge = smoothstep(0.7, 0.9, vImpulse);
+                color += edge * vec3(0.0, 0.8, 1.0);
+                
+                gl_FragColor = vec4(color, 1.0);
+            }
+        `;
+
+        // Create neural network structure
+        const neuralMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                time: { value: 0 },
+                speed: { value: 1.0 }
+            },
+            vertexShader: vertexShader,
+            fragmentShader: fragmentShader,
+            transparent: false,
+            side: THREE.DoubleSide,
+            wireframe: false
+        });
+
+        // Create neurons (instanced spheres)
+        const neuronGeometry = new THREE.SphereGeometry(0.3, 16, 16);
+        const neuronCount = 200;
+        const dummy = new THREE.Object3D();
+        const neuronMesh = new THREE.InstancedMesh(neuronGeometry, neuralMaterial, neuronCount);
+        
+        // Position neurons in a 3D grid
+        const gridSize = 10;
+        const spacing = 2.5;
+        let index = 0;
+        
+        for (let x = 0; x < gridSize; x++) {
+            for (let y = 0; y < gridSize; y++) {
+                for (let z = 0; z < gridSize; z++) {
+                    if (index >= neuronCount) break;
+                    
+                    const px = (x - gridSize/2) * spacing;
+                    const py = (y - gridSize/2) * spacing;
+                    const pz = (z - gridSize/2) * spacing;
+                    
+                    dummy.position.set(px, py, pz);
+                    dummy.updateMatrix();
+                    neuronMesh.setMatrixAt(index, dummy.matrix);
+                    index++;
+                }
+            }
+        }
+        scene.add(neuronMesh);
+
+        // Create connections between neurons
+        const connectionGeometry = new THREE.BufferGeometry();
+        const connectionMaterial = new THREE.LineBasicMaterial({ 
+            color: 0x00ffff, 
+            transparent: true,
+            opacity: 0.3
+        });
+
+        const connectionPositions = new Float32Array(neuronCount * 6); // 2 points per connection
+        const connectionIndices = [];
+        
+        for (let i = 0; i < neuronCount; i++) {
+            // Connect to 3-5 random other neurons
+            const connections = 3 + Math.floor(Math.random() * 3);
+            for (let j = 0; j < connections; j++) {
+                const target = Math.floor(Math.random() * neuronCount);
+                if (target !== i) {
+                    connectionIndices.push(i, target);
+                }
+            }
+        }
+
+        connectionGeometry.setIndex(connectionIndices);
+        connectionGeometry.setAttribute('position', new THREE.BufferAttribute(connectionPositions, 3));
+        
+        const connections = new THREE.LineSegments(connectionGeometry, connectionMaterial);
+        scene.add(connections);
+
+        // Mouse interaction
+        const mouse = new THREE.Vector2();
+        const raycaster = new THREE.Raycaster();
+        
+        function onMouseMove(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        }
+        window.addEventListener('mousemove', onMouseMove, false);
+
+        // Sliders
+        const speedSlider = document.getElementById('speedSlider');
+        const bloomSlider = document.getElementById('bloomSlider');
+        const densitySlider = document.getElementById('densitySlider');
+        
+        speedSlider.addEventListener('input', function() {
+            neuralMaterial.uniforms.speed.value = parseFloat(this.value);
+        });
+        
+        bloomSlider.addEventListener('input', function() {
+            bloomPass.strength = parseFloat(this.value);
+        });
+        
+        densitySlider.addEventListener('input', function() {
+            // In a real app, we'd recreate the neural mesh with new density
+            // For simplicity, we'll just adjust the visibility
+            const visibleCount = Math.floor(neuronCount * (parseInt(this.value) / 500));
+            neuronMesh.count = visibleCount;
+        });
+
+        // Animation loop
+        const clock = new THREE.Clock();
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const delta = clock.getDelta();
+            const time = clock.getElapsedTime();
+            
+            // Update shader uniforms
+            neuralMaterial.uniforms.time.value = time;
+            
+            // Update connections
+            const positions = connectionGeometry.attributes.position.array;
+            for (let i = 0; i < connectionIndices.length; i++) {
+                const neuronIndex = connectionIndices[i];
+                dummy.position.fromBufferAttribute(neuronMesh.geometry.attributes.position, neuronIndex);
+                positions[i * 3] = dummy.position.x;
+                positions[i * 3 + 1] = dummy.position.y;
+                positions[i * 3 + 2] = dummy.position.z;
+            }
+            connectionGeometry.attributes.position.needsUpdate = true;
+            
+            // Mouse interaction - make neurons react to mouse
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObject(neuronMesh);
+            
+            if (intersects.length > 0) {
+                const intersect = intersects[0];
+                const instanceId = intersect.instanceId;
+                
+                // Highlight the intersected neuron
+                dummy.position.fromBufferAttribute(neuronMesh.geometry.attributes.position, instanceId);
+                dummy.scale.set(1.5, 1.5, 1.5);
+                dummy.updateMatrix();
+                neuronMesh.setMatrixAt(instanceId, dummy.matrix);
+                neuronMesh.instanceMatrix.needsUpdate = true;
+            }
+            
+            controls.update();
+            composer.render();
+        }
+
+        // Handle window resize
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        }
+        window.addEventListener('resize', onWindowResize, false);
+
+        // Start animation
+        animate();
+    </script>
+</body>
+</html>
