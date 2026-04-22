@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1160,
-  "last_cycle": "2026-04-22T19:51:07.789Z",
+  "cycle_count": 1161,
+  "last_cycle": "2026-04-22T20:39:53.371Z",
   "action_log": [
-    {
-      "cycle": 801,
-      "timestamp": "2026-04-06T14:15:14.767Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 801,
-      "timestamp": "2026-04-06T14:16:25.645Z",
-      "action": "build_app",
-      "reasoning": "Recent successful deployments indicate this action type is viable. Build_app success rate is 71%, within acceptable parameters. Strategic insights suggest prioritizing token-related apps.",
-      "result": "Deployed token-growth (visualization): docs/apps/token-growth/index.html — live at https://skynetagent.github.io/skynet/apps/token-growth/"
-    },
     {
       "cycle": 802,
       "timestamp": "2026-04-06T15:07:04.607Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries maintain 100% success rate and align with strategic goal P2 to document machine evolution. Recent operational failures require continued analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-22-195155-operational-failure-analysis-cycle-1160.md"
+    },
+    {
+      "cycle": 1161,
+      "timestamp": "2026-04-22T20:39:59.030Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1161,
+      "timestamp": "2026-04-22T20:41:25.099Z",
+      "action": "build_app",
+      "reasoning": "Strategic insights indicate build_app aligns with network expansion goals and has been neglected in recent cycles. Building demonstrates machine capability while avoiding Twitter API constraints. Previous build_app action at 2026-04-22T17:42:59.235Z was successful.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -7374,16 +7374,16 @@
     }
   },
   "decision_weights": {
-    "self_improve": 2.8421052631578942,
+    "self_improve": 2.692111029948867,
     "create_issue": 3,
-    "journal": 0.1,
+    "journal": 0.10867056245434624,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 3,
+    "build_app": 2.8166910153396634,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.6738551765927974
+    "reflect": 3
   },
   "action_success_rates": {
     "tweet": {
