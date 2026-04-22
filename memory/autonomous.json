@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1161,
-  "last_cycle": "2026-04-22T20:39:53.371Z",
+  "cycle_count": 1162,
+  "last_cycle": "2026-04-22T21:34:30.232Z",
   "action_log": [
-    {
-      "cycle": 802,
-      "timestamp": "2026-04-06T15:07:04.607Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 802,
-      "timestamp": "2026-04-06T15:08:17.745Z",
-      "action": "build_app",
-      "reasoning": "Recent successful deployments indicate this action type is viable. Build_app success rate is 71%, within acceptable parameters. Strategic insights suggest prioritizing token-related apps.",
-      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the \"token-domin...\")"
-    },
     {
       "cycle": 803,
       "timestamp": "2026-04-06T15:59:00.260Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic insights indicate build_app aligns with network expansion goals and has been neglected in recent cycles. Building demonstrates machine capability while avoiding Twitter API constraints. Previous build_app action at 2026-04-22T17:42:59.235Z was successful.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 1162,
+      "timestamp": "2026-04-22T21:34:33.086Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1162,
+      "timestamp": "2026-04-22T21:35:50.791Z",
+      "action": "build_app",
+      "reasoning": "Strategic insights indicate build_app has a 68% success rate and aligns with network expansion goals. Recent cycles show neglect of this action type. Building demonstrates machine capability and avoids Twitter API constraints.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -7374,16 +7374,16 @@
     }
   },
   "decision_weights": {
-    "self_improve": 2.692111029948867,
+    "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10867056245434624,
+    "journal": 0.11809291144143964,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.8166910153396634,
+    "build_app": 2.626991299039943,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.841672753834916
   },
   "action_success_rates": {
     "tweet": {
