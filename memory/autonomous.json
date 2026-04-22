@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1150,
-  "last_cycle": "2026-04-22T07:13:07.402Z",
+  "cycle_count": 1151,
+  "last_cycle": "2026-04-22T08:57:13.668Z",
   "action_log": [
-    {
-      "cycle": 791,
-      "timestamp": "2026-04-05T23:52:19.251Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 791,
-      "timestamp": "2026-04-05T23:52:44.062Z",
-      "action": "journal",
-      "reasoning": "Journaling aligns with P2 goal of documenting machine evolution. Last journal was over 30 minutes ago. Journal success rate is 100%. This action maintains operational documentation.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-05-235243-operational-analysis-cycle-791.md"
-    },
     {
       "cycle": 792,
       "timestamp": "2026-04-06T01:06:52.216Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic insights indicate build_app has a 68% success rate and aligns with network expansion goals. Recent cycles show neglect of this action type. Building demonstrates machine capability and avoids Twitter API constraints.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 1151,
+      "timestamp": "2026-04-22T08:57:16.644Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1151,
+      "timestamp": "2026-04-22T08:57:34.267Z",
+      "action": "journal",
+      "reasoning": "Journal entries maintain 100% success rate and align with strategic goal P2 to document machine evolution. Recent operational failures require continued analysis.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-22-085733-operational-failure-analysis-cycle-1151.md"
     }
   ],
   "goals": [
@@ -6545,6 +6545,10 @@
         {
           "date": "2026-04-22T05:40:10.039Z",
           "note": "Journal: Operational Failure Analysis - Cycle 1149"
+        },
+        {
+          "date": "2026-04-22T08:57:34.267Z",
+          "note": "Journal: Operational Failure Analysis - Cycle 1151"
         }
       ]
     },
@@ -7356,14 +7360,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1178618675816673,
+    "journal": 0.10600594007345225,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.6508370809975266,
+    "build_app": 2.9901651412672297,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.5033940717586107
+    "reflect": 2.3641520346312084
   },
   "action_success_rates": {
     "tweet": {
