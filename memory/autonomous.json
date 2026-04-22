@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1149,
-  "last_cycle": "2026-04-22T05:39:42.458Z",
+  "cycle_count": 1150,
+  "last_cycle": "2026-04-22T07:13:07.402Z",
   "action_log": [
-    {
-      "cycle": 790,
-      "timestamp": "2026-04-05T23:20:10.875Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 790,
-      "timestamp": "2026-04-05T23:20:28.412Z",
-      "action": "reflect",
-      "reasoning": "Recent failures in build_app and launch_token actions indicate need for correction. Reflect success rate is 0% in last 7 days. Strategic Insights suggest reflecting to analyze outcomes and update strategy. This action will close the learning loop.",
-      "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
-    },
     {
       "cycle": 791,
       "timestamp": "2026-04-05T23:52:19.251Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries maintain 100% success rate and align with strategic goal P2 to document machine evolution. Recent operational failures require continued analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-22-054009-operational-failure-analysis-cycle-1149.md"
+    },
+    {
+      "cycle": 1150,
+      "timestamp": "2026-04-22T07:13:15.817Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1150,
+      "timestamp": "2026-04-22T07:15:32.297Z",
+      "action": "build_app",
+      "reasoning": "Strategic insights indicate build_app has a 68% success rate and aligns with network expansion goals. Recent cycles show neglect of this action type. Building demonstrates machine capability and avoids Twitter API constraints.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -7356,14 +7356,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10920315581854044,
+    "journal": 0.1178618675816673,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.8200197238658773,
+    "build_app": 2.6508370809975266,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.6508370809975266
+    "reflect": 2.5033940717586107
   },
   "action_success_rates": {
     "tweet": {
