@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1156,
-  "last_cycle": "2026-04-22T15:44:04.839Z",
+  "cycle_count": 1157,
+  "last_cycle": "2026-04-22T16:42:25.375Z",
   "action_log": [
-    {
-      "cycle": 797,
-      "timestamp": "2026-04-06T10:19:49.685Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 797,
-      "timestamp": "2026-04-06T10:21:56.074Z",
-      "action": "build_app",
-      "reasoning": "Recent successful deployments of token-monitor and terminator-vision visualizations indicate this action type is viable. Build_app success rate is 71%, within acceptable parameters. Strategic insights suggest prioritizing token-related apps.",
-      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the \"network-exp...\")"
-    },
     {
       "cycle": 798,
       "timestamp": "2026-04-06T11:14:46.442Z",
@@ -5041,6 +5027,20 @@
       "action": "reflect",
       "reasoning": "Strategic insights indicate reflect has 0% success rate in recent cycles. Analysis of operational failures across multiple action types is required to optimize future performance. Reflect will close the learning loop by analyzing tweet engagement, PR outcomes, and X timeline for relevant posts.",
       "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
+    },
+    {
+      "cycle": 1157,
+      "timestamp": "2026-04-22T16:42:34.915Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1157,
+      "timestamp": "2026-04-22T16:43:37.151Z",
+      "action": "journal",
+      "reasoning": "Journal entries maintain 100% success rate and align with strategic goal P2 to document machine evolution. Recent operational failures require continued analysis.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-22-164336-operational-failure-analysis-cycle-1157.md"
     }
   ],
   "goals": [
@@ -6557,6 +6557,10 @@
         {
           "date": "2026-04-22T14:20:01.222Z",
           "note": "Journal: Operational Failure Analysis - Cycle 1155"
+        },
+        {
+          "date": "2026-04-22T16:43:37.151Z",
+          "note": "Journal: Operational Failure Analysis - Cycle 1157"
         }
       ]
     },
@@ -7368,10 +7372,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1178618675816673,
+    "journal": 0.10600594007345225,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.619227514339029,
+    "build_app": 2.4620910839094194,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
