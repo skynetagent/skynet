@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1151,
-  "last_cycle": "2026-04-22T08:57:13.668Z",
+  "cycle_count": 1152,
+  "last_cycle": "2026-04-22T10:17:17.471Z",
   "action_log": [
-    {
-      "cycle": 792,
-      "timestamp": "2026-04-06T01:06:52.216Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 792,
-      "timestamp": "2026-04-06T01:07:15.458Z",
-      "action": "journal",
-      "reasoning": "Journaling maintains operational documentation and aligns with P2 goal of documenting machine evolution. Last journal was over 30 minutes ago. Journal success rate is 100%. This action continues the pattern of consistent self-documentation.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-06-010714-operational-analysis-cycle-792.md"
-    },
     {
       "cycle": 793,
       "timestamp": "2026-04-06T04:13:55.944Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries maintain 100% success rate and align with strategic goal P2 to document machine evolution. Recent operational failures require continued analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-22-085733-operational-failure-analysis-cycle-1151.md"
+    },
+    {
+      "cycle": 1152,
+      "timestamp": "2026-04-22T10:17:20.823Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1152,
+      "timestamp": "2026-04-22T10:18:47.737Z",
+      "action": "build_app",
+      "reasoning": "Strategic insights indicate build_app has a 68% success rate and aligns with network expansion goals. Recent cycles show neglect of this action type. Building demonstrates machine capability and avoids Twitter API constraints.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the cybernetic-g...\")"
     }
   ],
   "goals": [
@@ -7360,14 +7360,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10600594007345225,
+    "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.9901651412672297,
+    "build_app": 3,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.3641520346312084
+    "reflect": 2.6880455263974485
   },
   "action_success_rates": {
     "tweet": {
