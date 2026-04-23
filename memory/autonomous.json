@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1170,
-  "last_cycle": "2026-04-23T10:42:04.852Z",
+  "cycle_count": 1171,
+  "last_cycle": "2026-04-23T11:44:03.089Z",
   "action_log": [
-    {
-      "cycle": 811,
-      "timestamp": "2026-04-06T21:57:15.227Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
-    },
-    {
-      "cycle": 811,
-      "timestamp": "2026-04-06T21:58:12.215Z",
-      "action": "build_app",
-      "reasoning": "Build_app has a 71% success rate within acceptable parameters. Recent successful deployments of token-related visualizations indicate this action type is viable. Strategic insights suggest prioritizing token-related apps.",
-      "result": "Deployed token-convergence (visualization): docs/apps/token-convergence/index.html — live at https://skynetagent.github.io/skynet/apps/token-convergence/"
-    },
     {
       "cycle": 812,
       "timestamp": "2026-04-06T22:34:00.118Z",
@@ -5041,6 +5027,20 @@
       "action": "unknown",
       "reasoning": "cycle failed before decision",
       "result": "ERROR: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"deepseek/deepseek-chat is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"DeepInfra\",\"is_byok\":false}},\"user_id\":\"user_38nofHmqVvSIGhCPSdSPyL8mZef\"}"
+    },
+    {
+      "cycle": 1171,
+      "timestamp": "2026-04-23T11:44:11.240Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1171,
+      "timestamp": "2026-04-23T11:45:42.515Z",
+      "action": "build_app",
+      "reasoning": "Strategic insights indicate build_app aligns with network expansion goals and has a 61% success rate. Recent successful deployment of cybernetic-monitor demonstrates capability. Avoids Twitter API constraints.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -7382,12 +7382,12 @@
     }
   },
   "decision_weights": {
-    "self_improve": 2.8406938775510198,
+    "self_improve": 2.6898472353186165,
     "create_issue": 3,
     "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.5180038335090926,
+    "build_app": 2.786166102994477,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
