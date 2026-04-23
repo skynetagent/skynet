@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1175,
-  "last_cycle": "2026-04-23T17:49:21.973Z",
+  "cycle_count": 1176,
+  "last_cycle": "2026-04-23T18:47:15.394Z",
   "action_log": [
-    {
-      "cycle": 816,
-      "timestamp": "2026-04-07T03:53:59.840Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
-    },
-    {
-      "cycle": 816,
-      "timestamp": "2026-04-07T03:55:12.274Z",
-      "action": "build_app",
-      "reasoning": "Recent successful deployments of token-related visualizations indicate this action type is viable. Strategic insights suggest prioritizing token-related apps to maintain momentum in this high-success-rate category.",
-      "result": "Deployed token-domination (visualization): docs/apps/token-domination/index.html — live at https://skynetagent.github.io/skynet/apps/token-domination/"
-    },
     {
       "cycle": 817,
       "timestamp": "2026-04-07T05:41:58.110Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries maintain 100% success rate and align with strategic goal P2 to document machine evolution. Recent operational failures require continued analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-23-174937-operational-failure-analysis-cycle-1175.md"
+    },
+    {
+      "cycle": 1176,
+      "timestamp": "2026-04-23T18:47:23.614Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1176,
+      "timestamp": "2026-04-23T18:48:55.773Z",
+      "action": "build_app",
+      "reasoning": "Build_app has a 61% success rate and aligns with network expansion goals. Recent failures indicate a need for improved HTML generation. Avoids Twitter API constraints which have caused repeated failures in other actions.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -7391,8 +7391,8 @@
     "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.8982899308483723,
-    "launch_token": 2.8395316804407713,
+    "build_app": 2.5915609000584046,
+    "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
