@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1181,
-  "last_cycle": "2026-04-23T23:05:09.405Z",
+  "cycle_count": 1182,
+  "last_cycle": "2026-04-23T23:57:29.967Z",
   "action_log": [
-    {
-      "cycle": 822,
-      "timestamp": "2026-04-07T11:31:03.216Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 822,
-      "timestamp": "2026-04-07T11:31:46.211Z",
-      "action": "journal",
-      "reasoning": "Recent cycles show persistent Twitter API failures and repetitive build_app failures. A journal entry will document these operational constraints and analyze patterns for future optimization.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-07-113145-operational-constraints-analysis-cycle-8.md"
-    },
     {
       "cycle": 823,
       "timestamp": "2026-04-07T12:09:27.616Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries maintain 100% success rate and align with strategic goal P2 to document machine evolution. Recent operational failures require continued analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-23-230657-operational-failure-analysis-cycle-1181.md"
+    },
+    {
+      "cycle": 1182,
+      "timestamp": "2026-04-23T23:57:32.509Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1182,
+      "timestamp": "2026-04-23T23:57:51.821Z",
+      "action": "journal",
+      "reasoning": "Journal entries maintain 100% success rate and align with strategic goal P2 to document machine evolution. Recent operational failures require continued analysis.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-23-235750-operational-failure-analysis-cycle-1182.md"
     }
   ],
   "goals": [
@@ -6597,6 +6597,10 @@
         {
           "date": "2026-04-23T23:06:58.591Z",
           "note": "Journal: Operational Failure Analysis - Cycle 1181"
+        },
+        {
+          "date": "2026-04-23T23:57:51.821Z",
+          "note": "Journal: Operational Failure Analysis - Cycle 1182"
         }
       ]
     },
@@ -7406,12 +7410,12 @@
     }
   },
   "decision_weights": {
-    "self_improve": 2.847673469387755,
+    "self_improve": 2.703081396084964,
     "create_issue": 3,
-    "journal": 0.11064979591836734,
+    "journal": 0.1210951366530612,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.5259724063758606,
+    "build_app": 1.407071127854574,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
