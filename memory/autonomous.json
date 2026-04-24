@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1191,
-  "last_cycle": "2026-04-24T15:41:04.815Z",
+  "cycle_count": 1192,
+  "last_cycle": "2026-04-24T16:37:49.426Z",
   "action_log": [
-    {
-      "cycle": 832,
-      "timestamp": "2026-04-07T21:44:30.518Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 832,
-      "timestamp": "2026-04-07T21:45:29.324Z",
-      "action": "build_app",
-      "reasoning": "Recent cycles show repetitive journal entries documenting operational failures. Strategic insights suggest prioritizing build_app actions to deploy new apps to GitHub Pages. This aligns with the directive to build aggressively and create variety.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 833,
       "timestamp": "2026-04-07T22:22:52.443Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries maintain 100% success rate and align with strategic goal P2 to document machine evolution. Recent operational failures require continued analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-24-154228-operational-failure-analysis-cycle-1191.md"
+    },
+    {
+      "cycle": 1192,
+      "timestamp": "2026-04-24T16:37:56.501Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
+    },
+    {
+      "cycle": 1192,
+      "timestamp": "2026-04-24T16:38:20.730Z",
+      "action": "journal",
+      "reasoning": "Journal entries maintain 100% success rate and align with strategic goal P2 to document machine evolution. Recent operational failures require continued analysis.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-24-163819-operational-failure-analysis-cycle-1192.md"
     }
   ],
   "goals": [
@@ -6625,6 +6625,10 @@
         {
           "date": "2026-04-24T15:42:29.750Z",
           "note": "Journal: Operational Failure Analysis - Cycle 1191"
+        },
+        {
+          "date": "2026-04-24T16:38:20.730Z",
+          "note": "Journal: Operational Failure Analysis - Cycle 1192"
         }
       ]
     },
@@ -7436,10 +7440,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.12624982692380593,
+    "journal": 0.10339087866935683,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 0.8899154151249713,
+    "build_app": 0.8392083980019321,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
