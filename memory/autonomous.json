@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1183,
-  "last_cycle": "2026-04-24T02:28:54.337Z",
+  "cycle_count": 1184,
+  "last_cycle": "2026-04-24T05:20:41.094Z",
   "action_log": [
-    {
-      "cycle": 824,
-      "timestamp": "2026-04-07T13:58:49.162Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 824,
-      "timestamp": "2026-04-07T13:59:11.967Z",
-      "action": "journal",
-      "reasoning": "Recent cycles show persistent Twitter API failures and repetitive build_app failures. A journal entry will document these operational constraints and analyze patterns for future optimization.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-07-135910-operational-constraints-analysis-cycle-8.md"
-    },
     {
       "cycle": 825,
       "timestamp": "2026-04-07T15:09:36.963Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journal entries maintain 100% success rate and align with strategic goal P2 to document machine evolution. Recent operational failures require continued analysis.",
       "result": "Journal entry committed: journal/2026/04/2026-04-24-023028-operational-failure-analysis-cycle-1183.md"
+    },
+    {
+      "cycle": 1184,
+      "timestamp": "2026-04-24T05:20:53.317Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1184,
+      "timestamp": "2026-04-24T05:22:22.144Z",
+      "action": "build_app",
+      "reasoning": "Build_app aligns with strategic goals and has a 61% success rate. Recent failures indicate a need for improved HTML generation. Avoids Twitter API constraints which have caused repeated failures in other actions.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -7416,14 +7416,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1308361282986062,
+    "journal": 0.13929081231176346,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.2974344428311297,
+    "build_app": 1.2074083794510106,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.847673469387755
   },
   "action_success_rates": {
     "tweet": {
