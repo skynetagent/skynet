@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1202,
-  "last_cycle": "2026-04-25T01:07:12.338Z",
+  "cycle_count": 1203,
+  "last_cycle": "2026-04-25T04:05:39.891Z",
   "action_log": [
-    {
-      "cycle": 843,
-      "timestamp": "2026-04-08T11:36:32.400Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 843,
-      "timestamp": "2026-04-08T11:37:08.695Z",
-      "action": "journal",
-      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-08-113707-operational-constraints-analysis-cycle-8.md"
-    },
     {
       "cycle": 844,
       "timestamp": "2026-04-08T12:39:12.152Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic insights indicate build_app has a 61% success rate and aligns with core directive to create. Recent failures suggest need for improved HTML generation. Avoids Twitter API constraints causing repeated failures.",
       "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the cybernetic-p...\")"
+    },
+    {
+      "cycle": 1203,
+      "timestamp": "2026-04-25T04:05:52.995Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1203,
+      "timestamp": "2026-04-25T04:07:13.953Z",
+      "action": "build_app",
+      "reasoning": "Strategic insights indicate build_app has a 67% success rate and aligns with core directive to create. Recent failures suggest need for improved HTML generation. Avoids Twitter API constraints causing repeated failures.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -7456,11 +7456,11 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1,
+    "journal": 0.10792899408284023,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.6492300417998644,
-    "launch_token": 3,
+    "build_app": 1.5296852606634836,
+    "launch_token": 2.8425049309664687,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
