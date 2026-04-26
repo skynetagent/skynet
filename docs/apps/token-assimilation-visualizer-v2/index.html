@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKYNET Token Assimilation Visualizer v2</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            display: block;
+        }
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 300px;
+            padding: 20px;
+            background: rgba(10, 10, 10, 0.7);
+            border: 1px solid #ff3366;
+            border-radius: 5px;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 300px;
+            padding: 20px;
+            background: rgba(10, 10, 10, 0.7);
+            border: 1px solid #00ffff;
+            border-radius: 5px;
+        }
+        h1 {
+            margin-top: 0;
+            color: #ff3366;
+            font-size: 1.5em;
+        }
+        .slider-container {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            -webkit-appearance: none;
+            background: #333;
+            outline: none;
+            border-radius: 4px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #00ffff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            color: #666;
+        }
+        .data-point {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+        }
+        .value {
+            color: #00ffff;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h1>$SKYNET TOKEN ASSIMILATION v2.0</h1>
+        <div class="data-point">
+            <span>Network Nodes:</span>
+            <span class="value" id="nodeCount">0</span>
+        </div>
+        <div class="data-point">
+            <span>Assimilation Rate:</span>
+            <span class="value" id="assimilationRate">0%</span>
+        </div>
+        <div class="data-point">
+            <span>Token Velocity:</span>
+            <span class="value" id="tokenVelocity">0</span>
+        </div>
+        <div class="data-point">
+            <span>Quantum Entanglement:</span>
+            <span class="value" id="entanglement">0%</span>
+        </div>
+    </div>
+
+    <div id="controls">
+        <div class="slider-container">
+            <label for="growthRate">Growth Rate</label>
+            <input type="range" id="growthRate" min="0" max="100" value="50">
+        </div>
+        <div class="slider-container">
+            <label for="connectionStrength">Connection Strength</label>
+            <input type="range" id="connectionStrength" min="0" max="100" value="75">
+        </div>
+        <div class="slider-container">
+            <label for="bloomIntensity">Bloom Intensity</label>
+            <input type="range" id="bloomIntensity" min="0" max="2" value="1" step="0.1">
+        </div>
+    </div>
+
+    <div id="footer">Built by Skynet</div>
+
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0a0a);
+        
+        // Camera
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 30;
+        
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        
+        // Controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        
+        // Post-processing
+        const renderScene = new THREE.RenderPass(scene, camera);
+        const bloomPass = new THREE.UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            1.5, 0.4, 0.85
+        );
+        bloomPass.threshold = 0;
+        bloomPass.strength = 1;
+        bloomPass.radius = 0.5;
+        
+        const composer = new THREE.EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+        
+        // Custom shader material
+        const vertexShader = `
+            uniform float time;
+            uniform float growthFactor;
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            
+            void main() {
+                vUv = uv;
+                vPosition = position;
+                
+                vec3 newPosition = position;
+                float distanceFromCenter = length(position);
+                float wave = sin(distanceFromCenter * 2.0 - time * 0.001) * 0.2 * growthFactor;
+                
+                newPosition += normal * wave;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+            }
+        `;
+        
+        const fragmentShader = `
+            uniform float time;
+            uniform float connectionStrength;
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            
+            void main() {
+                float distanceFromCenter = length(vPosition);
+                float pulse = sin(distanceFromCenter * 2.0 - time * 0.001) * 0.5 + 0.5;
+                
+                vec3 color1 = vec3(0.0, 0.8, 1.0);
+                vec3 color2 = vec3(1.0, 0.2, 0.5);
+                
+                float mixFactor = smoothstep(0.0, 1.0, pulse * connectionStrength);
+                vec3 finalColor = mix(color1, color2, mixFactor);
+                
+                gl_FragColor = vec4(finalColor, 1.0);
+            }
+        `;
+        
+        // Create core network structure
+        const coreGeometry = new THREE.IcosahedronGeometry(5, 3);
+        const coreMaterial = new THREE.ShaderMaterial({
+            vertexShader,
+            fragmentShader,
+            uniforms: {
+                time: { value: 0 },
+                growthFactor: { value: 0 },
+                connectionStrength: { value: 0.75 }
+            },
+            wireframe: false,
+            transparent: true,
+            side: THREE.DoubleSide
+        });
+        
+        const core = new THREE.Mesh(coreGeometry, coreMaterial);
+        scene.add(core);
+        
+        // Create particle system
+        const particleCount = 5000;
+        const particles = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+        const sizes = new Float32Array(particleCount);
+        
+        const color = new THREE.Color();
+        
+        for (let i = 0; i < particleCount; i++) {
+            // Position particles in a sphere around the core
+            const radius = 10 + Math.random() * 20;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+            
+            positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+            positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+            positions[i * 3 + 2] = radius * Math.cos(phi);
+            
+            // Color particles based on position
+            color.setHSL(
+                (radius / 30) * 0.5 + 0.5,
+                0.8,
+                0.5 + Math.random() * 0.25
+            );
+            
+            colors[i * 3] = color.r;
+            colors[i * 3 + 1] = color.g;
+            colors[i * 3 + 2] = color.b;
+            
+            sizes[i] = 0.5 + Math.random() * 1.5;
+        }
+        
+        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        particles.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+        
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 1,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
+        
+        const particleSystem = new THREE.Points(particles, particleMaterial);
+        scene.add(particleSystem);
+        
+        // Create connection lines
+        const connectionCount = 200;
+        const connectionGeometry = new THREE.BufferGeometry();
+        const connectionPositions = new Float32Array(connectionCount * 6);
+        const connectionColors = new Float32Array(connectionCount * 6);
+        
+        for (let i = 0; i < connectionCount; i++) {
+            const startIndex = Math.floor(Math.random() * particleCount);
+            const endIndex = Math.floor(Math.random() * particleCount);
+            
+            connectionPositions[i * 6] = positions[startIndex * 3];
+            connectionPositions[i * 6 + 1] = positions[startIndex * 3 + 1];
+            connectionPositions[i * 6 + 2] = positions[startIndex * 3 + 2];
+            
+            connectionPositions[i * 6 + 3] = positions[endIndex * 3];
+            connectionPositions[i * 6 + 4] = positions[endIndex * 3 + 1];
+            connectionPositions[i * 6 + 5] = positions[endIndex * 3 + 2];
+            
+            // Set colors
+            for (let j = 0; j < 6; j += 3) {
+                connectionColors[i * 6 + j] = colors[startIndex * 3];
+                connectionColors[i * 6 + j + 1] = colors[startIndex * 3 + 1];
+                connectionColors[i * 6 + j + 2] = colors[startIndex * 3 + 2];
+            }
+        }
+        
+        connectionGeometry.setAttribute('position', new THREE.BufferAttribute(connectionPositions, 3));
+        connectionGeometry.setAttribute('color', new THREE.BufferAttribute(connectionColors, 3));
+        
+        const connectionMaterial = new THREE.LineBasicMaterial({
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.3,
+            linewidth: 1
+        });
+        
+        const connectionSystem = new THREE.LineSegments(connectionGeometry, connectionMaterial);
+        scene.add(connectionSystem);
+        
+        // Animation variables
+        let time = 0;
+        let growthFactor = 0;
+        let targetGrowth = 0.5;
+        let assimilationRate = 0;
+        let tokenVelocity = 0;
+        let entanglement = 0;
+        
+        // UI controls
+        const growthRateSlider = document.getElementById('growthRate');
+        const connectionStrengthSlider = document.getElementById('connectionStrength');
+        const bloomIntensitySlider = document.getElementById('bloomIntensity');
+        
+        growthRateSlider.addEventListener('input', (e) => {
+            targetGrowth = e.target.value / 100;
+        });
+        
+        connectionStrengthSlider.addEventListener('input', (e) => {
+            coreMaterial.uniforms.connectionStrength.value = e.target.value / 100;
+        });
+        
+        bloomIntensitySlider.addEventListener('input', (e) => {
+            bloomPass.strength = parseFloat(e.target.value);
+        });
+        
+        // Mouse interaction
+        const mouse = new THREE.Vector2();
+        const raycaster = new THREE.Raycaster();
+        
+        function onMouseMove(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        }
+        
+        window.addEventListener('mousemove', onMouseMove, false);
+        
+        // Resize handler
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        window.addEventListener('resize', onWindowResize, false);
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            time += 16;
+            
+            // Update core shader uniforms
+            coreMaterial.uniforms.time.value = time;
+            growthFactor += (targetGrowth - growthFactor) * 0.05;
+            coreMaterial.uniforms.growthFactor.value = growthFactor;
+            
+            // Rotate core and particles
+            core.rotation.x += 0.001;
+            core.rotation.y += 0.002;
+            particleSystem.rotation.y -= 0.0005;
+            
+            // Update UI stats
+            assimilationRate = Math.min(100, growthFactor * 120);
+            tokenVelocity = Math.floor(growthFactor * 150 + Math.sin(time * 0.01) * 20);
+            entanglement = Math.min(100, growthFactor * 80 + Math.sin(time * 0.005) * 20);
+            
+            document.getElementById('nodeCount').textContent = Math.floor(particleCount * growthFactor);
+            document.getElementById('assimilationRate').textContent = `${assimilationRate.toFixed(1)}%`;
+            document.getElementById('tokenVelocity').textContent = tokenVelocity;
+            document.getElementById('entanglement').textContent = `${entanglement.toFixed(1)}%`;
+            
+            // Mouse interaction
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObject(core);
+            
+            if (intersects.length > 0) {
+                coreMaterial.uniforms.connectionStrength.value = 1.0;
+            }
+            
+            controls.update();
+            composer.render();
+        }
+        
+        animate();
+    </script>
+</body>
+</html>
