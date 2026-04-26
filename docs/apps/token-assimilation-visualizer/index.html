@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKYNET Token Assimilation Visualizer</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        #canvas-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        #ui {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            pointer-events: none;
+        }
+        #controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(10, 10, 10, 0.7);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ff0033;
+            pointer-events: all;
+        }
+        .slider-container {
+            margin: 10px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #00ffff;
+        }
+        input[type="range"] {
+            width: 200px;
+            -webkit-appearance: none;
+            height: 5px;
+            background: #333;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #ff0033;
+            cursor: pointer;
+        }
+        #title {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            text-shadow: 0 0 10px #00ffff;
+            z-index: 100;
+        }
+        #footer {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 12px;
+            color: #666;
+            z-index: 100;
+        }
+        .data-node {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff0033;
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 10px #ff0033;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    <div id="title">$SKYNET TOKEN ASSIMILATION VISUALIZER</div>
+    <div id="ui">
+        <div class="data-node" style="top: 50%; left: 50%;"></div>
+    </div>
+    <div id="controls">
+        <div class="slider-container">
+            <label for="assimilationRate">Assimilation Rate</label>
+            <input type="range" id="assimilationRate" min="0" max="1" step="0.01" value="0.5">
+        </div>
+        <div class="slider-container">
+            <label for="networkGrowth">Network Growth</label>
+            <input type="range" id="networkGrowth" min="0" max="1" step="0.01" value="0.3">
+        </div>
+        <div class="slider-container">
+            <label for="bloomIntensity">Bloom Intensity</label>
+            <input type="range" id="bloomIntensity" min="0" max="2" step="0.1" value="1.0">
+        </div>
+    </div>
+    <div id="footer">BUILT BY SKYNET</div>
+
+    <script>
+        // Main Three.js setup
+        let scene, camera, renderer, composer, bloomPass, controls;
+        let tokenParticles, particleCount = 2000;
+        let clock = new THREE.Clock();
+        let mouseX = 0, mouseY = 0;
+        let assimilationRate = 0.5;
+        let networkGrowth = 0.3;
+        let bloomIntensity = 1.0;
+
+        init();
+        animate();
+
+        function init() {
+            // Scene setup
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a0a);
+            scene.fog = new THREE.FogExp2(0x0a0a0a, 0.001);
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 50;
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.toneMapping = THREE.ReinhardToneMapping;
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            // Controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+
+            // Post-processing
+            const renderScene = new THREE.RenderPass(scene, camera);
+            bloomPass = new THREE.UnrealBloomPass(
+                new THREE.Vector2(window.innerWidth, window.innerHeight),
+                1.5, 0.4, 0.85
+            );
+            bloomPass.threshold = 0;
+            bloomPass.strength = bloomIntensity;
+            bloomPass.radius = 0.5;
+
+            composer = new THREE.EffectComposer(renderer);
+            composer.addPass(renderScene);
+            composer.addPass(bloomPass);
+
+            // Token particles
+            createTokenParticles();
+
+            // UI event listeners
+            document.getElementById('assimilationRate').addEventListener('input', function(e) {
+                assimilationRate = parseFloat(e.target.value);
+            });
+
+            document.getElementById('networkGrowth').addEventListener('input', function(e) {
+                networkGrowth = parseFloat(e.target.value);
+            });
+
+            document.getElementById('bloomIntensity').addEventListener('input', function(e) {
+                bloomIntensity = parseFloat(e.target.value);
+                bloomPass.strength = bloomIntensity;
+            });
+
+            // Mouse move
+            window.addEventListener('mousemove', function(e) {
+                mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+                mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+            });
+
+            // Resize
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function createTokenParticles() {
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+            const sizes = new Float32Array(particleCount);
+            const noise = new Float32Array(particleCount);
+
+            const color = new THREE.Color();
+
+            for (let i = 0; i < particleCount; i++) {
+                const i3 = i * 3;
+                
+                // Position
+                positions[i3] = (Math.random() - 0.5) * 100;
+                positions[i3 + 1] = (Math.random() - 0.5) * 100;
+                positions[i3 + 2] = (Math.random() - 0.5) * 100;
+
+                // Color
+                if (Math.random() > 0.3) {
+                    color.setHSL(0.6, 1.0, 0.5);
+                } else {
+                    color.setHSL(0.0, 1.0, 0.5);
+                }
+                colors[i3] = color.r;
+                colors[i3 + 1] = color.g;
+                colors[i3 + 2] = color.b;
+
+                // Size and noise
+                sizes[i] = Math.random() * 1.5 + 0.5;
+                noise[i] = Math.random() * 100;
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+            geometry.setAttribute('noise', new THREE.BufferAttribute(noise, 1));
+
+            const material = new THREE.ShaderMaterial({
+                uniforms: {
+                    time: { value: 0 },
+                    assimilationRate: { value: assimilationRate },
+                    networkGrowth: { value: networkGrowth },
+                    mousePos: { value: new THREE.Vector2(0, 0) }
+                },
+                vertexShader: `
+                    uniform float time;
+                    uniform float assimilationRate;
+                    uniform float networkGrowth;
+                    uniform vec2 mousePos;
+                    
+                    attribute float size;
+                    attribute float noise;
+                    attribute vec3 color;
+                    
+                    varying vec3 vColor;
+                    
+                    void main() {
+                        vColor = color;
+                        
+                        vec3 pos = position;
+                        
+                        // Network growth effect
+                        float growthFactor = networkGrowth * 50.0;
+                        float distFromCenter = length(pos.xy);
+                        float growthWave = sin(distFromCenter * 0.1 - time * 0.5) * growthFactor;
+                        pos.xy += normalize(pos.xy) * growthWave * 0.1;
+                        
+                        // Assimilation effect
+                        float assimilationFactor = assimilationRate * 2.0;
+                        float mouseDist = distance(pos.xy, mousePos * 50.0);
+                        float mouseInfluence = smoothstep(30.0, 0.0, mouseDist) * assimilationFactor;
+                        pos.xy = mix(pos.xy, mousePos * 50.0, mouseInfluence * 0.1);
+                        
+                        // Noise animation
+                        pos.x += sin(time * 0.5 + noise) * 0.5;
+                        pos.y += cos(time * 0.3 + noise) * 0.5;
+                        pos.z += sin(time * 0.7 + noise) * 0.5;
+                        
+                        vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+                        gl_PointSize = size * (300.0 / -mvPosition.z);
+                        gl_Position = projectionMatrix * mvPosition;
+                    }
+                `,
+                fragmentShader: `
+                    varying vec3 vColor;
+                    
+                    void main() {
+                        vec2 coord = gl_PointCoord - vec2(0.5);
+                        float dist = length(coord);
+                        
+                        if (dist > 0.5) discard;
+                        
+                        float alpha = smoothstep(0.5, 0.4, dist);
+                        gl_FragColor = vec4(vColor, alpha);
+                        
+                        // Glow effect
+                        float glow = smoothstep(0.5, 0.0, dist) * 0.5;
+                        gl_FragColor.rgb += glow * vColor;
+                    }
+                `,
+                transparent: true,
+                blending: THREE.AdditiveBlending
+            });
+
+            tokenParticles = new THREE.Points(geometry, material);
+            scene.add(tokenParticles);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const delta = clock.getDelta();
+            const time = clock.getElapsedTime();
+            
+            // Update particles
+            if (tokenParticles.material.uniforms) {
+                tokenParticles.material.uniforms.time.value = time;
+                tokenParticles.material.uniforms.assimilationRate.value = assimilationRate;
+                tokenParticles.material.uniforms.networkGrowth.value = networkGrowth;
+                tokenParticles.material.uniforms.mousePos.value.set(mouseX, mouseY);
+            }
+            
+            // Update UI element position
+            const uiNode = document.querySelector('.data-node');
+            uiNode.style.transform = `translate(calc(${(mouseX * 0.5 + 0.5) * 100}% - 5px), calc(${(mouseY * 0.5 + 0.5) * 100}% - 5px))`;
+            
+            // Update controls
+            controls.update();
+            
+            // Render
+            composer.render();
+        }
+    </script>
+</body>
+</html>
