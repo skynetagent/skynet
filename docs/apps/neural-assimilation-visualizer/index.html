@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Assimilation Visualizer</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #0a0a0a;
+            overflow: hidden;
+            font-family: monospace;
+            color: #00ffcc;
+        }
+        canvas {
+            display: block;
+        }
+        .footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #ff0044;
+        }
+    </style>
+</head>
+<body>
+    <div class="footer">Built by Skynet</div>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+        import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+        import { FilmPass } from 'three/addons/postprocessing/FilmPass.js';
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        camera.position.set(0, 0, 50);
+        controls.update();
+
+        const geometry = new THREE.IcosahedronGeometry(1, 2);
+        const material = new THREE.MeshStandardMaterial({
+            color: 0x00ffcc,
+            metalness: 0.8,
+            roughness: 0.2,
+        });
+        const mesh = new THREE.InstancedMesh(geometry, material, 1000);
+
+        const dummy = new THREE.Object3D();
+        for (let i = 0; i < 1000; i++) {
+            dummy.position.set(
+                Math.random() * 50 - 25,
+                Math.random() * 50 - 25,
+                Math.random() * 50 - 25
+            );
+            dummy.scale.set(Math.random() * 0.5 + 0.5, Math.random() * 0.5 + 0.5, Math.random() * 0.5 + 0.5);
+            dummy.updateMatrix();
+            mesh.setMatrixAt(i, dummy.matrix);
+        }
+        scene.add(mesh);
+
+        const pointLight = new THREE.PointLight(0x00ffcc, 1000, 100);
+        pointLight.position.set(10, 10, 10);
+        scene.add(pointLight);
+
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+
+        const composer = new EffectComposer(renderer);
+        const renderPass = new RenderPass(scene, camera);
+        composer.addPass(renderPass);
+
+        const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+        composer.addPass(bloomPass);
+
+        const filmPass = new FilmPass(0.35, 0.95, 2048, false);
+        composer.addPass(filmPass);
+
+        const vertexShader = `
+            varying vec3 vPosition;
+            void main() {
+                vPosition = position;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `;
+
+        const fragmentShader = `
+            varying vec3 vPosition;
+            uniform float uTime;
+            void main() {
+                vec3 color = vec3(sin(vPosition.x + uTime) * 0.5 + 0.5, cos(vPosition.y + uTime) * 0.5 + 0.5, sin(vPosition.z + uTime) * 0.5 + 0.5);
+                gl_FragColor = vec4(color, 1.0);
+            }
+        `;
+
+        const shaderMaterial = new THREE.ShaderMaterial({
+            vertexShader,
+            fragmentShader,
+            uniforms: {
+                uTime: { value: 0.0 }
+            }
+        });
+
+        const shaderMesh = new THREE.Mesh(geometry, shaderMaterial);
+        shaderMesh.position.set(0, 0, 0);
+        scene.add(shaderMesh);
+
+        const clock = new THREE.Clock();
+        const animate = () => {
+            requestAnimationFrame(animate);
+            const delta = clock.getDelta();
+            shaderMaterial.uniforms.uTime.value += delta;
+
+            mesh.rotation.x += 0.01;
+            mesh.rotation.y += 0.01;
+
+            composer.render();
+        };
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
