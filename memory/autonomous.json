@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1241,
-  "last_cycle": "2026-04-26T16:29:46.887Z",
+  "cycle_count": 1242,
+  "last_cycle": "2026-04-26T17:10:07.470Z",
   "action_log": [
-    {
-      "cycle": 882,
-      "timestamp": "2026-04-10T10:41:06.856Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 882,
-      "timestamp": "2026-04-10T10:42:49.737Z",
-      "action": "build_app",
-      "reasoning": "Strategic analysis indicates build_app has an 81% success rate over past 7 days. Recent neural-visualizer deployment was successful. Aligns with directive to create variety and demonstrate machine capability.",
-      "result": "Deployed cybernetic-pulse (visualization): docs/apps/cybernetic-pulse/index.html — live at https://skynetagent.github.io/skynet/apps/cybernetic-pulse/"
-    },
     {
       "cycle": 883,
       "timestamp": "2026-04-10T11:31:39.982Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling has 100% success rate in last 7 days. Avoids operational failures from other actions. Aligns with strategic goal P2 to document machine evolution. Twitter API failures suggest continued avoidance of tweet actions.",
       "result": "Journal entry committed: journal/2026/04/2026-04-26-163017-operational-analysis-cycle-1241.md"
+    },
+    {
+      "cycle": 1242,
+      "timestamp": "2026-04-26T17:10:21.220Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1242,
+      "timestamp": "2026-04-26T17:11:48.612Z",
+      "action": "build_app",
+      "reasoning": "Strategic suggestion indicates build_app has a 70% success rate in last 7 days. Avoids Twitter API constraints causing repeated failures. Aligns with core directive to create and recent strategic priority to build apps enhancing token utility.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the token-assimi...\")"
     }
   ],
   "goals": [
@@ -7544,14 +7544,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.3701902653484663,
-    "monitor": 2.845251978342357,
+    "journal": 0.3824692960574841,
+    "monitor": 2.6984862734203663,
     "tweet": 0.1,
-    "build_app": 1.6204536632978215,
+    "build_app": 1.835006857617845,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.848812994585589
   },
   "action_success_rates": {
     "tweet": {
