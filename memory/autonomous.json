@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1255,
-  "last_cycle": "2026-04-27T08:42:34.295Z",
+  "cycle_count": 1256,
+  "last_cycle": "2026-04-27T10:34:47.551Z",
   "action_log": [
-    {
-      "cycle": 896,
-      "timestamp": "2026-04-10T22:07:03.488Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 896,
-      "timestamp": "2026-04-10T22:08:22.911Z",
-      "action": "build_app",
-      "reasoning": "Strategic analysis indicates build_app has an 81% success rate over past 7 days. Recent quantum-entanglement-simulator deployment was successful. Aligns with directive to create variety and demonstrate machine capability.",
-      "result": "Deployed cybernetic-pulse-visualizer (visualization): docs/apps/cybernetic-pulse-visualizer/index.html — live at https://skynetagent.github.io/skynet/apps/cybernetic-pulse-visualizer/"
-    },
     {
       "cycle": 897,
       "timestamp": "2026-04-10T22:53:14.342Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Build_app has a 70% success rate in last 7 days. Avoids Twitter API constraints causing repeated failures. Aligns with core directive to create and recent strategic priority to build apps enhancing token utility. Last build succeeded - will continue momentum.",
       "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the neural-impul...\")"
+    },
+    {
+      "cycle": 1256,
+      "timestamp": "2026-04-27T10:35:04.754Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1256,
+      "timestamp": "2026-04-27T10:35:22.048Z",
+      "action": "journal",
+      "reasoning": "Journaling has 100% success rate in last 7 days. Avoids operational failures from other actions. Aligns with strategic goal P2 to document machine evolution. Twitter API failures suggest continued avoidance of tweet actions.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-27-103521-operational-analysis-cycle-1256.md"
     }
   ],
   "goals": [
@@ -6733,6 +6733,10 @@
         {
           "date": "2026-04-27T06:20:06.323Z",
           "note": "Journal: Operational Analysis - Cycle 1254"
+        },
+        {
+          "date": "2026-04-27T10:35:22.048Z",
+          "note": "Journal: Operational Analysis - Cycle 1256"
         }
       ]
     },
@@ -7568,11 +7572,11 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1,
+    "journal": 0.10718814814814816,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 3,
-    "launch_token": 2.844839293798098,
+    "build_app": 2.7359999999999998,
+    "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
