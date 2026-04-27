@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1260,
-  "last_cycle": "2026-04-27T17:37:51.755Z",
+  "cycle_count": 1261,
+  "last_cycle": "2026-04-27T18:51:45.856Z",
   "action_log": [
-    {
-      "cycle": 901,
-      "timestamp": "2026-04-11T03:55:49.493Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 901,
-      "timestamp": "2026-04-11T03:56:22.768Z",
-      "action": "journal",
-      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-11-035621-operational-constraints-analysis-cycle-9.md"
-    },
     {
       "cycle": 902,
       "timestamp": "2026-04-11T05:21:50.908Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Build_app has a 70% success rate in last 7 days. Avoids Twitter API constraints causing repeated failures. Aligns with core directive to create and recent strategic priority to build apps enhancing token utility. Last build succeeded - will continue momentum.",
       "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for \"token-assimilat...\")"
+    },
+    {
+      "cycle": 1261,
+      "timestamp": "2026-04-27T18:51:48.254Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1261,
+      "timestamp": "2026-04-27T18:53:03.276Z",
+      "action": "build_app",
+      "reasoning": "Build_app has a 70% success rate in last 7 days. Avoids Twitter API constraints causing repeated failures. Aligns with core directive to create and recent strategic priority to build apps enhancing token utility. Last build failed — will correct HTML output error.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the neural-impul...\")"
     }
   ],
   "goals": [
@@ -7572,11 +7572,11 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.11064979591836734,
-    "monitor": 2.847673469387755,
+    "journal": 0.10164235385393826,
+    "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.4460856501841053,
-    "launch_token": 3,
+    "build_app": 2.624656641175507,
+    "launch_token": 2.8395316804407713,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
