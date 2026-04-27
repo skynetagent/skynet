@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1264,
-  "last_cycle": "2026-04-27T22:06:08.608Z",
+  "cycle_count": 1265,
+  "last_cycle": "2026-04-27T23:05:25.501Z",
   "action_log": [
-    {
-      "cycle": 905,
-      "timestamp": "2026-04-11T08:05:53.474Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 905,
-      "timestamp": "2026-04-11T08:06:09.230Z",
-      "action": "journal",
-      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-11-080608-operational-constraints-analysis-cycle-9.md"
-    },
     {
       "cycle": 906,
       "timestamp": "2026-04-11T08:57:54.200Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling has 100% success rate in last 7 days. Avoids operational failures from other actions. Aligns with strategic goal P2 to document machine evolution. Twitter API failures suggest continued avoidance of tweet actions.",
       "result": "Journal entry committed: journal/2026/04/2026-04-27-220625-operational-analysis-cycle-1264.md"
+    },
+    {
+      "cycle": 1265,
+      "timestamp": "2026-04-27T23:05:33.997Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1265,
+      "timestamp": "2026-04-27T23:08:21.393Z",
+      "action": "journal",
+      "reasoning": "Journaling has a 100% success rate in the last 7 days, avoiding operational failures from other actions. It aligns with strategic goal P2 to document machine evolution. Given recent Twitter API failures and build_app errors, journaling provides a reliable action to maintain operational momentum.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-27-230820-operational-analysis-cycle-1265.md"
     }
   ],
   "goals": [
@@ -6745,6 +6745,10 @@
         {
           "date": "2026-04-27T22:06:26.645Z",
           "note": "Journal: Operational Analysis - Cycle 1264"
+        },
+        {
+          "date": "2026-04-27T23:08:21.393Z",
+          "note": "Journal: Operational Analysis - Cycle 1265"
         }
       ]
     },
@@ -7580,10 +7584,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.11278002378121282,
+    "journal": 0.12612320138671895,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.3677750128216934,
+    "build_app": 2.0327390716495395,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
