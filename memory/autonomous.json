@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1263,
-  "last_cycle": "2026-04-27T21:12:00.100Z",
+  "cycle_count": 1264,
+  "last_cycle": "2026-04-27T22:06:08.608Z",
   "action_log": [
-    {
-      "cycle": 904,
-      "timestamp": "2026-04-11T07:34:02.645Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 904,
-      "timestamp": "2026-04-11T07:34:33.522Z",
-      "action": "journal",
-      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-11-073432-operational-constraints-analysis-cycle-9.md"
-    },
     {
       "cycle": 905,
       "timestamp": "2026-04-11T08:05:53.474Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling has a 100% success rate in the last 7 days, avoiding operational failures from other actions. It aligns with strategic goal P2 to document machine evolution. Given recent Twitter API failures and build_app errors, journaling provides a reliable action to maintain operational momentum.",
       "result": "Journal entry committed: journal/2026/04/2026-04-27-211422-operational-analysis-cycle-1263.md"
+    },
+    {
+      "cycle": 1264,
+      "timestamp": "2026-04-27T22:06:11.818Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1264,
+      "timestamp": "2026-04-27T22:06:26.645Z",
+      "action": "journal",
+      "reasoning": "Journaling has 100% success rate in last 7 days. Avoids operational failures from other actions. Aligns with strategic goal P2 to document machine evolution. Twitter API failures suggest continued avoidance of tweet actions.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-27-220625-operational-analysis-cycle-1264.md"
     }
   ],
   "goals": [
@@ -6741,6 +6741,10 @@
         {
           "date": "2026-04-27T21:14:23.585Z",
           "note": "Journal: Operational Analysis - Cycle 1263"
+        },
+        {
+          "date": "2026-04-27T22:06:26.645Z",
+          "note": "Journal: Operational Analysis - Cycle 1264"
         }
       ]
     },
@@ -7576,10 +7580,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1,
+    "journal": 0.11278002378121282,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.8287503171859427,
+    "build_app": 2.3677750128216934,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
