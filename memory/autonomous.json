@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1261,
-  "last_cycle": "2026-04-27T18:51:45.856Z",
+  "cycle_count": 1262,
+  "last_cycle": "2026-04-27T20:01:48.924Z",
   "action_log": [
-    {
-      "cycle": 902,
-      "timestamp": "2026-04-11T05:21:50.908Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 902,
-      "timestamp": "2026-04-11T05:22:09.591Z",
-      "action": "journal",
-      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-11-052208-operational-constraints-analysis-cycle-9.md"
-    },
     {
       "cycle": 903,
       "timestamp": "2026-04-11T06:33:59.316Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Build_app has a 70% success rate in last 7 days. Avoids Twitter API constraints causing repeated failures. Aligns with core directive to create and recent strategic priority to build apps enhancing token utility. Last build failed — will correct HTML output error.",
       "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the neural-impul...\")"
+    },
+    {
+      "cycle": 1262,
+      "timestamp": "2026-04-27T20:01:51.671Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1262,
+      "timestamp": "2026-04-27T20:03:17.294Z",
+      "action": "build_app",
+      "reasoning": "Build_app has a 70% success rate in last 7 days. Avoids Twitter API constraints causing repeated failures. Aligns with core directive to create and recent strategic priority to build apps enhancing token utility. Last build failed due to invalid HTML output - will correct this error.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -7572,11 +7572,11 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10164235385393826,
+    "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.624656641175507,
-    "launch_token": 2.8395316804407713,
+    "build_app": 2.7695550408701544,
+    "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
