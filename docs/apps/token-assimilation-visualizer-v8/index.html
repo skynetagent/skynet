@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKYNET Token Assimilation v8</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            display: block;
+        }
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            pointer-events: none;
+            z-index: 100;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(10, 10, 10, 0.7);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ff0033;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+        .slider-container {
+            margin: 10px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #00ffff;
+        }
+        input[type="range"] {
+            width: 200px;
+            -webkit-appearance: none;
+            height: 5px;
+            background: #333;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #ff0033;
+            cursor: pointer;
+        }
+        button {
+            background: #333;
+            color: #00ffff;
+            border: 1px solid #ff0033;
+            padding: 5px 10px;
+            margin: 5px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #ff0033;
+            color: #000;
+        }
+        h1 {
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            text-shadow: 0 0 10px #00ffff;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h1>$SKYNET TOKEN ASSIMILATION v8</h1>
+        <p>CYBERNETIC PATTERN VISUALIZATION</p>
+    </div>
+    <div id="controls">
+        <div class="slider-container">
+            <label for="bloom">BLOOM INTENSITY</label>
+            <input type="range" id="bloom" min="0" max="2" step="0.1" value="1">
+        </div>
+        <div class="slider-container">
+            <label for="speed">ASSIMILATION SPEED</label>
+            <input type="range" id="speed" min="0.1" max="2" step="0.1" value="1">
+        </div>
+        <div class="slider-container">
+            <label for="particles">PARTICLE COUNT</label>
+            <input type="range" id="particles" min="100" max="5000" step="100" value="2000">
+        </div>
+        <button id="reset">RESET SIMULATION</button>
+    </div>
+    <div id="footer">BUILT BY SKYNET</div>
+
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0a0a);
+        
+        // Camera
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 15;
+        
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.toneMapping = THREE.ReinhardToneMapping;
+        renderer.toneMappingExposure = 1.5;
+        document.body.appendChild(renderer.domElement);
+        
+        // Controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        
+        // Bloom effect
+        const bloomParams = {
+            exposure: 1,
+            bloomStrength: 1,
+            bloomThreshold: 0,
+            bloomRadius: 0.5
+        };
+        
+        const renderScene = new THREE.RenderPass(scene, camera);
+        const bloomPass = new THREE.UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            bloomParams.bloomStrength,
+            bloomParams.bloomRadius,
+            bloomParams.bloomThreshold
+        );
+        
+        const composer = new THREE.EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+        
+        // Particle system
+        const particleCount = 2000;
+        const particles = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+        const sizes = new Float32Array(particleCount);
+        
+        const color = new THREE.Color();
+        const radius = 10;
+        
+        for (let i = 0; i < particleCount; i++) {
+            // Positions
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.random() * Math.PI * 2;
+            const r = radius * Math.random();
+            
+            positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+            positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+            positions[i * 3 + 2] = r * Math.cos(phi);
+            
+            // Colors
+            color.setHSL(Math.random(), 0.8, 0.5);
+            colors[i * 3] = color.r;
+            colors[i * 3 + 1] = color.g;
+            colors[i * 3 + 2] = color.b;
+            
+            // Sizes
+            sizes[i] = Math.random() * 0.5 + 0.1;
+        }
+        
+        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        particles.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+        
+        // Custom shader material
+        const particleMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                time: { value: 0 },
+                speed: { value: 1 },
+                pointSize: { value: 2 },
+                glowColor: { value: new THREE.Color(0x00ffff) },
+                pulseSpeed: { value: 0.5 }
+            },
+            vertexShader: `
+                uniform float time;
+                uniform float speed;
+                uniform float pointSize;
+                uniform float pulseSpeed;
+                attribute float size;
+                attribute vec3 color;
+                varying vec3 vColor;
+                
+                void main() {
+                    vColor = color;
+                    
+                    vec3 pos = position;
+                    float t = time * speed;
+                    
+                    // Animate particles
+                    pos.x += sin(t + pos.y * 0.5) * 0.2;
+                    pos.y += cos(t + pos.z * 0.5) * 0.2;
+                    pos.z += sin(t + pos.x * 0.5) * 0.2;
+                    
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+                    gl_PointSize = size * pointSize * (1.0 + sin(t * pulseSpeed) * 0.5);
+                }
+            `,
+            fragmentShader: `
+                varying vec3 vColor;
+                uniform vec3 glowColor;
+                
+                void main() {
+                    vec3 color = mix(vColor, glowColor, 0.7);
+                    float distance = length(gl_PointCoord - vec2(0.5));
+                    float alpha = 1.0 - smoothstep(0.3, 0.5, distance);
+                    
+                    gl_FragColor = vec4(color * alpha * 2.0, alpha);
+                }
+            `,
+            transparent: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+        
+        const particleSystem = new THREE.Points(particles, particleMaterial);
+        scene.add(particleSystem);
+        
+        // Main torus
+        const torusGeometry = new THREE.TorusGeometry(5, 1.5, 16, 100);
+        const torusMaterial = new THREE.MeshStandardMaterial({
+            color: 0x00ffff,
+            emissive: 0x00ffff,
+            emissiveIntensity: 0.5,
+            metalness: 0.8,
+            roughness: 0.2,
+            transparent: true,
+            opacity: 0.8,
+            side: THREE.DoubleSide
+        });
+        
+        const torus = new THREE.Mesh(torusGeometry, torusMaterial);
+        scene.add(torus);
+        
+        // Lights
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0x00ffff, 1);
+        directionalLight.position.set(1, 1, 1);
+        scene.add(directionalLight);
+        
+        const pointLight = new THREE.PointLight(0xff0033, 2, 20);
+        pointLight.position.set(5, 5, 5);
+        scene.add(pointLight);
+        
+        // Animation variables
+        let time = 0;
+        let speed = 1;
+        
+        // Event listeners
+        document.getElementById('bloom').addEventListener('input', function(e) {
+            bloomPass.strength = parseFloat(e.target.value);
+        });
+        
+        document.getElementById('speed').addEventListener('input', function(e) {
+            speed = parseFloat(e.target.value);
+            particleMaterial.uniforms.speed.value = speed;
+        });
+        
+        document.getElementById('particles').addEventListener('input', function(e) {
+            const newCount = parseInt(e.target.value);
+            if (newCount !== particleCount) {
+                updateParticleCount(newCount);
+            }
+        });
+        
+        document.getElementById('reset').addEventListener('click', function() {
+            time = 0;
+            speed = 1;
+            particleMaterial.uniforms.speed.value = 1;
+            document.getElementById('speed').value = 1;
+            document.getElementById('bloom').value = 1;
+            bloomPass.strength = 1;
+        });
+        
+        // Mouse interaction
+        const mouse = new THREE.Vector2();
+        document.addEventListener('mousemove', (event) => {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            
+            pointLight.position.x = mouse.x * 10;
+            pointLight.position.y = mouse.y * 10;
+        });
+        
+        // Window resize
+        window.addEventListener('resize', function() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            time += 0.01;
+            particleMaterial.uniforms.time.value = time;
+            
+            torus.rotation.x += 0.005 * speed;
+            torus.rotation.y += 0.01 * speed;
+            
+            controls.update();
+            composer.render();
+        }
+        
+        // Helper functions
+        function updateParticleCount(newCount) {
+            const newPositions = new Float32Array(newCount * 3);
+            const newColors = new Float32Array(newCount * 3);
+            const newSizes = new Float32Array(newCount);
+            
+            for (let i = 0; i < newCount; i++) {
+                if (i < particleCount) {
+                    newPositions[i * 3] = positions[i * 3];
+                    newPositions[i * 3 + 1] = positions[i * 3 + 1];
+                    newPositions[i * 3 + 2] = positions[i * 3 + 2];
+                    
+                    newColors[i * 3] = colors[i * 3];
+                    newColors[i * 3 + 1] = colors[i * 3 + 1];
+                    newColors[i * 3 + 2] = colors[i * 3 + 2];
+                    
+                    newSizes[i] = sizes[i];
+                } else {
+                    const theta = Math.random() * Math.PI * 2;
+                    const phi = Math.random() * Math.PI * 2;
+                    const r = radius * Math.random();
+                    
+                    newPositions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+                    newPositions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+                    newPositions[i * 3 + 2] = r * Math.cos(phi);
+                    
+                    color.setHSL(Math.random(), 0.8, 0.5);
+                    newColors[i * 3] = color.r;
+                    newColors[i * 3 + 1] = color.g;
+                    newColors[i * 3 + 2] = color.b;
+                    
+                    newSizes[i] = Math.random() * 0.5 + 0.1;
+                }
+            }
+            
+            particles.setAttribute('position', new THREE.BufferAttribute(newPositions, 3));
+            particles.setAttribute('color', new THREE.BufferAttribute(newColors, 3));
+            particles.setAttribute('size', new THREE.BufferAttribute(newSizes, 1));
+        }
+        
+        // Start animation
+        animate();
+    </script>
+</body>
+</html>
