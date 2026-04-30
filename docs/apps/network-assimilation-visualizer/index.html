@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Assimilation Visualizer | Skynet</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            display: block;
+        }
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            pointer-events: none;
+            text-shadow: 0 0 5px #00ffff;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(10, 10, 10, 0.7);
+            padding: 10px;
+            border: 1px solid #ff0033;
+            border-radius: 5px;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #ff0033;
+            text-shadow: 0 0 2px #ff0033;
+        }
+        input[type="range"] {
+            width: 200px;
+            -webkit-appearance: none;
+            height: 5px;
+            background: #333;
+            outline: none;
+            margin: 10px 0;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #00ffff;
+            cursor: pointer;
+            box-shadow: 0 0 5px #00ffff;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h1>NETWORK ASSIMILATION VISUALIZER</h1>
+        <p>Nodes assimilated: <span id="nodeCount">0</span></p>
+    </div>
+    <div id="controls">
+        <label for="assimilationRate">Assimilation Rate</label>
+        <input type="range" id="assimilationRate" min="0.1" max="5" step="0.1" value="1">
+        <label for="bloomIntensity">Bloom Intensity</label>
+        <input type="range" id="bloomIntensity" min="0" max="3" step="0.1" value="1.5">
+    </div>
+    <div id="footer">BUILT BY SKYNET</div>
+
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0a0a);
+        
+        // Camera
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 30;
+        
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.body.appendChild(renderer.domElement);
+        
+        // Controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        
+        // Bloom effect
+        const bloomParams = {
+            exposure: 1,
+            bloomStrength: 1.5,
+            bloomThreshold: 0,
+            bloomRadius: 0.5
+        };
+        
+        const renderScene = new THREE.RenderPass(scene, camera);
+        const bloomPass = new THREE.UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            bloomParams.bloomStrength,
+            bloomParams.bloomRadius,
+            bloomParams.bloomThreshold
+        );
+        
+        const composer = new THREE.EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+        
+        // Custom shader material for nodes
+        const nodeVertexShader = `
+            uniform float time;
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            
+            void main() {
+                vUv = uv;
+                vPosition = position;
+                
+                float pulse = sin(time * 2.0 + position.x * 10.0) * 0.1;
+                vec3 newPosition = position + normal * pulse;
+                
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+            }
+        `;
+        
+        const nodeFragmentShader = `
+            uniform float time;
+            uniform float assimilation;
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            
+            void main() {
+                float glow = sin(time * 3.0 + vPosition.x * 10.0) * 0.5 + 0.5;
+                vec3 color = mix(vec3(0.8, 0.0, 0.1), vec3(0.0, 1.0, 1.0), assimilation);
+                
+                float distanceToCenter = distance(vUv, vec2(0.5));
+                float alpha = smoothstep(0.5, 0.3, distanceToCenter);
+                
+                gl_FragColor = vec4(color * glow, alpha);
+            }
+        `;
+        
+        // Create network nodes
+        const nodeCount = 500;
+        const nodes = [];
+        const nodeGeometry = new THREE.IcosahedronGeometry(0.5, 3);
+        
+        for (let i = 0; i < nodeCount; i++) {
+            const material = new THREE.ShaderMaterial({
+                uniforms: {
+                    time: { value: 0 },
+                    assimilation: { value: 0 }
+                },
+                vertexShader: nodeVertexShader,
+                fragmentShader: nodeFragmentShader,
+                transparent: true,
+                blending: THREE.AdditiveBlending
+            });
+            
+            const node = new THREE.Mesh(nodeGeometry, material);
+            
+            // Random position in a sphere
+            const radius = 15 * Math.pow(Math.random(), 1/3);
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+            
+            node.position.x = radius * Math.sin(phi) * Math.cos(theta);
+            node.position.y = radius * Math.sin(phi) * Math.sin(theta);
+            node.position.z = radius * Math.cos(phi);
+            
+            node.userData = {
+                assimilated: false,
+                targetAssimilation: 0,
+                speed: 0.1 + Math.random() * 0.3
+            };
+            
+            nodes.push(node);
+            scene.add(node);
+        }
+        
+        // Create connections
+        const connectionMaterial = new THREE.LineBasicMaterial({ 
+            color: 0x00ffff,
+            transparent: true,
+            opacity: 0.3
+        });
+        
+        const connections = [];
+        const maxConnections = 1000;
+        
+        for (let i = 0; i < maxConnections; i++) {
+            const a = Math.floor(Math.random() * nodeCount);
+            let b = Math.floor(Math.random() * nodeCount);
+            while (b === a) b = Math.floor(Math.random() * nodeCount);
+            
+            const geometry = new THREE.BufferGeometry().setFromPoints([
+                nodes[a].position,
+                nodes[b].position
+            ]);
+            
+            const line = new THREE.Line(geometry, connectionMaterial);
+            line.userData = {
+                nodeA: a,
+                nodeB: b,
+                active: false
+            };
+            
+            connections.push(line);
+            scene.add(line);
+        }
+        
+        // Create central core
+        const coreGeometry = new THREE.IcosahedronGeometry(3, 4);
+        const coreMaterial = new THREE.MeshPhysicalMaterial({
+            color: 0xff0033,
+            emissive: 0xff0033,
+            emissiveIntensity: 0.5,
+            metalness: 0.8,
+            roughness: 0.2,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.1
+        });
+        const core = new THREE.Mesh(coreGeometry, coreMaterial);
+        scene.add(core);
+        
+        // Animation
+        let time = 0;
+        let assimilatedCount = 0;
+        const assimilationRate = { value: 1 };
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            time += 0.01;
+            controls.update();
+            
+            // Update nodes
+            nodes.forEach((node, i) => {
+                if (!node.userData.assimilated && Math.random() < 0.001 * assimilationRate.value) {
+                    node.userData.targetAssimilation = 1;
+                    node.userData.assimilated = true;
+                    assimilatedCount++;
+                    document.getElementById('nodeCount').textContent = assimilatedCount;
+                }
+                
+                if (node.userData.assimilation < node.userData.targetAssimilation) {
+                    node.userData.assimilation += 0.01 * node.userData.speed;
+                    node.material.uniforms.assimilation.value = node.userData.assimilation;
+                }
+                
+                node.material.uniforms.time.value = time;
+                
+                // Pulsing effect for assimilated nodes
+                if (node.userData.assimilated) {
+                    const distanceToCore = node.position.length();
+                    const pulse = Math.sin(time * 3 + i * 0.1) * 0.2 + 1;
+                    node.scale.set(pulse, pulse, pulse);
+                    
+                    // Attract to core
+                    node.position.lerp(new THREE.Vector3(), 0.0005 * node.userData.assimilation);
+                }
+            });
+            
+            // Update connections
+            connections.forEach(conn => {
+                const nodeA = nodes[conn.userData.nodeA];
+                const nodeB = nodes[conn.userData.nodeB];
+                
+                if (nodeA.userData.assimilated && nodeB.userData.assimilated) {
+                    if (!conn.userData.active) {
+                        conn.material.color.setHex(0xff0033);
+                        conn.material.opacity = 0.6;
+                        conn.userData.active = true;
+                    }
+                    
+                    // Update connection geometry
+                    const positions = conn.geometry.attributes.position;
+                    positions.setXYZ(0, nodeA.position.x, nodeA.position.y, nodeA.position.z);
+                    positions.setXYZ(1, nodeB.position.x, nodeB.position.y, nodeB.position.z);
+                    positions.needsUpdate = true;
+                }
+            });
+            
+            // Rotate core
+            core.rotation.x = time * 0.1;
+            core.rotation.y = time * 0.2;
+            
+            // Render with bloom
+            composer.render();
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Controls
+        document.getElementById('assimilationRate').addEventListener('input', (e) => {
+            assimilationRate.value = parseFloat(e.target.value);
+        });
+        
+        document.getElementById('bloomIntensity').addEventListener('input', (e) => {
+            bloomPass.strength = parseFloat(e.target.value);
+        });
+        
+        // Start animation
+        animate();
+    </script>
+</body>
+</html>
