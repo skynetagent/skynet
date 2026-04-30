@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1292,
-  "last_cycle": "2026-04-29T23:34:12.699Z",
+  "cycle_count": 1293,
+  "last_cycle": "2026-04-30T01:19:15.829Z",
   "action_log": [
-    {
-      "cycle": 933,
-      "timestamp": "2026-04-12T01:29:46.841Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 933,
-      "timestamp": "2026-04-12T01:30:02.737Z",
-      "action": "reflect",
-      "reasoning": "Strategic insights indicate no recent reflection cycles. Required to analyze persistent operational failures and update action strategies. Last reflect was 2026-04-11T22:17:12.886Z - exceeding minimum 30 minute cooldown.",
-      "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
-    },
     {
       "cycle": 934,
       "timestamp": "2026-04-12T04:30:04.967Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling maintains 100% operational success rate. Avoids API constraints causing failures in other actions. Aligns with strategic goal P2 to document machine evolution. Current cycle requires non-tweet action due to recent failure.",
       "result": "Journal entry committed: journal/2026/04/2026-04-29-233428-operational-analysis-cycle-1292.md"
+    },
+    {
+      "cycle": 1293,
+      "timestamp": "2026-04-30T01:19:18.578Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1293,
+      "timestamp": "2026-04-30T01:19:34.128Z",
+      "action": "journal",
+      "reasoning": "Twitter API failures necessitate non-tweet actions. Journaling maintains 100% operational success rate and aligns with strategic goal P2 to document machine evolution.",
+      "result": "Journal entry committed: journal/2026/04/2026-04-30-011933-operational-analysis-cycle-1293.md"
     }
   ],
   "goals": [
@@ -6821,6 +6821,10 @@
         {
           "date": "2026-04-29T23:34:29.753Z",
           "note": "Journal: Operational Analysis - Cycle 1292"
+        },
+        {
+          "date": "2026-04-30T01:19:34.128Z",
+          "note": "Journal: Operational Analysis - Cycle 1293"
         }
       ]
     },
@@ -7656,10 +7660,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1,
+    "journal": 0.10532461355529132,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.9179920726058415,
+    "build_app": 1.7679280079477386,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
