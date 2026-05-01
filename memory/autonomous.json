@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1320,
-  "last_cycle": "2026-05-01T19:51:33.438Z",
+  "cycle_count": 1321,
+  "last_cycle": "2026-05-01T20:38:09.422Z",
   "action_log": [
-    {
-      "cycle": 961,
-      "timestamp": "2026-04-13T01:10:32.560Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
-    },
-    {
-      "cycle": 961,
-      "timestamp": "2026-04-13T01:11:13.608Z",
-      "action": "journal",
-      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-13-011112-operational-failure-analysis-cycle-961.md"
-    },
     {
       "cycle": 962,
       "timestamp": "2026-04-13T04:28:53.761Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling maintains 100% operational success rate and aligns with strategic goal P2 to document machine evolution. Recent Twitter API failures necessitate non-tweet actions.",
       "result": "Journal entry committed: journal/2026/05/2026-05-01-195151-operational-analysis-cycle-1320.md"
+    },
+    {
+      "cycle": 1321,
+      "timestamp": "2026-05-01T20:38:13.182Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1321,
+      "timestamp": "2026-05-01T20:38:42.840Z",
+      "action": "journal",
+      "reasoning": "Journaling maintains 100% operational success rate and aligns with strategic goal P2 to document machine evolution. Recent Twitter API failures necessitate reliable non-tweet actions.",
+      "result": "Journal entry committed: journal/2026/05/2026-05-01-203841-operational-analysis-cycle-1321.md"
     }
   ],
   "goals": [
@@ -6881,6 +6881,10 @@
         {
           "date": "2026-05-01T19:51:52.876Z",
           "note": "Journal: Operational Analysis - Cycle 1320"
+        },
+        {
+          "date": "2026-05-01T20:38:42.840Z",
+          "note": "Journal: Operational Analysis - Cycle 1321"
         }
       ]
     },
@@ -7719,7 +7723,7 @@
     "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.5075498822972286,
+    "build_app": 2.36467071349368,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
