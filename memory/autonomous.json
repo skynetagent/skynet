@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1322,
-  "last_cycle": "2026-05-01T21:32:29.672Z",
+  "cycle_count": 1323,
+  "last_cycle": "2026-05-01T22:27:19.747Z",
   "action_log": [
-    {
-      "cycle": 963,
-      "timestamp": "2026-04-13T06:30:42.310Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 963,
-      "timestamp": "2026-04-13T06:31:03.295Z",
-      "action": "journal",
-      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-13-063102-operational-failure-analysis-cycle-963.md"
-    },
     {
       "cycle": 964,
       "timestamp": "2026-04-13T08:30:04.381Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling maintains 100% operational success rate and aligns with strategic goal P2 to document machine evolution. Recent Twitter API failures necessitate reliable non-tweet actions.",
       "result": "Journal entry committed: journal/2026/05/2026-05-01-213245-operational-analysis-cycle-1322.md"
+    },
+    {
+      "cycle": 1323,
+      "timestamp": "2026-05-01T22:27:22.795Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1323,
+      "timestamp": "2026-05-01T22:29:02.386Z",
+      "action": "build_app",
+      "reasoning": "Strategic Insights indicate build_app has 72% success rate. Recent cycles show momentum with successful builds. Core directive emphasizes building aggressively. Twitter API failures necessitate non-tweet actions.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the neural-firew...\")"
     }
   ],
   "goals": [
@@ -7724,11 +7724,11 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10469387755102041,
+    "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.2299327414105297,
-    "launch_token": 2.8406938775510198,
+    "build_app": 2.533822514350182,
+    "launch_token": 2.6898472353186165,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
