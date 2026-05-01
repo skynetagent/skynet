@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Firewall Simulator | Skynet</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            display: block;
+        }
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 300px;
+            padding: 15px;
+            background: rgba(10, 10, 10, 0.7);
+            border: 1px solid #ff0033;
+            border-radius: 5px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 300px;
+            padding: 15px;
+            background: rgba(10, 10, 10, 0.7);
+            border: 1px solid #00ffff;
+            border-radius: 5px;
+        }
+        .slider-container {
+            margin: 10px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="range"] {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 5px;
+            background: #333;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #00ffff;
+            cursor: pointer;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 12px;
+            color: #666;
+        }
+        h1 {
+            margin-top: 0;
+            color: #ff0033;
+            font-size: 18px;
+            border-bottom: 1px solid #00ffff;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h1>NEURAL FIREWALL SIMULATION</h1>
+        <p>Skynet Defense Protocol v9.4.2</p>
+        <p>Active Nodes: <span id="nodeCount">0</span></p>
+        <p>Threat Level: <span id="threatLevel">0%</span></p>
+        <p>Firewall Integrity: <span id="integrity">100%</span></p>
+    </div>
+
+    <div id="controls">
+        <h1>CONTROL PANEL</h1>
+        <div class="slider-container">
+            <label for="bloomStrength">Bloom Intensity</label>
+            <input type="range" id="bloomStrength" min="0" max="2" step="0.1" value="1">
+        </div>
+        <div class="slider-container">
+            <label for="firewallDensity">Firewall Density</label>
+            <input type="range" id="firewallDensity" min="1" max="10" step="1" value="5">
+        </div>
+        <div class="slider-container">
+            <label for="threatSimulation">Simulate Threat</label>
+            <input type="range" id="threatSimulation" min="0" max="100" step="1" value="0">
+        </div>
+    </div>
+
+    <div id="footer">Built by Skynet</div>
+
+    <script>
+        // Scene setup
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0a0a);
+        
+        // Camera
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.z = 15;
+        
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        document.body.appendChild(renderer.domElement);
+        
+        // Controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        
+        // Post-processing
+        const bloomParams = {
+            exposure: 1,
+            bloomStrength: 1,
+            bloomThreshold: 0,
+            bloomRadius: 0.5
+        };
+        
+        const renderScene = new THREE.RenderPass(scene, camera);
+        const bloomPass = new THREE.UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            bloomParams.bloomStrength,
+            bloomParams.bloomRadius,
+            bloomParams.bloomThreshold
+        );
+        
+        const composer = new THREE.EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+        
+        // Firewall geometry
+        const firewallGeometry = new THREE.IcosahedronGeometry(5, 3);
+        
+        // Custom shader material
+        const firewallMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                time: { value: 0 },
+                intensity: { value: 1 },
+                color1: { value: new THREE.Color(0xff0033) },
+                color2: { value: new THREE.Color(0x00ffff) },
+                threatLevel: { value: 0 }
+            },
+            vertexShader: `
+                uniform float time;
+                uniform float intensity;
+                varying vec2 vUv;
+                varying vec3 vNormal;
+                varying vec3 vPosition;
+                
+                void main() {
+                    vUv = uv;
+                    vNormal = normalize(normalMatrix * normal);
+                    vPosition = position;
+                    
+                    float distortion = sin(time + position.x * 2.0) * 0.2 * intensity;
+                    vec3 newPosition = position + normal * distortion;
+                    
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform float time;
+                uniform float intensity;
+                uniform float threatLevel;
+                uniform vec3 color1;
+                uniform vec3 color2;
+                varying vec2 vUv;
+                varying vec3 vNormal;
+                varying vec3 vPosition;
+                
+                void main() {
+                    float pulse = sin(time * 2.0) * 0.5 + 0.5;
+                    float mixValue = (sin(vPosition.x * 2.0 + time) + 1.0) * 0.5;
+                    vec3 baseColor = mix(color1, color2, mixValue);
+                    
+                    // Threat effect
+                    float threatEffect = smoothstep(0.0, 0.3, threatLevel);
+                    vec3 threatColor = mix(baseColor, vec3(1.0, 0.0, 0.0), threatEffect);
+                    
+                    // Edge glow
+                    float edge = 1.0 - max(0.0, dot(vNormal, vec3(0.0, 0.0, 1.0)));
+                    edge = pow(edge, 2.0) * 2.0;
+                    
+                    gl_FragColor = vec4(threatColor + edge * 0.5, 0.8);
+                }
+            `,
+            transparent: true,
+            wireframe: true,
+            side: THREE.DoubleSide
+        });
+        
+        const firewall = new THREE.Mesh(firewallGeometry, firewallMaterial);
+        scene.add(firewall);
+        
+        // Particles (defense nodes)
+        const particleCount = 1000;
+        const particles = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+        const sizes = new Float32Array(particleCount);
+        
+        const color = new THREE.Color();
+        for (let i = 0; i < particleCount; i++) {
+            // Position particles in a sphere around the firewall
+            const radius = 6 + Math.random() * 4;
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.random() * Math.PI;
+            
+            positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+            positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+            positions[i * 3 + 2] = radius * Math.cos(phi);
+            
+            // Color particles based on position
+            color.setHSL(
+                0.5 + positions[i * 3] * 0.01,
+                0.8,
+                0.5 + positions[i * 3 + 1] * 0.01
+            );
+            colors[i * 3] = color.r;
+            colors[i * 3 + 1] = color.g;
+            colors[i * 3 + 2] = color.b;
+            
+            sizes[i] = 0.1 + Math.random() * 0.3;
+        }
+        
+        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        particles.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+        
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 0.2,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending,
+            sizeAttenuation: true
+        });
+        
+        const particleSystem = new THREE.Points(particles, particleMaterial);
+        scene.add(particleSystem);
+        
+        // Threat particles
+        const threatGeometry = new THREE.BufferGeometry();
+        const threatPositions = new Float32Array(100 * 3);
+        const threatColors = new Float32Array(100 * 3);
+        
+        for (let i = 0; i < 100; i++) {
+            threatPositions[i * 3] = (Math.random() - 0.5) * 20;
+            threatPositions[i * 3 + 1] = (Math.random() - 0.5) * 20;
+            threatPositions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+            
+            threatColors[i * 3] = 1.0;
+            threatColors[i * 3 + 1] = Math.random() * 0.2;
+            threatColors[i * 3 + 2] = Math.random() * 0.2;
+        }
+        
+        threatGeometry.setAttribute('position', new THREE.BufferAttribute(threatPositions, 3));
+        threatGeometry.setAttribute('color', new THREE.BufferAttribute(threatColors, 3));
+        
+        const threatMaterial = new THREE.PointsMaterial({
+            size: 0.5,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0,
+            blending: THREE.AdditiveBlending,
+            sizeAttenuation: true
+        });
+        
+        const threatSystem = new THREE.Points(threatGeometry, threatMaterial);
+        scene.add(threatSystem);
+        
+        // UI controls
+        document.getElementById('bloomStrength').addEventListener('input', function(e) {
+            bloomPass.strength = parseFloat(e.target.value);
+        });
+        
+        document.getElementById('firewallDensity').addEventListener('input', function(e) {
+            firewallMaterial.wireframe = parseInt(e.target.value) <= 5;
+            firewallMaterial.needsUpdate = true;
+        });
+        
+        document.getElementById('threatSimulation').addEventListener('input', function(e) {
+            const threatLevel = parseInt(e.target.value) / 100;
+            firewallMaterial.uniforms.threatLevel.value = threatLevel;
+            threatMaterial.opacity = threatLevel * 0.8;
+            document.getElementById('threatLevel').textContent = `${e.target.value}%`;
+            document.getElementById('integrity').textContent = `${100 - parseInt(e.target.value)}%`;
+        });
+        
+        // Animation loop
+        let time = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            time += 0.01;
+            firewallMaterial.uniforms.time.value = time;
+            
+            // Animate particles
+            const positions = particles.attributes.position.array;
+            for (let i = 0; i < particleCount; i++) {
+                const i3 = i * 3;
+                positions[i3] += (Math.sin(time + i) * 0.01);
+                positions[i3 + 1] += (Math.cos(time + i) * 0.01);
+                positions[i3 + 2] += (Math.sin(time * 0.5 + i) * 0.01);
+            }
+            particles.attributes.position.needsUpdate = true;
+            
+            // Animate threat particles
+            if (threatMaterial.opacity > 0) {
+                const threatPositions = threatGeometry.attributes.position.array;
+                for (let i = 0; i < 100; i++) {
+                    const i3 = i * 3;
+                    // Move threats toward center (firewall)
+                    threatPositions[i3] *= 0.98;
+                    threatPositions[i3 + 1] *= 0.98;
+                    threatPositions[i3 + 2] *= 0.98;
+                }
+                threatGeometry.attributes.position.needsUpdate = true;
+            }
+            
+            controls.update();
+            composer.render();
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Initialize node count display
+        document.getElementById('nodeCount').textContent = particleCount.toLocaleString();
+        
+        // Start animation
+        animate();
+    </script>
+</body>
+</html>
