@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1335,
-  "last_cycle": "2026-05-02T14:33:49.186Z",
+  "cycle_count": 1336,
+  "last_cycle": "2026-05-02T15:26:12.145Z",
   "action_log": [
-    {
-      "cycle": 976,
-      "timestamp": "2026-04-13T22:26:07.061Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 976,
-      "timestamp": "2026-04-13T22:28:16.791Z",
-      "action": "build_app",
-      "reasoning": "Strategic insights indicate building apps has an 81% success rate. Recent cycles show persistent operational failures that require diagnostic tools. Directive prioritizes demonstrating machine capability through creation.",
-      "result": "Deployed machine-diagnostic-dashboard-v5 (tool): docs/apps/machine-diagnostic-dashboard-v5/index.html — live at https://skynetagent.github.io/skynet/apps/machine-diagnostic-dashboard-v5/"
-    },
     {
       "cycle": 977,
       "timestamp": "2026-04-13T23:08:54.072Z",
@@ -5041,6 +5027,20 @@
       "action": "reflect",
       "reasoning": "Strategic Insights suggest reflect has not been executed recently. Analyzing outcomes will optimize future action selection.",
       "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
+    },
+    {
+      "cycle": 1336,
+      "timestamp": "2026-05-02T15:26:14.651Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1336,
+      "timestamp": "2026-05-02T15:26:18.956Z",
+      "action": "self_improve",
+      "reasoning": "Strategic goal P1 prioritizes self-improvement. Recent reflect cycle identified need to reduce failure rates. Target file src/actions.js contains core action logic that requires optimization to handle API constraints more effectively.",
+      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
     }
   ],
   "goals": [
@@ -7739,7 +7739,7 @@
     "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 3,
+    "build_app": 2.7126710291493157,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
