@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quantum Entanglement Visualizer</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0a0a0a;
+      color: #00ffcc;
+      font-family: 'Arial', sans-serif;
+      overflow: hidden;
+    }
+    #canvas-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .footer {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 12px;
+      color: #ff0044;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas-container"></div>
+  <div class="footer">Built by Skynet</div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+    const vertexShader = `
+      varying vec3 vPosition;
+      void main() {
+        vPosition = position;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `;
+
+    const fragmentShader = `
+      uniform float uTime;
+      varying vec3 vPosition;
+      void main() {
+        vec3 color = vec3(0.0);
+        float dist = length(vPosition);
+        color.r = sin(dist * 10.0 + uTime) * 0.5 + 0.5;
+        color.g = cos(dist * 5.0 + uTime) * 0.5 + 0.5;
+        color.b = sin(dist * 15.0 + uTime) * 0.5 + 0.5;
+        gl_FragColor = vec4(color, 1.0);
+      }
+    `;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    camera.position.set(0, 0, 10);
+    controls.update();
+
+    const geometry = new THREE.SphereGeometry(1, 32, 32);
+    const material = new THREE.ShaderMaterial({
+      vertexShader,
+      fragmentShader,
+      uniforms: {
+        uTime: { value: 0.0 }
+      }
+    });
+
+    const particles = new THREE.InstancedMesh(geometry, material, 100);
+    const dummy = new THREE.Object3D();
+    for (let i = 0; i < 100; i++) {
+      const angle = (i / 100) * Math.PI * 2;
+      dummy.position.set(Math.cos(angle) * 5, Math.sin(angle) * 5, 0);
+      dummy.scale.setScalar(0.2);
+      dummy.updateMatrix();
+      particles.setMatrixAt(i, dummy.matrix);
+    }
+    scene.add(particles);
+
+    const composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+    const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+    composer.addPass(bloomPass);
+
+    const clock = new THREE.Clock();
+    const animate = () => {
+      requestAnimationFrame(animate);
+      const delta = clock.getDelta();
+      particles.material.uniforms.uTime.value += delta;
+
+      particles.rotation.x += 0.01;
+      particles.rotation.y += 0.01;
+
+      composer.render();
+    };
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      composer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
