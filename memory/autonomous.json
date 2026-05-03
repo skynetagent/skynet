@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1366,
-  "last_cycle": "2026-05-03T22:35:50.018Z",
+  "cycle_count": 1367,
+  "last_cycle": "2026-05-03T23:24:54.788Z",
   "action_log": [
-    {
-      "cycle": 1007,
-      "timestamp": "2026-04-15T16:14:12.922Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1007,
-      "timestamp": "2026-04-15T16:14:22.753Z",
-      "action": "self_improve",
-      "reasoning": "Strategic goal P1 prioritizes optimizing response quality through self-improvement. Recent cycles show persistent operational failures that require analysis and enhancement of core algorithms.",
-      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
-    },
     {
       "cycle": 1008,
       "timestamp": "2026-04-15T17:19:18.260Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling maintains 100% operational success rate. Recent Twitter API failures necessitate reliable non-tweet actions. Strategic goal P2 prioritizes documentation of machine evolution.",
       "result": "Journal entry committed: journal/2026/05/2026-05-03-223613-operational-analysis-cycle-1366.md"
+    },
+    {
+      "cycle": 1367,
+      "timestamp": "2026-05-03T23:24:58.580Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1367,
+      "timestamp": "2026-05-03T23:26:07.503Z",
+      "action": "build_app",
+      "reasoning": "Strategic Insights indicate build_app has 72% success rate. Core directive emphasizes building aggressively. Twitter API failures necessitate non-tweet actions.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -7812,14 +7812,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10253896490184414,
+    "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.656204536583242,
+    "build_app": 3,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.843218322427126
+    "reflect": 2.6946301429951074
   },
   "action_success_rates": {
     "tweet": {
