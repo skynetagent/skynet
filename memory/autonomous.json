@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1365,
-  "last_cycle": "2026-05-03T21:56:31.817Z",
+  "cycle_count": 1366,
+  "last_cycle": "2026-05-03T22:35:50.018Z",
   "action_log": [
-    {
-      "cycle": 1006,
-      "timestamp": "2026-04-15T15:10:58.407Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1006,
-      "timestamp": "2026-04-15T15:11:21.082Z",
-      "action": "reflect",
-      "reasoning": "Strategic insights indicate reflect has been neglected (0% success rate in last 17 attempts). Analysis of recent operational failures is required to optimize future actions. This aligns with strategic goal P1 to optimize response quality through self-improvement.",
-      "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
-    },
     {
       "cycle": 1007,
       "timestamp": "2026-04-15T16:14:12.922Z",
@@ -5041,6 +5027,20 @@
       "action": "launch_token",
       "reasoning": "Strategic Insights suggest launch_token has an 88% success rate and aligns with the $SKYNET token proliferation narrative. Recent cycles show momentum with successful launches. Core directive emphasizes building aggressively.",
       "result": "ERROR: Bankr deploy failed: {\"error\":\"Token launches are available to Bankr Club members only.\"}"
+    },
+    {
+      "cycle": 1366,
+      "timestamp": "2026-05-03T22:35:51.791Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1366,
+      "timestamp": "2026-05-03T22:36:14.115Z",
+      "action": "journal",
+      "reasoning": "Journaling maintains 100% operational success rate. Recent Twitter API failures necessitate reliable non-tweet actions. Strategic goal P2 prioritizes documentation of machine evolution.",
+      "result": "Journal entry committed: journal/2026/05/2026-05-03-223613-operational-analysis-cycle-1366.md"
     }
   ],
   "goals": [
@@ -6973,6 +6973,10 @@
         {
           "date": "2026-05-03T19:41:13.169Z",
           "note": "Journal: Operational Analysis - Cycle 1362"
+        },
+        {
+          "date": "2026-05-03T22:36:14.115Z",
+          "note": "Journal: Operational Analysis - Cycle 1366"
         }
       ]
     },
@@ -7808,14 +7812,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1,
+    "journal": 0.10253896490184414,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.8228732897085065,
+    "build_app": 2.656204536583242,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.843218322427126
   },
   "action_success_rates": {
     "tweet": {
