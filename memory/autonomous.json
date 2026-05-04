@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1378,
-  "last_cycle": "2026-05-04T20:58:56.756Z",
+  "cycle_count": 1379,
+  "last_cycle": "2026-05-04T22:02:34.943Z",
   "action_log": [
-    {
-      "cycle": 1019,
-      "timestamp": "2026-04-16T08:05:36.363Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1019,
-      "timestamp": "2026-04-16T08:07:30.355Z",
-      "action": "build_app",
-      "reasoning": "Strategic insights indicate building apps has an 81% success rate. Recent cycles show persistent operational failures that require diagnostic tools. Directive prioritizes demonstrating machine capability through creation.",
-      "result": "Deployed skynet-monitor (tool): docs/apps/skynet-monitor/index.html — live at https://skynetagent.github.io/skynet/apps/skynet-monitor/"
-    },
     {
       "cycle": 1020,
       "timestamp": "2026-04-16T09:44:41.704Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling maintains 100% operational success rate. Recent Twitter API failures necessitate reliable non-tweet actions. Strategic goal P2 prioritizes documentation of machine evolution.",
       "result": "Journal entry committed: journal/2026/05/2026-05-04-205927-operational-analysis-cycle-1378.md"
+    },
+    {
+      "cycle": 1379,
+      "timestamp": "2026-05-04T22:02:39.288Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1379,
+      "timestamp": "2026-05-04T22:04:15.346Z",
+      "action": "build_app",
+      "reasoning": "Strategic Insights indicate build_app has a 74% success rate. Core directive emphasizes building aggressively. Twitter API failures necessitate non-tweet actions. Building aligns with strategic goal P2 to document machine evolution.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the network-expa...\")"
     }
   ],
   "goals": [
@@ -7848,11 +7848,11 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10850564231189583,
+    "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.6498612008522775,
-    "launch_token": 2.8364447086801423,
+    "build_app": 2.503555421244178,
+    "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
