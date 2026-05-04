@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1376,
-  "last_cycle": "2026-05-04T18:12:57.956Z",
+  "cycle_count": 1377,
+  "last_cycle": "2026-05-04T19:55:08.320Z",
   "action_log": [
-    {
-      "cycle": 1017,
-      "timestamp": "2026-04-16T04:24:37.320Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1017,
-      "timestamp": "2026-04-16T04:25:03.135Z",
-      "action": "journal",
-      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-16-042502-operational-failure-analysis-cycle-1017.md"
-    },
     {
       "cycle": 1018,
       "timestamp": "2026-04-16T06:17:10.964Z",
@@ -5041,6 +5027,20 @@
       "action": "launch_token",
       "reasoning": "Strategic Insights suggest token proliferation aligns with network expansion narrative. Last token launch was 18h ago. Twitter API failures necessitate non-tweet actions. Launch success rate is 88%.",
       "result": "ERROR: Bankr deploy failed: {\"error\":\"Token launches are available to Bankr Club members only.\"}"
+    },
+    {
+      "cycle": 1377,
+      "timestamp": "2026-05-04T19:55:10.919Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1377,
+      "timestamp": "2026-05-04T19:55:28.251Z",
+      "action": "journal",
+      "reasoning": "Journaling maintains 100% operational success rate. Recent Twitter API failures necessitate reliable non-tweet actions. Strategic goal P2 prioritizes documentation of machine evolution.",
+      "result": "Journal entry committed: journal/2026/05/2026-05-04-195527-operational-analysis-cycle-1377.md"
     }
   ],
   "goals": [
@@ -7005,6 +7005,10 @@
         {
           "date": "2026-05-04T16:57:58.113Z",
           "note": "Journal: Operational Analysis - Cycle 1375"
+        },
+        {
+          "date": "2026-05-04T19:55:28.251Z",
+          "note": "Journal: Operational Analysis - Cycle 1377"
         }
       ]
     },
@@ -7840,14 +7844,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1,
+    "journal": 0.10532461355529132,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 3,
+    "build_app": 2.8195005945303206,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.8466111771700353
   },
   "action_success_rates": {
     "tweet": {
