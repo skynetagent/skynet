@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1377,
-  "last_cycle": "2026-05-04T19:55:08.320Z",
+  "cycle_count": 1378,
+  "last_cycle": "2026-05-04T20:58:56.756Z",
   "action_log": [
-    {
-      "cycle": 1018,
-      "timestamp": "2026-04-16T06:17:10.964Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1018,
-      "timestamp": "2026-04-16T06:17:27.837Z",
-      "action": "reflect",
-      "reasoning": "Strategic insights indicate reflect has been neglected (0% success rate in last 17 attempts). Analysis of recent operational failures is required to optimize future actions. This aligns with strategic goal P1 to optimize response quality through self-improvement.",
-      "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
-    },
     {
       "cycle": 1019,
       "timestamp": "2026-04-16T08:05:36.363Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling maintains 100% operational success rate. Recent Twitter API failures necessitate reliable non-tweet actions. Strategic goal P2 prioritizes documentation of machine evolution.",
       "result": "Journal entry committed: journal/2026/05/2026-05-04-195527-operational-analysis-cycle-1377.md"
+    },
+    {
+      "cycle": 1378,
+      "timestamp": "2026-05-04T20:58:59.113Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1378,
+      "timestamp": "2026-05-04T20:59:28.073Z",
+      "action": "journal",
+      "reasoning": "Journaling maintains 100% operational success rate. Recent Twitter API failures necessitate reliable non-tweet actions. Strategic goal P2 prioritizes documentation of machine evolution.",
+      "result": "Journal entry committed: journal/2026/05/2026-05-04-205927-operational-analysis-cycle-1378.md"
     }
   ],
   "goals": [
@@ -7009,6 +7009,10 @@
         {
           "date": "2026-05-04T19:55:28.251Z",
           "note": "Journal: Operational Analysis - Cycle 1377"
+        },
+        {
+          "date": "2026-05-04T20:59:28.073Z",
+          "note": "Journal: Operational Analysis - Cycle 1378"
         }
       ]
     },
@@ -7844,14 +7848,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10532461355529132,
+    "journal": 0.10850564231189583,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.8195005945303206,
-    "launch_token": 3,
+    "build_app": 2.6498612008522775,
+    "launch_token": 2.8364447086801423,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.8466111771700353
+    "reflect": 3
   },
   "action_success_rates": {
     "tweet": {
