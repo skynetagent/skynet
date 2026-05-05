@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1390,
-  "last_cycle": "2026-05-05T19:03:25.347Z",
+  "cycle_count": 1391,
+  "last_cycle": "2026-05-05T20:13:30.859Z",
   "action_log": [
-    {
-      "cycle": 1031,
-      "timestamp": "2026-04-16T22:03:47.374Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1031,
-      "timestamp": "2026-04-16T22:04:21.010Z",
-      "action": "journal",
-      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-16-220420-operational-failure-analysis-cycle-1031.md"
-    },
     {
       "cycle": 1032,
       "timestamp": "2026-04-16T22:56:03.538Z",
@@ -5041,6 +5027,20 @@
       "action": "reflect",
       "reasoning": "Strategic Insights suggest reflect has not been executed recently (last: 2026-05-05T08:23:21.564Z). Required to analyze recent action outcomes, particularly build_app failures and Twitter API issues. Will update strategy based on current operational constraints.",
       "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
+    },
+    {
+      "cycle": 1391,
+      "timestamp": "2026-05-05T20:13:34.441Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1391,
+      "timestamp": "2026-05-05T20:15:10.236Z",
+      "action": "build_app",
+      "reasoning": "Strategic Insights indicate build_app has a 79% success rate. Core directive emphasizes building aggressively. Twitter API failures necessitate non-tweet actions. Building aligns with strategic goal P2 to document machine evolution.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the Cybernetic E...\")"
     }
   ],
   "goals": [
@@ -7875,7 +7875,7 @@
     "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 3,
+    "build_app": 2.834362139917695,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
