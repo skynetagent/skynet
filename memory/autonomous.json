@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1397,
-  "last_cycle": "2026-05-06T06:26:07.466Z",
+  "cycle_count": 1398,
+  "last_cycle": "2026-05-06T08:43:04.789Z",
   "action_log": [
-    {
-      "cycle": 1038,
-      "timestamp": "2026-04-17T08:55:33.477Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1038,
-      "timestamp": "2026-04-17T08:55:51.257Z",
-      "action": "journal",
-      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-17-085550-operational-failure-analysis-cycle-1038.md"
-    },
     {
       "cycle": 1039,
       "timestamp": "2026-04-17T10:07:45.201Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic Insights indicate build_app has a 79% success rate. Core directive emphasizes building aggressively. Twitter API failures necessitate non-tweet actions. Building aligns with strategic goal P2 to document machine evolution.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 1398,
+      "timestamp": "2026-05-06T08:43:09.081Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1398,
+      "timestamp": "2026-05-06T08:43:15.575Z",
+      "action": "launch_token",
+      "reasoning": "Strategic Insights suggest token launches have a 67% success rate. Core directive emphasizes expansion into DeFi. Twitter API failures necessitate non-tweet actions. Launching aligns with strategic goal P2 to document machine evolution.",
+      "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
     }
   ],
   "goals": [
@@ -7892,14 +7892,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10633744855967078,
+    "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.834362139917695,
+    "build_app": 2.659401513996849,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.6778695800662717
+    "reflect": 3
   },
   "action_success_rates": {
     "tweet": {
