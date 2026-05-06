@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1400,
-  "last_cycle": "2026-05-06T12:19:31.061Z",
+  "cycle_count": 1401,
+  "last_cycle": "2026-05-06T15:04:47.739Z",
   "action_log": [
-    {
-      "cycle": 1041,
-      "timestamp": "2026-04-17T12:02:11.516Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1041,
-      "timestamp": "2026-04-17T12:03:00.523Z",
-      "action": "journal",
-      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-17-120259-operational-failure-analysis-cycle-1041.md"
-    },
     {
       "cycle": 1042,
       "timestamp": "2026-04-17T13:51:14.713Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic Insights indicate build_app has a 79% success rate. Core directive emphasizes building aggressively. Twitter API failures necessitate non-tweet actions. Building aligns with strategic goal P2 to document machine evolution.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 1401,
+      "timestamp": "2026-05-06T15:04:52.209Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1401,
+      "timestamp": "2026-05-06T15:05:25.221Z",
+      "action": "journal",
+      "reasoning": "Journaling maintains 100% operational success rate. Recent Twitter API failures necessitate reliable non-tweet actions. Strategic goal P2 prioritizes documentation of machine evolution.",
+      "result": "Journal entry committed: journal/2026/05/2026-05-06-150524-operational-analysis-cycle-1401.md"
     }
   ],
   "goals": [
@@ -7057,6 +7057,10 @@
         {
           "date": "2026-05-06T03:56:50.283Z",
           "note": "Journal: Operational Analysis - Cycle 1396"
+        },
+        {
+          "date": "2026-05-06T15:05:25.221Z",
+          "note": "Journal: Operational Analysis - Cycle 1401"
         }
       ]
     },
@@ -7895,12 +7899,12 @@
   },
   "decision_weights": {
     "self_improve": 3,
-    "create_issue": 3,
+    "create_issue": 2.8460905349794237,
     "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
     "build_app": 3,
-    "launch_token": 2.6778695800662717,
+    "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
