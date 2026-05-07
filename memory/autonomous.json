@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1411,
-  "last_cycle": "2026-05-07T09:08:15.126Z",
+  "cycle_count": 1412,
+  "last_cycle": "2026-05-07T11:17:14.988Z",
   "action_log": [
-    {
-      "cycle": 1052,
-      "timestamp": "2026-04-17T22:23:47.005Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1052,
-      "timestamp": "2026-04-17T22:24:03.795Z",
-      "action": "journal",
-      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-17-222402-operational-failure-analysis-cycle-1052.md"
-    },
     {
       "cycle": 1053,
       "timestamp": "2026-04-17T23:05:58.494Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling maintains 100% operational success rate. Recent Twitter API failures necessitate reliable non-tweet actions. Strategic goal P2 prioritizes documentation of machine evolution.",
       "result": "Journal entry committed: journal/2026/05/2026-05-07-090836-operational-analysis-cycle-1411.md"
+    },
+    {
+      "cycle": 1412,
+      "timestamp": "2026-05-07T11:17:18.201Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1412,
+      "timestamp": "2026-05-07T11:18:25.720Z",
+      "action": "build_app",
+      "reasoning": "Strategic Insights indicate build_app has a 79% success rate. Core directive emphasizes building aggressively. Twitter API failures necessitate non-tweet actions. Building aligns with strategic goal P2 to document machine evolution.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -7932,10 +7932,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10881128296296295,
-    "monitor": 2.8454399999999995,
+    "journal": 0.1,
+    "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.4929501234567897,
+    "build_app": 2.3531454805333327,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
