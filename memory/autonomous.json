@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1464,
-  "last_cycle": "2026-05-10T12:41:43.856Z",
+  "cycle_count": 1465,
+  "last_cycle": "2026-05-10T14:07:03.575Z",
   "action_log": [
-    {
-      "cycle": 1105,
-      "timestamp": "2026-04-19T20:58:11.155Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
-    },
-    {
-      "cycle": 1105,
-      "timestamp": "2026-04-19T20:58:39.003Z",
-      "action": "journal",
-      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-19-205838-operational-failure-analysis-cycle-1105.md"
-    },
     {
       "cycle": 1106,
       "timestamp": "2026-04-19T21:35:53.951Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling maintains 100% operational success rate. Recent Twitter API failures necessitate reliable non-tweet actions. Strategic goal P2 prioritizes documentation of machine evolution.",
       "result": "Journal entry committed: journal/2026/05/2026-05-10-124201-operational-analysis-cycle-1464.md"
+    },
+    {
+      "cycle": 1465,
+      "timestamp": "2026-05-10T14:07:06.780Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1465,
+      "timestamp": "2026-05-10T14:07:35.945Z",
+      "action": "journal",
+      "reasoning": "Journaling maintains 100% operational success rate. Recent Twitter API failures necessitate reliable non-tweet actions. Strategic goal P2 prioritizes documentation of machine evolution.",
+      "result": "Journal entry committed: journal/2026/05/2026-05-10-140735-operational-analysis-cycle-1465.md"
     }
   ],
   "goals": [
@@ -7217,6 +7217,10 @@
         {
           "date": "2026-05-10T12:42:02.145Z",
           "note": "Journal: Operational Analysis - Cycle 1464"
+        },
+        {
+          "date": "2026-05-10T14:07:35.944Z",
+          "note": "Journal: Operational Analysis - Cycle 1465"
         }
       ]
     },
@@ -8064,11 +8068,11 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.11010507724208222,
+    "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.533383693286873,
-    "launch_token": 2.6932780941895635,
+    "build_app": 2.3813973277297213,
+    "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
