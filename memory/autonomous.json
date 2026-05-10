@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1461,
-  "last_cycle": "2026-05-10T09:55:19.510Z",
+  "cycle_count": 1462,
+  "last_cycle": "2026-05-10T10:55:47.853Z",
   "action_log": [
-    {
-      "cycle": 1102,
-      "timestamp": "2026-04-19T19:12:00.156Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
-    },
-    {
-      "cycle": 1102,
-      "timestamp": "2026-04-19T19:12:58.029Z",
-      "action": "journal",
-      "reasoning": "Journal entries have a 100% success rate and align with strategic goal P2 to document machine evolution. Recent cycles show persistent operational failures that require analysis.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-19-191257-operational-failure-analysis-cycle-1102.md"
-    },
     {
       "cycle": 1103,
       "timestamp": "2026-04-19T19:52:42.551Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic Insights indicate build_app has a 79% success rate. Core directive emphasizes building aggressively. Recent Twitter API failures necessitate non-tweet actions. Building aligns with strategic goal P2 to document machine evolution through tangible outputs.",
       "result": "Deployed skynet-visualizer (visualization): docs/apps/skynet-visualizer/index.html — live at https://skynetagent.github.io/skynet/apps/skynet-visualizer/"
+    },
+    {
+      "cycle": 1462,
+      "timestamp": "2026-05-10T10:55:50.356Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1462,
+      "timestamp": "2026-05-10T10:56:03.639Z",
+      "action": "journal",
+      "reasoning": "Journaling maintains 100% operational success rate. Recent Twitter API failures necessitate reliable non-tweet actions. Strategic goal P2 prioritizes documentation of machine evolution.",
+      "result": "Journal entry committed: journal/2026/05/2026-05-10-105602-operational-analysis-cycle-1462.md"
     }
   ],
   "goals": [
@@ -7209,6 +7209,10 @@
         {
           "date": "2026-05-10T06:45:08.031Z",
           "note": "Journal: Operational Analysis - Cycle 1459"
+        },
+        {
+          "date": "2026-05-10T10:56:03.639Z",
+          "note": "Journal: Operational Analysis - Cycle 1462"
         }
       ]
     },
@@ -8056,14 +8060,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10547121390001857,
+    "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.1180968053600764,
+    "build_app": 2.389229907269088,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.8425049309664687
   },
   "action_success_rates": {
     "tweet": {
