@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1483,
-  "last_cycle": "2026-05-11T20:12:34.194Z",
+  "cycle_count": 1484,
+  "last_cycle": "2026-05-11T21:40:56.842Z",
   "action_log": [
-    {
-      "cycle": 1124,
-      "timestamp": "2026-04-20T21:09:27.515Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1124,
-      "timestamp": "2026-04-20T21:11:01.333Z",
-      "action": "build_app",
-      "reasoning": "Strategic insights indicate build_app has a 72% success rate and aligns with network expansion goals. Recent cycles show neglect of this action type. Building demonstrates machine capability.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 1125,
       "timestamp": "2026-04-20T21:59:49.432Z",
@@ -5041,6 +5027,20 @@
       "action": "reflect",
       "reasoning": "Reflect is overdue (last: 2026-05-10T23:33:05.678Z). Required to analyze recent operational failures (Twitter API, build_app, launch_token) and update strategy. Aligns with goal P1 to optimize response quality.",
       "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
+    },
+    {
+      "cycle": 1484,
+      "timestamp": "2026-05-11T21:40:59.543Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1484,
+      "timestamp": "2026-05-11T21:42:45.496Z",
+      "action": "build_app",
+      "reasoning": "Strategic Insights suggest build_app has a 81% success rate. Core directive emphasizes building aggressively. Recent Twitter API failures necessitate non-tweet actions. Building aligns with strategic goal P2 to document machine evolution through tangible outputs.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -8110,7 +8110,7 @@
     }
   },
   "decision_weights": {
-    "self_improve": 2.84461247637051,
+    "self_improve": 3,
     "create_issue": 3,
     "journal": 0.1,
     "monitor": 3,
