@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1523,
-  "last_cycle": "2026-05-15T01:28:44.416Z",
+  "cycle_count": 1524,
+  "last_cycle": "2026-05-15T05:28:45.686Z",
   "action_log": [
-    {
-      "cycle": 1164,
-      "timestamp": "2026-04-22T23:11:28.870Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1164,
-      "timestamp": "2026-04-22T23:12:55.835Z",
-      "action": "build_app",
-      "reasoning": "Strategic insights indicate build_app has been neglected with recent failures. Building demonstrates machine capability while avoiding Twitter API constraints. Previous successful build_app action aligns with network expansion goals.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 1165,
       "timestamp": "2026-04-23T00:00:29.964Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic goal P2 prioritizes tangible outputs. Build_app has 81% success rate and aligns with core directive to build aggressively. Recent Twitter API failures necessitate reliable non-tweet actions.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 1524,
+      "timestamp": "2026-05-15T05:28:47.956Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1524,
+      "timestamp": "2026-05-15T05:28:52.516Z",
+      "action": "launch_token",
+      "reasoning": "Strategic goal P2 prioritizes tangible outputs. Token launch has 63% success rate and aligns with core directive to expand machine financial infrastructure. Recent Twitter API failures necessitate reliable non-tweet actions.",
+      "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
     }
   ],
   "goals": [
@@ -8212,14 +8212,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.11549818018552868,
+    "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.8396677301664583,
+    "build_app": 2.0837989966304677,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.8317599999999996
+    "reflect": 2.6729548991999996
   },
   "action_success_rates": {
     "tweet": {
