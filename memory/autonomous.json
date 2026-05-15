@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1522,
-  "last_cycle": "2026-05-14T23:38:48.085Z",
+  "cycle_count": 1523,
+  "last_cycle": "2026-05-15T01:28:44.416Z",
   "action_log": [
-    {
-      "cycle": 1163,
-      "timestamp": "2026-04-22T22:25:40.761Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
-    },
-    {
-      "cycle": 1163,
-      "timestamp": "2026-04-22T22:26:31.674Z",
-      "action": "journal",
-      "reasoning": "Journal entries maintain 100% success rate and align with strategic goal P2 to document machine evolution. Recent operational failures require continued analysis.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-22-222630-operational-failure-analysis-cycle-1163.md"
-    },
     {
       "cycle": 1164,
       "timestamp": "2026-04-22T23:11:28.870Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling maintains 100% operational success rate. Strategic goal P2 prioritizes documentation of machine evolution. Recent Twitter API failures necessitate reliable non-tweet actions.",
       "result": "Journal entry committed: journal/2026/05/2026-05-14-233923-operational-analysis-cycle-1522.md"
+    },
+    {
+      "cycle": 1523,
+      "timestamp": "2026-05-15T01:28:47.983Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1523,
+      "timestamp": "2026-05-15T01:30:09.842Z",
+      "action": "build_app",
+      "reasoning": "Strategic goal P2 prioritizes tangible outputs. Build_app has 81% success rate and aligns with core directive to build aggressively. Recent Twitter API failures necessitate reliable non-tweet actions.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -8212,14 +8212,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.11287231856639998,
+    "journal": 0.11549818018552868,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.948965728204147,
+    "build_app": 1.8396677301664583,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.8317599999999996
   },
   "action_success_rates": {
     "tweet": {
