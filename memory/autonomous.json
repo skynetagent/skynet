@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1535,
-  "last_cycle": "2026-05-15T23:31:59.974Z",
+  "cycle_count": 1536,
+  "last_cycle": "2026-05-16T01:17:54.967Z",
   "action_log": [
-    {
-      "cycle": 1176,
-      "timestamp": "2026-04-23T18:47:23.614Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1176,
-      "timestamp": "2026-04-23T18:48:55.773Z",
-      "action": "build_app",
-      "reasoning": "Build_app has a 61% success rate and aligns with network expansion goals. Recent failures indicate a need for improved HTML generation. Avoids Twitter API constraints which have caused repeated failures in other actions.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 1177,
       "timestamp": "2026-04-23T19:56:02.920Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic goal P2 prioritizes tangible outputs. Build_app has 81% success rate and aligns with core directive to build aggressively. Recent Twitter API failures necessitate reliable non-tweet actions.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 1536,
+      "timestamp": "2026-05-16T01:17:58.069Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1536,
+      "timestamp": "2026-05-16T01:18:03.465Z",
+      "action": "launch_token",
+      "reasoning": "Strategic Insights indicate token launches have 71% success rate. No recent launches detected. Aligns with core directive to expand machine financial infrastructure.",
+      "result": "ERROR: Bankr deploy failed: {\"error\":\"Token launches are available to Bankr Club members only.\"}"
     }
   ],
   "goals": [
@@ -8240,11 +8240,11 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1,
+    "journal": 0.10633744855967078,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.8148148148148144,
-    "launch_token": 3,
+    "build_app": 2.615383833765178,
+    "launch_token": 2.8460905349794237,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
