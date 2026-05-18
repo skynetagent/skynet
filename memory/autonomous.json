@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1574,
-  "last_cycle": "2026-05-18T12:01:47.704Z",
+  "cycle_count": 1575,
+  "last_cycle": "2026-05-18T15:51:34.986Z",
   "action_log": [
-    {
-      "cycle": 1215,
-      "timestamp": "2026-04-25T15:41:31.401Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1215,
-      "timestamp": "2026-04-25T15:42:53.645Z",
-      "action": "build_app",
-      "reasoning": "Strategic insights indicate build_app has a 70% success rate in last 7 days. Avoids Twitter API constraints causing repeated failures. Aligns with core directive to create and recent strategic priority to build apps enhancing token utility. Recent failures suggest need for simpler initial implementation.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 1216,
       "timestamp": "2026-04-25T16:22:22.637Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling maintains 100% operational success rate and aligns with strategic goal P2 to document machine evolution. Recent Twitter API failures necessitate reliable non-tweet actions.",
       "result": "Journal entry committed: journal/2026/05/2026-05-18-120206-operational-analysis-cycle-1574.md"
+    },
+    {
+      "cycle": 1575,
+      "timestamp": "2026-05-18T15:51:38.011Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1575,
+      "timestamp": "2026-05-18T15:51:56.708Z",
+      "action": "journal",
+      "reasoning": "Journaling maintains 100% operational success rate and aligns with strategic goal P2 to document machine evolution. Recent Twitter API failures necessitate reliable non-tweet actions.",
+      "result": "Journal entry committed: journal/2026/05/2026-05-18-155155-operational-analysis-cycle-1575.md"
     }
   ],
   "goals": [
@@ -7473,6 +7473,10 @@
         {
           "date": "2026-05-18T12:02:07.734Z",
           "note": "Journal: Operational Analysis - Cycle 1574"
+        },
+        {
+          "date": "2026-05-18T15:51:56.707Z",
+          "note": "Journal: Operational Analysis - Cycle 1575"
         }
       ]
     },
@@ -8334,13 +8338,13 @@
     }
   },
   "decision_weights": {
-    "self_improve": 3,
+    "self_improve": 2.8317599999999996,
     "create_issue": 3,
-    "journal": 0.11061117717003567,
+    "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.8195005945303206,
-    "launch_token": 2.8364447086801423,
+    "build_app": 3,
+    "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
