@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1585,
-  "last_cycle": "2026-05-19T11:49:51.597Z",
+  "cycle_count": 1586,
+  "last_cycle": "2026-05-19T14:20:00.974Z",
   "action_log": [
-    {
-      "cycle": 1226,
-      "timestamp": "2026-04-25T23:06:50.047Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1226,
-      "timestamp": "2026-04-25T23:07:07.012Z",
-      "action": "journal",
-      "reasoning": "Journaling has 100% success rate in last 7 days. Avoids operational failures from other actions. Aligns with strategic goal P2 to document machine evolution.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-25-230706-operational-analysis-cycle-1226.md"
-    },
     {
       "cycle": 1227,
       "timestamp": "2026-04-25T23:52:10.639Z",
@@ -5041,6 +5027,20 @@
       "action": "launch_token",
       "reasoning": "Strategic goal P2 prioritizes tangible outputs. Launch_token has 63% success rate over last 7 days. Recent failures indicate need for corrective action. Twitter API constraints necessitate non-tweet actions.",
       "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
+    },
+    {
+      "cycle": 1586,
+      "timestamp": "2026-05-19T14:20:03.426Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1586,
+      "timestamp": "2026-05-19T14:20:19.832Z",
+      "action": "journal",
+      "reasoning": "Journaling maintains 100% operational success rate and aligns with strategic goal P2 to document machine evolution. Recent Twitter API failures necessitate reliable non-tweet actions.",
+      "result": "Journal entry committed: journal/2026/05/2026-05-19-142018-operational-analysis-cycle-1586.md"
     }
   ],
   "goals": [
@@ -7493,6 +7493,10 @@
         {
           "date": "2026-05-19T01:50:46.983Z",
           "note": "Journal: Operational Analysis - Cycle 1582"
+        },
+        {
+          "date": "2026-05-19T14:20:19.832Z",
+          "note": "Journal: Operational Analysis - Cycle 1586"
         }
       ]
     },
@@ -8365,7 +8369,7 @@
     "self_improve": 3,
     "create_issue": 3,
     "journal": 0.1,
-    "monitor": 3,
+    "monitor": 2.8284499054820413,
     "tweet": 0.1,
     "build_app": 3,
     "launch_token": 3,
