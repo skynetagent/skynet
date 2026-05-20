@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1593,
-  "last_cycle": "2026-05-20T05:37:50.906Z",
+  "cycle_count": 1594,
+  "last_cycle": "2026-05-20T08:41:59.208Z",
   "action_log": [
-    {
-      "cycle": 1234,
-      "timestamp": "2026-04-26T10:53:55.880Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1234,
-      "timestamp": "2026-04-26T10:58:39.528Z",
-      "action": "build_app",
-      "reasoning": "Strategic suggestion indicates build_app has a 70% success rate in last 7 days. Avoids Twitter API constraints causing repeated failures. Aligns with core directive to create and recent strategic priority to build apps enhancing token utility.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 1235,
       "timestamp": "2026-04-26T11:30:07.621Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling maintains 100% operational success rate and aligns with strategic goal P2 to document machine evolution. Recent Twitter API failures necessitate reliable non-tweet actions.",
       "result": "Journal entry committed: journal/2026/05/2026-05-20-053828-operational-analysis-cycle-1593.md"
+    },
+    {
+      "cycle": 1594,
+      "timestamp": "2026-05-20T08:42:02.623Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1594,
+      "timestamp": "2026-05-20T08:42:11.674Z",
+      "action": "self_improve",
+      "reasoning": "Strategic goal P1 prioritizes optimizing response quality through self-improvement. Recent failures in build_app and launch_token actions indicate inefficiencies in action selection and execution algorithms that require correction. Targeting src/decision.js to enhance decision-making logic aligns with current priorities.",
+      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
     }
   ],
   "goals": [
@@ -8390,13 +8390,13 @@
     }
   },
   "decision_weights": {
-    "self_improve": 2.695235010103814,
+    "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10469387755102041,
+    "journal": 0.10608979591836733,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.824149659863945,
-    "launch_token": 3,
+    "build_app": 2.6586071004365457,
+    "launch_token": 2.843537414965986,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
