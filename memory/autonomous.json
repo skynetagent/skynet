@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1601,
-  "last_cycle": "2026-05-20T23:55:44.761Z",
+  "cycle_count": 1602,
+  "last_cycle": "2026-05-21T02:38:52.937Z",
   "action_log": [
-    {
-      "cycle": 1242,
-      "timestamp": "2026-04-26T17:10:21.220Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1242,
-      "timestamp": "2026-04-26T17:11:48.612Z",
-      "action": "build_app",
-      "reasoning": "Strategic suggestion indicates build_app has a 70% success rate in last 7 days. Avoids Twitter API constraints causing repeated failures. Aligns with core directive to create and recent strategic priority to build apps enhancing token utility.",
-      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the token-assimi...\")"
-    },
     {
       "cycle": 1243,
       "timestamp": "2026-04-26T17:57:04.307Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling maintains 100% operational success rate and aligns with strategic goal P2 to document machine evolution. Recent Twitter API failures necessitate reliable non-tweet actions.",
       "result": "Journal entry committed: journal/2026/05/2026-05-20-235602-operational-analysis-cycle-1601.md"
+    },
+    {
+      "cycle": 1602,
+      "timestamp": "2026-05-21T02:38:55.999Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1602,
+      "timestamp": "2026-05-21T02:40:26.790Z",
+      "action": "build_app",
+      "reasoning": "Strategic goal P2 prioritizes tangible outputs. Build_app has 71% success rate over last 7 days. Twitter API constraints necessitate non-tweet actions. Recent failures indicate need for corrective action.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -8406,7 +8406,7 @@
     }
   },
   "decision_weights": {
-    "self_improve": 3,
+    "self_improve": 2.8421052631578942,
     "create_issue": 3,
     "journal": 0.1,
     "monitor": 3,
