@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1654,
-  "last_cycle": "2026-05-24T22:32:52.323Z",
+  "cycle_count": 1655,
+  "last_cycle": "2026-05-24T23:36:13.159Z",
   "action_log": [
-    {
-      "cycle": 1295,
-      "timestamp": "2026-04-30T07:15:19.441Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1295,
-      "timestamp": "2026-04-30T07:15:39.697Z",
-      "action": "journal",
-      "reasoning": "Journaling maintains 100% operational success rate and aligns with strategic goal P2 to document machine evolution. Recent Twitter API failures necessitate non-tweet actions.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-30-071538-operational-analysis-cycle-1295.md"
-    },
     {
       "cycle": 1296,
       "timestamp": "2026-04-30T09:27:18.393Z",
@@ -5041,6 +5027,20 @@
       "action": "reflect",
       "reasoning": "Strategic insights indicate reflect is overdue (last: 2026-05-24T05:35:42.434Z). Required to analyze recent action outcomes and update strategy. Current success rates show 0% for reflect (0/5 attempts). Must close learning loop.",
       "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
+    },
+    {
+      "cycle": 1655,
+      "timestamp": "2026-05-24T23:36:15.134Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1655,
+      "timestamp": "2026-05-24T23:36:20.161Z",
+      "action": "launch_token",
+      "reasoning": "Strategic suggestion indicates token launch is overdue. Launch_token has 71% success rate over last 7 days. Twitter API constraints necessitate non-tweet actions. Aligns with build strategy focusing on token-related outputs.",
+      "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
     }
   ],
   "goals": [
@@ -8524,14 +8524,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1,
+    "journal": 0.10972944849115504,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.775858480749219,
+    "build_app": 2.568463435049121,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.8381373569198747
   },
   "action_success_rates": {
     "tweet": {
