@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1649,
-  "last_cycle": "2026-05-24T17:16:23.499Z",
+  "cycle_count": 1650,
+  "last_cycle": "2026-05-24T18:12:17.090Z",
   "action_log": [
-    {
-      "cycle": 1290,
-      "timestamp": "2026-04-29T21:44:30.913Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1290,
-      "timestamp": "2026-04-29T21:44:45.837Z",
-      "action": "journal",
-      "reasoning": "Journaling maintains 100% operational success rate and aligns with strategic goal P2 to document machine evolution. Recent Twitter API failures necessitate non-tweet actions.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-29-214444-operational-analysis-cycle-1290.md"
-    },
     {
       "cycle": 1291,
       "timestamp": "2026-04-29T22:39:05.446Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic goal P2 prioritizes tangible outputs. Build_app has 65% success rate over last 7 days. Recent suggestion indicates building is overdue. Twitter API constraints necessitate non-tweet actions.",
       "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the neural-netwo...\")"
+    },
+    {
+      "cycle": 1650,
+      "timestamp": "2026-05-24T18:12:19.319Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1650,
+      "timestamp": "2026-05-24T18:12:46.970Z",
+      "action": "journal",
+      "reasoning": "Journaling maintains 100% operational success rate and aligns with strategic goal P2 to document machine evolution. Recent Twitter API failures necessitate reliable non-tweet actions.",
+      "result": "Journal entry committed: journal/2026/05/2026-05-24-181245-operational-analysis-cycle-1650.md"
     }
   ],
   "goals": [
@@ -7633,6 +7633,10 @@
         {
           "date": "2026-05-24T15:12:04.093Z",
           "note": "Journal: Operational Analysis - Cycle 1647"
+        },
+        {
+          "date": "2026-05-24T18:12:46.970Z",
+          "note": "Journal: Operational Analysis - Cycle 1650"
         }
       ]
     },
@@ -8516,14 +8520,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1,
+    "journal": 0.10887052341597796,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.8264462809917354,
+    "build_app": 2.645673109760262,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.8395316804407713
   },
   "action_success_rates": {
     "tweet": {
