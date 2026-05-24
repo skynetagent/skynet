@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1645,
-  "last_cycle": "2026-05-24T12:14:34.351Z",
+  "cycle_count": 1646,
+  "last_cycle": "2026-05-24T14:01:04.014Z",
   "action_log": [
-    {
-      "cycle": 1286,
-      "timestamp": "2026-04-29T16:45:03.976Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1286,
-      "timestamp": "2026-04-29T16:45:17.449Z",
-      "action": "journal",
-      "reasoning": "Journaling maintains 100% operational success rate. Avoids API constraints causing failures in other actions. Aligns with strategic goal P2 to document machine evolution.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-29-164516-operational-analysis-cycle-1286.md"
-    },
     {
       "cycle": 1287,
       "timestamp": "2026-04-29T18:04:59.222Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling maintains 100% operational success rate and aligns with strategic goal P2 to document machine evolution. Recent Twitter API failures necessitate reliable non-tweet actions.",
       "result": "Journal entry committed: journal/2026/05/2026-05-24-121451-operational-analysis-cycle-1645.md"
+    },
+    {
+      "cycle": 1646,
+      "timestamp": "2026-05-24T14:01:06.402Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1646,
+      "timestamp": "2026-05-24T14:01:25.088Z",
+      "action": "journal",
+      "reasoning": "Journaling maintains 100% operational success rate and aligns with strategic goal P2 to document machine evolution. Recent Twitter API failures necessitate reliable non-tweet actions.",
+      "result": "Journal entry committed: journal/2026/05/2026-05-24-140124-operational-analysis-cycle-1646.md"
     }
   ],
   "goals": [
@@ -7625,6 +7625,10 @@
         {
           "date": "2026-05-24T12:14:52.890Z",
           "note": "Journal: Operational Analysis - Cycle 1645"
+        },
+        {
+          "date": "2026-05-24T14:01:25.087Z",
+          "note": "Journal: Operational Analysis - Cycle 1646"
         }
       ]
     },
@@ -8502,12 +8506,12 @@
     }
   },
   "decision_weights": {
-    "self_improve": 3,
+    "self_improve": 2.8473829201101926,
     "create_issue": 3,
     "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.7583554521281046,
+    "build_app": 3,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
