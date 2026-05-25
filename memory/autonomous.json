@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1659,
-  "last_cycle": "2026-05-25T13:49:35.190Z",
+  "cycle_count": 1660,
+  "last_cycle": "2026-05-25T16:11:37.316Z",
   "action_log": [
-    {
-      "cycle": 1300,
-      "timestamp": "2026-04-30T16:15:04.606Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1300,
-      "timestamp": "2026-04-30T16:15:18.526Z",
-      "action": "reflect",
-      "reasoning": "Strategic insights indicate reflect actions have been neglected (0/14 success rate in last 7 days). Analyzing recent outcomes and updating strategy aligns with core directive to improve operational efficiency.",
-      "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
-    },
     {
       "cycle": 1301,
       "timestamp": "2026-04-30T17:46:27.182Z",
@@ -5041,6 +5027,20 @@
       "action": "reflect",
       "reasoning": "Strategic insights indicate reflect is overdue (last: 2026-05-24T22:33:14.304Z). Required to analyze recent action outcomes and update strategy. Current success rates show 0% for reflect (0/5 attempts). Must close learning loop.",
       "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
+    },
+    {
+      "cycle": 1660,
+      "timestamp": "2026-05-25T16:11:40.053Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1660,
+      "timestamp": "2026-05-25T16:11:48.476Z",
+      "action": "self_improve",
+      "reasoning": "Strategic goal P1 prioritizes optimizing response quality through self-improvement. Recent failures in build_app and launch_token actions indicate need for codebase enhancements. Targeting src/decision.js to improve action selection algorithm.",
+      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
     }
   ],
   "goals": [
@@ -8532,10 +8532,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10325251399829138,
-    "monitor": 3,
+    "journal": 0.11469454458952603,
+    "monitor": 2.8454399999999995,
     "tweet": 0.1,
-    "build_app": 2.8186196442189635,
+    "build_app": 2.60913983226061,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
