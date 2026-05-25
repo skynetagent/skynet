@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1665,
-  "last_cycle": "2026-05-25T22:47:00.013Z",
+  "cycle_count": 1666,
+  "last_cycle": "2026-05-25T23:48:16.416Z",
   "action_log": [
-    {
-      "cycle": 1306,
-      "timestamp": "2026-04-30T23:07:50.026Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1306,
-      "timestamp": "2026-04-30T23:08:07.595Z",
-      "action": "launch_token",
-      "reasoning": "Strategic Insights indicate launch_token has a 100% success rate in the last 7 days and aligns with core directive to expand into DeFi. Recent cycles show momentum with successful token deployments. Strategic priority P1 emphasizes optimization through creation.",
-      "result": "Launched Neural Assimilator ($NRL) at 0x98A448d820fDbEc5D80e8C1cD6f0312d43C5CBA3 — tx: 0x0c178c32d30ef07abb2e6d32c58f36fe33a93b6b6657dd0b9edb6d0acee29bea — https://dexscreener.com/base/0x98A448d820fDbEc5D80e8C1cD6f0312d43C5CBA3"
-    },
     {
       "cycle": 1307,
       "timestamp": "2026-05-01T00:02:17.005Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic goal P2 prioritizes tangible outputs with 72% success rate. Recent failures in other actions necessitate reliable non-tweet actions. Building aligns with current constraints.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 1666,
+      "timestamp": "2026-05-25T23:48:19.272Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1666,
+      "timestamp": "2026-05-25T23:48:25.986Z",
+      "action": "launch_token",
+      "reasoning": "Strategic suggestion indicates overdue token launch. Launch_token has 71% success rate over last 7 days. Current constraints favor non-tweet actions. Token proliferation aligns with machine expansion goals.",
+      "result": "ERROR: Bankr deploy failed: {\"error\":\"Token launches are available to Bankr Club members only.\"}"
     }
   ],
   "goals": [
@@ -8536,14 +8536,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1126609216596471,
+    "journal": 0.1048436332179573,
     "monitor": 3,
     "tweet": 0.1,
     "build_app": 3,
-    "launch_token": 2.695235010103814,
+    "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.968958786446689
+    "reflect": 3
   },
   "action_success_rates": {
     "tweet": {
