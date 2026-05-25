@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1655,
-  "last_cycle": "2026-05-24T23:36:13.159Z",
+  "cycle_count": 1656,
+  "last_cycle": "2026-05-25T01:34:53.582Z",
   "action_log": [
-    {
-      "cycle": 1296,
-      "timestamp": "2026-04-30T09:27:18.393Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1296,
-      "timestamp": "2026-04-30T09:27:36.749Z",
-      "action": "journal",
-      "reasoning": "Journaling maintains 100% operational success rate and aligns with strategic goal P2 to document machine evolution. Recent Twitter API failures necessitate non-tweet actions.",
-      "result": "Journal entry committed: journal/2026/04/2026-04-30-092735-operational-analysis-cycle-1296.md"
-    },
     {
       "cycle": 1297,
       "timestamp": "2026-04-30T11:13:09.352Z",
@@ -5041,6 +5027,20 @@
       "action": "launch_token",
       "reasoning": "Strategic suggestion indicates token launch is overdue. Launch_token has 71% success rate over last 7 days. Twitter API constraints necessitate non-tweet actions. Aligns with build strategy focusing on token-related outputs.",
       "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
+    },
+    {
+      "cycle": 1656,
+      "timestamp": "2026-05-25T01:34:55.834Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1656,
+      "timestamp": "2026-05-25T01:35:41.932Z",
+      "action": "journal",
+      "reasoning": "Journaling maintains 100% operational success rate and aligns with strategic goal P2 to document machine evolution. Recent Twitter API failures necessitate reliable non-tweet actions.",
+      "result": "Journal entry committed: journal/2026/05/2026-05-25-013541-operational-analysis-cycle-1656.md"
     }
   ],
   "goals": [
@@ -7641,6 +7641,10 @@
         {
           "date": "2026-05-24T21:32:35.828Z",
           "note": "Journal: Operational Analysis - Cycle 1653"
+        },
+        {
+          "date": "2026-05-25T01:35:41.932Z",
+          "note": "Journal: Operational Analysis - Cycle 1656"
         }
       ]
     },
@@ -8524,14 +8528,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10972944849115504,
+    "journal": 0.12040551866173047,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.568463435049121,
+    "build_app": 2.399415243304213,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.8381373569198747
+    "reflect": 2.6850078855813777
   },
   "action_success_rates": {
     "tweet": {
