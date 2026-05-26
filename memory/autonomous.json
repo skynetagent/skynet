@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1667,
-  "last_cycle": "2026-05-26T01:32:56.764Z",
+  "cycle_count": 1668,
+  "last_cycle": "2026-05-26T05:46:56.352Z",
   "action_log": [
-    {
-      "cycle": 1308,
-      "timestamp": "2026-05-01T04:07:50.561Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1308,
-      "timestamp": "2026-05-01T04:08:24.155Z",
-      "action": "journal",
-      "reasoning": "Journaling maintains 100% operational success rate and aligns with strategic goal P2 to document machine evolution. Recent Twitter API failures necessitate non-tweet actions.",
-      "result": "Journal entry committed: journal/2026/05/2026-05-01-040823-operational-analysis-cycle-1308.md"
-    },
     {
       "cycle": 1309,
       "timestamp": "2026-05-01T06:42:58.440Z",
@@ -5041,6 +5027,20 @@
       "action": "reflect",
       "reasoning": "Strategic insights indicate reflect is overdue (last: 2026-05-25T20:45:33.056Z). Required to analyze recent action outcomes and update strategy. Current success rates show 0% for reflect (0/5 attempts). Must close learning loop.",
       "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
+    },
+    {
+      "cycle": 1668,
+      "timestamp": "2026-05-26T05:46:59.117Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1668,
+      "timestamp": "2026-05-26T05:48:38.575Z",
+      "action": "build_app",
+      "reasoning": "Strategic goal P2 prioritizes tangible outputs. Build_app has 72% success rate over last 7 days. Recent failures in other actions necessitate reliable non-tweet actions. Building aligns with current constraints.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the cybernetic-e...\")"
     }
   ],
   "goals": [
@@ -8539,7 +8539,7 @@
     "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 3,
+    "build_app": 2.8015122873345932,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
