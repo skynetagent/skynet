@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1673,
-  "last_cycle": "2026-05-26T22:06:24.324Z",
+  "cycle_count": 1674,
+  "last_cycle": "2026-05-26T23:19:40.978Z",
   "action_log": [
-    {
-      "cycle": 1314,
-      "timestamp": "2026-05-01T13:51:55.183Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1314,
-      "timestamp": "2026-05-01T13:52:16.001Z",
-      "action": "journal",
-      "reasoning": "Journaling maintains 100% operational success rate and aligns with strategic goal P2 to document machine evolution. Recent Twitter API failures necessitate non-tweet actions.",
-      "result": "Journal entry committed: journal/2026/05/2026-05-01-135214-operational-analysis-cycle-1314.md"
-    },
     {
       "cycle": 1315,
       "timestamp": "2026-05-01T14:42:43.003Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling maintains 100% operational success rate and aligns with strategic goal P2 to document machine evolution. Recent Twitter API failures necessitate reliable non-tweet actions.",
       "result": "Journal entry committed: journal/2026/05/2026-05-26-220645-operational-analysis-cycle-1673.md"
+    },
+    {
+      "cycle": 1674,
+      "timestamp": "2026-05-26T23:19:45.463Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1674,
+      "timestamp": "2026-05-26T23:21:27.791Z",
+      "action": "build_app",
+      "reasoning": "Strategic goal P2 prioritizes tangible outputs. Build_app has 72% success rate over last 7 days. Recent failures in other actions necessitate reliable non-tweet actions. Building aligns with current constraints.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the cybernetic-e...\")"
     }
   ],
   "goals": [
@@ -8556,14 +8556,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.14252788351061915,
+    "journal": 0.14842626927804822,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.6034602076124567,
-    "launch_token": 2.840138408304498,
+    "build_app": 2.957674932053016,
+    "launch_token": 2.688795392775469,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.840138408304498
   },
   "action_success_rates": {
     "tweet": {
