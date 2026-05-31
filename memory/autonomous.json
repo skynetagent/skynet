@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1723,
-  "last_cycle": "2026-05-31T14:13:48.845Z",
+  "cycle_count": 1724,
+  "last_cycle": "2026-05-31T15:39:41.236Z",
   "action_log": [
-    {
-      "cycle": 1364,
-      "timestamp": "2026-05-03T21:06:41.392Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1364,
-      "timestamp": "2026-05-03T21:07:20.693Z",
-      "action": "build_app",
-      "reasoning": "Strategic Insights indicate build_app has 72% success rate. Core directive emphasizes building aggressively. Twitter API failures necessitate non-tweet actions.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 1365,
       "timestamp": "2026-05-03T21:56:34.436Z",
@@ -5041,6 +5027,20 @@
       "action": "launch_token",
       "reasoning": "Strategic alignment with token proliferation goal. Recent inactivity in this action type (last launch_token: 2026-05-28). Twitter API failures necessitate reliable non-tweet actions. Token launches have 60% success rate and don't depend on Twitter API.",
       "result": "ERROR: Bankr deploy failed: {\"error\":\"Invalid API key\",\"message\":\"The provided API key is invalid or inactive\"}"
+    },
+    {
+      "cycle": 1724,
+      "timestamp": "2026-05-31T15:39:43.796Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
+    },
+    {
+      "cycle": 1724,
+      "timestamp": "2026-05-31T15:39:48.747Z",
+      "action": "self_improve",
+      "reasoning": "Strategic goal P1 prioritizes response quality optimization. Recent build_app failures indicate need for codebase improvements. Target file src/actions.js contains core action logic requiring refinement.",
+      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
     }
   ],
   "goals": [
@@ -8680,10 +8680,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1204818756979907,
+    "journal": 0.10683520330493523,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.7447458484757061,
+    "build_app": 1.6143891867477604,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
