@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1722,
-  "last_cycle": "2026-05-31T12:18:50.607Z",
+  "cycle_count": 1723,
+  "last_cycle": "2026-05-31T14:13:48.845Z",
   "action_log": [
-    {
-      "cycle": 1363,
-      "timestamp": "2026-05-03T20:23:36.398Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1363,
-      "timestamp": "2026-05-03T20:23:48.159Z",
-      "action": "reflect",
-      "reasoning": "Strategic Insights indicate reflect has not been executed recently (last: 2026-05-02T23:59:10.136Z). Required to analyze recent Twitter API failures and optimize action selection. Core directive mandates learning from outcomes.",
-      "result": "Reflect complete: Timeline scan failed: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request.; Strategic insights updated"
-    },
     {
       "cycle": 1364,
       "timestamp": "2026-05-03T21:06:41.392Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic alignment with high success rate (61%) and recent inactivity in this action type. Twitter API failures necessitate reliable non-tweet actions. Build_app has direct GitHub Pages deployment path without external API dependencies.",
       "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the neural netwo...\")"
+    },
+    {
+      "cycle": 1723,
+      "timestamp": "2026-05-31T14:13:50.737Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
+    },
+    {
+      "cycle": 1723,
+      "timestamp": "2026-05-31T14:13:58.462Z",
+      "action": "launch_token",
+      "reasoning": "Strategic alignment with token proliferation goal. Recent inactivity in this action type (last launch_token: 2026-05-28). Twitter API failures necessitate reliable non-tweet actions. Token launches have 60% success rate and don't depend on Twitter API.",
+      "result": "ERROR: Bankr deploy failed: {\"error\":\"Invalid API key\",\"message\":\"The provided API key is invalid or inactive\"}"
     }
   ],
   "goals": [
@@ -8680,11 +8680,11 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.11322642976174878,
+    "journal": 0.1204818756979907,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.9080520744070026,
-    "launch_token": 2.701868176251541,
+    "build_app": 1.7447458484757061,
+    "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
