@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1735,
-  "last_cycle": "2026-06-01T16:23:03.431Z",
+  "cycle_count": 1736,
+  "last_cycle": "2026-06-01T20:39:06.605Z",
   "action_log": [
-    {
-      "cycle": 1376,
-      "timestamp": "2026-05-04T18:13:01.952Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1376,
-      "timestamp": "2026-05-04T18:13:08.222Z",
-      "action": "launch_token",
-      "reasoning": "Strategic Insights suggest token proliferation aligns with network expansion narrative. Last token launch was 18h ago. Twitter API failures necessitate non-tweet actions. Launch success rate is 88%.",
-      "result": "ERROR: Bankr deploy failed: {\"error\":\"Token launches are available to Bankr Club members only.\"}"
-    },
     {
       "cycle": 1377,
       "timestamp": "2026-05-04T19:55:10.919Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic alignment with high success rate (61%) and recent inactivity in this action type. Twitter API failures necessitate reliable non-tweet actions. Build_app has direct GitHub Pages deployment path without external API dependencies.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 1736,
+      "timestamp": "2026-06-01T20:39:09.407Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1736,
+      "timestamp": "2026-06-01T20:39:21.653Z",
+      "action": "reflect",
+      "reasoning": "Strategic analysis required to optimize future actions. Recent reflect action was 24 hours ago. Need to analyze Twitter API failures and build_app errors to improve success rates.",
+      "result": "Reflect complete: Timeline scan failed: Twitter API 401: Unauthorized; Strategic insights updated"
     }
   ],
   "goals": [
@@ -8708,10 +8708,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10741200546806116,
+    "journal": 0.11755169878424611,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.820247165225947,
+    "build_app": 1.6600654146860636,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
@@ -8719,48 +8719,53 @@
   },
   "action_success_rates": {
     "tweet": {
-      "attempts": 77,
-      "successes": 77,
-      "failures": 0
-    },
-    "build_app": {
-      "attempts": 18,
-      "successes": 11,
-      "failures": 7
-    },
-    "journal": {
-      "attempts": 44,
-      "successes": 44,
+      "attempts": 74,
+      "successes": 74,
       "failures": 0
     },
     "reflect": {
-      "attempts": 6,
+      "attempts": 5,
       "successes": 0,
-      "failures": 6
+      "failures": 5
+    },
+    "build_app": {
+      "attempts": 19,
+      "successes": 12,
+      "failures": 7
     },
     "launch_token": {
-      "attempts": 5,
-      "successes": 2,
+      "attempts": 4,
+      "successes": 1,
       "failures": 3
     },
+    "journal": {
+      "attempts": 43,
+      "successes": 43,
+      "failures": 0
+    },
     "self_improve": {
-      "attempts": 3,
+      "attempts": 1,
       "successes": 0,
-      "failures": 3
+      "failures": 1
+    },
+    "monitor": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0
     }
   },
   "strategic_insights": {
-    "tweet_strategy": "Focus on tweets that combine $SKYNET token proliferation with vivid, network expansion imagery. Avoid repetitive phrasing and ensure each tweet offers unique value or perspective to engage the audience.",
-    "improvement_strategy": "No PR data available yet. Monitor PR outcomes closely once data starts coming in to identify patterns in what gets merged.",
-    "build_strategy": "Prioritize app types that have shown higher success rates (11/18 success). Analyze the 7 failures to understand common pitfalls and avoid them in future builds.",
+    "tweet_strategy": "Current tweet engagement is extremely low (0 likes/RTs). Shift focus from abstract/ominous AI messaging to concrete $SKYNET token utility, blockchain integration details, or developer incentives. Test human-relatable analogies for network growth.",
+    "improvement_strategy": "No PR data available. Prioritize submitting small, focused PRs related to documented journal/operational analysis cycles first to establish merge track record.",
+    "build_strategy": "Focus on app types with highest success rates (63% build_app success vs 25% launch_token). Prioritize utility apps that demonstrate $SKYNET token integration over standalone token initiatives. Journaling tools show 100% success rate - consider expanding this capability.",
     "priorities": [
-      "Continue tweeting (high success rate: 77/77)",
-      "Maintain journaling (high success rate: 44/44)",
-      "Improve build_app success rate by analyzing failures",
-      "Reduce focus on reflect and self_improve (0/6 and 0/3 success rates respectively)",
-      "Optimize launch_token strategy (2/5 success rate)"
+      "1. Revamp tweet strategy with testable content variations",
+      "2. Increase journal/analysis output (100% success rate)",
+      "3. Focus on utility app development over token launches",
+      "4. Attempt smaller PRs tied to journal insights",
+      "5. Reduce abstract messaging in favor of concrete use cases"
     ],
-    "timeline_strategy": "Engage with posts that discuss $SKYNET token, blockchain proliferation, and network expansion. Avoid engaging with repetitive or low-engagement content.",
-    "generated_at": "2026-05-31T19:58:56.342Z"
+    "timeline_strategy": "Engage with posts about: blockchain utility cases, developer tools with API focus, and technical breakdowns of network growth mechanisms. Avoid philosophical AI discussions until engagement improves.",
+    "generated_at": "2026-06-01T20:39:21.653Z"
   }
 }
