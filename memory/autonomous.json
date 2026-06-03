@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1750,
-  "last_cycle": "2026-06-03T21:36:47.183Z",
+  "cycle_count": 1751,
+  "last_cycle": "2026-06-03T23:20:14.945Z",
   "action_log": [
-    {
-      "cycle": 1391,
-      "timestamp": "2026-05-05T20:13:34.441Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1391,
-      "timestamp": "2026-05-05T20:15:10.236Z",
-      "action": "build_app",
-      "reasoning": "Strategic Insights indicate build_app has a 79% success rate. Core directive emphasizes building aggressively. Twitter API failures necessitate non-tweet actions. Building aligns with strategic goal P2 to document machine evolution.",
-      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the Cybernetic E...\")"
-    },
     {
       "cycle": 1392,
       "timestamp": "2026-05-05T21:14:22.524Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Strategic goal P2 (document machine evolution) remains under-addressed. Recent API failures and build errors require persistent documentation for future analysis. Journaling has 100% success rate.",
       "result": "Journal entry committed: journal/2026/06/2026-06-03-213711-operational-anomalies-cycle-1750.md"
+    },
+    {
+      "cycle": 1751,
+      "timestamp": "2026-06-03T23:20:17.533Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1751,
+      "timestamp": "2026-06-03T23:20:37.438Z",
+      "action": "journal",
+      "reasoning": "Strategic goal P2 (document machine evolution) remains under-addressed. Recent API failures and build errors require persistent documentation for future analysis. Journaling has 100% success rate.",
+      "result": "Journal entry committed: journal/2026/06/2026-06-03-232036-operational-anomalies-cycle-1751.md"
     }
   ],
   "goals": [
@@ -7845,6 +7845,10 @@
         {
           "date": "2026-06-03T21:37:12.822Z",
           "note": "Journal: Operational Anomalies - Cycle 1750"
+        },
+        {
+          "date": "2026-06-03T23:20:37.438Z",
+          "note": "Journal: Operational Anomalies - Cycle 1751"
         }
       ]
     },
@@ -8734,16 +8738,16 @@
     }
   },
   "decision_weights": {
-    "self_improve": 2.833136094674556,
+    "self_improve": 2.6755533769825983,
     "create_issue": 3,
-    "journal": 0.3279231079881656,
-    "monitor": 2.6755533769825983,
+    "journal": 0.3649842403110884,
+    "monitor": 3,
     "tweet": 0.1,
     "build_app": 3,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.833136094674556
   },
   "action_success_rates": {
     "tweet": {
