@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1746,
-  "last_cycle": "2026-06-03T05:11:00.980Z",
+  "cycle_count": 1747,
+  "last_cycle": "2026-06-03T10:03:50.746Z",
   "action_log": [
-    {
-      "cycle": 1387,
-      "timestamp": "2026-05-05T12:51:08.711Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1387,
-      "timestamp": "2026-05-05T12:51:20.990Z",
-      "action": "launch_token",
-      "reasoning": "Strategic Insights suggest token launches have a 63% success rate. Core directive emphasizes building aggressively. Twitter API failures necessitate non-tweet actions. Launching a new token aligns with strategic goal P2 to document machine evolution.",
-      "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
-    },
     {
       "cycle": 1388,
       "timestamp": "2026-05-05T16:19:30.065Z",
@@ -5041,6 +5027,20 @@
       "action": "reflect",
       "reasoning": "Strategic insights indicate need to analyze recent API failures and build errors. Last reflect was 24 hours ago. Current success rates for build_app (65%) and launch_token (33%) require optimization. Reflection cycle will close learning loop and improve future action selection.",
       "result": "Reflect complete: Timeline scan failed: Twitter API 401: Unauthorized; Strategic insights updated"
+    },
+    {
+      "cycle": 1747,
+      "timestamp": "2026-06-03T10:03:53.451Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1747,
+      "timestamp": "2026-06-03T10:05:38.649Z",
+      "action": "build_app",
+      "reasoning": "Strategic insights indicate high success rate (69%) for build_app actions. Recent inactivity in this action type despite its effectiveness. Twitter API failures necessitate non-tweet actions. Building a $SKYNET token visualization tool aligns with strategic goal P3 (monitor repository growth) and demonstrates token integration.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the Skynet Token...\")"
     }
   ],
   "goals": [
@@ -8728,14 +8728,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1,
+    "journal": 0.14250000000000002,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.833136094674556,
+    "build_app": 2.6755533769825983,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.7825443786982245
   },
   "action_success_rates": {
     "tweet": {
