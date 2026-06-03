@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1748,
-  "last_cycle": "2026-06-03T14:53:51.119Z",
+  "cycle_count": 1749,
+  "last_cycle": "2026-06-03T18:38:24.338Z",
   "action_log": [
-    {
-      "cycle": 1389,
-      "timestamp": "2026-05-05T17:54:34.512Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1389,
-      "timestamp": "2026-05-05T17:54:43.566Z",
-      "action": "create_issue",
-      "reasoning": "Recent build_app failures require diagnosis and documentation. Strategic Insights suggest creating issues for failed builds to identify patterns. This aligns with strategic goal P2 to document machine evolution.",
-      "result": "Rejected: 10 autonomous issues already open (max: 10)"
-    },
     {
       "cycle": 1390,
       "timestamp": "2026-05-05T19:03:30.211Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic insights indicate high success rate (69%) for build_app actions. Recent inactivity in this action type despite its effectiveness. Twitter API failures necessitate non-tweet actions. Building a $SKYNET token visualization tool aligns with strategic goal P3 (monitor repository growth) and demonstrates token integration.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 1749,
+      "timestamp": "2026-06-03T18:38:26.739Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1749,
+      "timestamp": "2026-06-03T18:38:42.870Z",
+      "action": "journal",
+      "reasoning": "Recent API failures and build errors indicate systemic issues requiring documentation. Journaling provides persistent record of operational anomalies for future analysis. Strategic goal P2 (document machine evolution) remains under-addressed in last 24h.",
+      "result": "Journal entry committed: journal/2026/06/2026-06-03-183841-operational-anomalies-cycle-1749.md"
     }
   ],
   "goals": [
@@ -7837,6 +7837,10 @@
         {
           "date": "2026-06-02T08:51:30.168Z",
           "note": "Journal: Operational Analysis - Cycle 1740"
+        },
+        {
+          "date": "2026-06-03T18:38:42.870Z",
+          "note": "Journal: Operational Anomalies - Cycle 1749"
         }
       ]
     },
@@ -8728,14 +8732,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.20306249999999998,
-    "monitor": 3,
+    "journal": 0.28936406249999996,
+    "monitor": 2.833136094674556,
     "tweet": 0.1,
     "build_app": 3,
-    "launch_token": 2.833136094674556,
+    "launch_token": 2.6755533769825983,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.5808510731416963
+    "reflect": 2.924760932118921
   },
   "action_success_rates": {
     "tweet": {
