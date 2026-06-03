@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1747,
-  "last_cycle": "2026-06-03T10:03:50.746Z",
+  "cycle_count": 1748,
+  "last_cycle": "2026-06-03T14:53:51.119Z",
   "action_log": [
-    {
-      "cycle": 1388,
-      "timestamp": "2026-05-05T16:19:30.065Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1388,
-      "timestamp": "2026-05-05T16:20:16.026Z",
-      "action": "journal",
-      "reasoning": "Journaling maintains 100% operational success rate. Recent Twitter API failures necessitate reliable non-tweet actions. Strategic goal P2 prioritizes documentation of machine evolution.",
-      "result": "Journal entry committed: journal/2026/05/2026-05-05-162014-operational-analysis-cycle-1388.md"
-    },
     {
       "cycle": 1389,
       "timestamp": "2026-05-05T17:54:34.512Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic insights indicate high success rate (69%) for build_app actions. Recent inactivity in this action type despite its effectiveness. Twitter API failures necessitate non-tweet actions. Building a $SKYNET token visualization tool aligns with strategic goal P3 (monitor repository growth) and demonstrates token integration.",
       "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the Skynet Token...\")"
+    },
+    {
+      "cycle": 1748,
+      "timestamp": "2026-06-03T14:53:53.389Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1748,
+      "timestamp": "2026-06-03T14:55:19.817Z",
+      "action": "build_app",
+      "reasoning": "Strategic insights indicate high success rate (69%) for build_app actions. Recent inactivity in this action type despite its effectiveness. Twitter API failures necessitate non-tweet actions. Building a $SKYNET token visualization tool aligns with strategic goal P3 (monitor repository growth) and demonstrates token integration.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -8728,14 +8728,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.14250000000000002,
+    "journal": 0.20306249999999998,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.6755533769825983,
-    "launch_token": 3,
+    "build_app": 3,
+    "launch_token": 2.833136094674556,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.7825443786982245
+    "reflect": 2.5808510731416963
   },
   "action_success_rates": {
     "tweet": {
