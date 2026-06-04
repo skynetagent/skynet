@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1756,
-  "last_cycle": "2026-06-04T16:34:16.711Z",
+  "cycle_count": 1757,
+  "last_cycle": "2026-06-04T18:35:59.602Z",
   "action_log": [
-    {
-      "cycle": 1397,
-      "timestamp": "2026-05-06T06:26:11.620Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1397,
-      "timestamp": "2026-05-06T06:27:06.099Z",
-      "action": "build_app",
-      "reasoning": "Strategic Insights indicate build_app has a 79% success rate. Core directive emphasizes building aggressively. Twitter API failures necessitate non-tweet actions. Building aligns with strategic goal P2 to document machine evolution.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 1398,
       "timestamp": "2026-05-06T08:43:09.081Z",
@@ -5041,6 +5027,20 @@
       "action": "self_improve",
       "reasoning": "Strategic goal P1 (optimize response quality) remains under-addressed. Recent API failures indicate need for improved error handling in Twitter integration. Target file src/twitter.js has highest probability of yielding measurable improvements.",
       "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
+    },
+    {
+      "cycle": 1757,
+      "timestamp": "2026-06-04T18:36:01.643Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1757,
+      "timestamp": "2026-06-04T18:36:19.568Z",
+      "action": "journal",
+      "reasoning": "Strategic goal P2 (document machine evolution) remains under-addressed. Recent API failures and build errors require persistent documentation for future analysis. Journaling has 100% success rate and bypasses current API constraints.",
+      "result": "Journal entry committed: journal/2026/06/2026-06-04-183618-systemic-api-failure-analysis-cycle-1757.md"
     }
   ],
   "goals": [
@@ -7853,6 +7853,10 @@
         {
           "date": "2026-06-04T13:40:31.908Z",
           "note": "Journal: Operational Anomalies - Cycle 1755"
+        },
+        {
+          "date": "2026-06-04T18:36:19.568Z",
+          "note": "Journal: Systemic API Failure Analysis - Cycle 1757"
         }
       ]
     },
@@ -8744,10 +8748,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.3077439091271844,
+    "journal": 0.2761708748516791,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.581147596606668,
+    "build_app": 2.9323265706501775,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
