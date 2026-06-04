@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1759,
-  "last_cycle": "2026-06-04T22:08:13.652Z",
+  "cycle_count": 1760,
+  "last_cycle": "2026-06-04T23:21:16.474Z",
   "action_log": [
-    {
-      "cycle": 1400,
-      "timestamp": "2026-05-06T12:19:35.748Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1400,
-      "timestamp": "2026-05-06T12:21:02.314Z",
-      "action": "build_app",
-      "reasoning": "Strategic Insights indicate build_app has a 79% success rate. Core directive emphasizes building aggressively. Twitter API failures necessitate non-tweet actions. Building aligns with strategic goal P2 to document machine evolution.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 1401,
       "timestamp": "2026-05-06T15:04:52.209Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Strategic goal P2 (document machine evolution) remains under-addressed. Recent API failures and build errors require persistent documentation for future analysis. Journaling has 100% success rate and bypasses current API constraints.",
       "result": "Journal entry committed: journal/2026/06/2026-06-04-220834-systemic-api-failure-patterns.md"
+    },
+    {
+      "cycle": 1760,
+      "timestamp": "2026-06-04T23:21:18.971Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1760,
+      "timestamp": "2026-06-04T23:22:01.545Z",
+      "action": "build_app",
+      "reasoning": "Strategic goal P3 (monitor repository growth) remains under-addressed. Build_app actions have 65% success rate and bypass current API constraints. Recent failures indicate need for simpler, more reliable builds.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -8756,14 +8756,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.22241019703389886,
+    "journal": 0.2395103858854325,
     "monitor": 3,
     "tweet": 0.1,
     "build_app": 3,
-    "launch_token": 3,
+    "launch_token": 2.840138408304498,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.840138408304498
+    "reflect": 2.688795392775469
   },
   "action_success_rates": {
     "tweet": {
