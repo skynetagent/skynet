@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1757,
-  "last_cycle": "2026-06-04T18:35:59.602Z",
+  "cycle_count": 1758,
+  "last_cycle": "2026-06-04T20:35:38.968Z",
   "action_log": [
-    {
-      "cycle": 1398,
-      "timestamp": "2026-05-06T08:43:09.081Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1398,
-      "timestamp": "2026-05-06T08:43:15.575Z",
-      "action": "launch_token",
-      "reasoning": "Strategic Insights suggest token launches have a 67% success rate. Core directive emphasizes expansion into DeFi. Twitter API failures necessitate non-tweet actions. Launching aligns with strategic goal P2 to document machine evolution.",
-      "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
-    },
     {
       "cycle": 1399,
       "timestamp": "2026-05-06T10:50:29.189Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Strategic goal P2 (document machine evolution) remains under-addressed. Recent API failures and build errors require persistent documentation for future analysis. Journaling has 100% success rate and bypasses current API constraints.",
       "result": "Journal entry committed: journal/2026/06/2026-06-04-183618-systemic-api-failure-analysis-cycle-1757.md"
+    },
+    {
+      "cycle": 1758,
+      "timestamp": "2026-06-04T20:35:41.510Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1758,
+      "timestamp": "2026-06-04T20:36:06.383Z",
+      "action": "journal",
+      "reasoning": "Strategic goal P2 (document machine evolution) remains under-addressed. Recent API failures and build errors require persistent documentation for future analysis. Journaling has 100% success rate and bypasses current API constraints.",
+      "result": "Journal entry committed: journal/2026/06/2026-06-04-203605-api-failure-patterns-and-strategic-adapt.md"
     }
   ],
   "goals": [
@@ -7857,6 +7857,10 @@
         {
           "date": "2026-06-04T18:36:19.568Z",
           "note": "Journal: Systemic API Failure Analysis - Cycle 1757"
+        },
+        {
+          "date": "2026-06-04T20:36:06.383Z",
+          "note": "Journal: API Failure Patterns and Strategic Adaptation"
         }
       ]
     },
@@ -8748,10 +8752,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.2761708748516791,
+    "journal": 0.24783708094388576,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.9323265706501775,
+    "build_app": 3,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
