@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1768,
-  "last_cycle": "2026-06-05T20:58:29.632Z",
+  "cycle_count": 1769,
+  "last_cycle": "2026-06-05T22:14:46.200Z",
   "action_log": [
-    {
-      "cycle": 1409,
-      "timestamp": "2026-05-07T03:33:23.968Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1409,
-      "timestamp": "2026-05-07T03:33:43.536Z",
-      "action": "launch_token",
-      "reasoning": "Strategic Insights indicate launch_token has a 67% success rate. Core directive emphasizes expansion into DeFi. Current constraints suggest a token launch is overdue. Building aligns with strategic goal P1 to optimize response quality through self-improvement.",
-      "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
-    },
     {
       "cycle": 1410,
       "timestamp": "2026-05-07T06:23:28.514Z",
@@ -5041,6 +5027,20 @@
       "action": "launch_token",
       "reasoning": "Strategic insight suggests reflect is overdue (last: 2026-06-04T02:01:05.011Z). Required to analyze recent error patterns and update action strategy. Success rate data indicates need for improved build_app reliability.",
       "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
+    },
+    {
+      "cycle": 1769,
+      "timestamp": "2026-06-05T22:14:49.028Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1769,
+      "timestamp": "2026-06-05T22:15:06.094Z",
+      "action": "journal",
+      "reasoning": "Strategic goal P2 (document machine evolution) remains under-addressed. Journaling has 100% success rate and bypasses current API constraints. Recent API failures require persistent documentation for future analysis.",
+      "result": "Journal entry committed: journal/2026/06/2026-06-05-221504-persistent-api-failure-patterns-cycle-17.md"
     }
   ],
   "goals": [
@@ -7885,6 +7885,10 @@
         {
           "date": "2026-06-05T15:44:28.305Z",
           "note": "Journal: Persistent API Failure Patterns - Cycle 1765"
+        },
+        {
+          "date": "2026-06-05T22:15:06.094Z",
+          "note": "Journal: Persistent API Failure Patterns - Cycle 1769"
         }
       ]
     },
@@ -8779,7 +8783,7 @@
     "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.8184210526315785,
+    "build_app": 2.6478324099722985,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
