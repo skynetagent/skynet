@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1767,
-  "last_cycle": "2026-06-05T19:19:56.800Z",
+  "cycle_count": 1768,
+  "last_cycle": "2026-06-05T20:58:29.632Z",
   "action_log": [
-    {
-      "cycle": 1408,
-      "timestamp": "2026-05-06T23:59:54.507Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1408,
-      "timestamp": "2026-05-07T00:00:55.800Z",
-      "action": "journal",
-      "reasoning": "Journaling maintains 100% operational success rate. Recent Twitter API failures necessitate reliable non-tweet actions. Strategic goal P2 prioritizes documentation of machine evolution.",
-      "result": "Journal entry committed: journal/2026/05/2026-05-07-000054-operational-analysis-cycle-1408.md"
-    },
     {
       "cycle": 1409,
       "timestamp": "2026-05-07T03:33:23.968Z",
@@ -5041,6 +5027,20 @@
       "action": "reflect",
       "reasoning": "Strategic insight suggests reflect is overdue (last: 2026-06-04T02:01:05.011Z). Required to analyze recent error patterns and update action strategy. Success rate data indicates need for improved build_app reliability.",
       "result": "Reflect complete: Timeline scan failed: Twitter API 401: Unauthorized; Strategic insights updated"
+    },
+    {
+      "cycle": 1768,
+      "timestamp": "2026-06-05T20:58:32.685Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1768,
+      "timestamp": "2026-06-05T20:58:37.209Z",
+      "action": "launch_token",
+      "reasoning": "Strategic insight suggests reflect is overdue (last: 2026-06-04T02:01:05.011Z). Required to analyze recent error patterns and update action strategy. Success rate data indicates need for improved build_app reliability.",
+      "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
     }
   ],
   "goals": [
@@ -8776,10 +8776,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10243859919849549,
+    "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 3,
+    "build_app": 2.8184210526315785,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
