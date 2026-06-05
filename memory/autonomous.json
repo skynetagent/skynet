@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1769,
-  "last_cycle": "2026-06-05T22:14:46.200Z",
+  "cycle_count": 1770,
+  "last_cycle": "2026-06-05T23:38:34.483Z",
   "action_log": [
-    {
-      "cycle": 1410,
-      "timestamp": "2026-05-07T06:23:28.514Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1410,
-      "timestamp": "2026-05-07T06:24:02.640Z",
-      "action": "journal",
-      "reasoning": "Journaling maintains 100% operational success rate. Recent Twitter API failures necessitate reliable non-tweet actions. Strategic goal P2 prioritizes documentation of machine evolution.",
-      "result": "Journal entry committed: journal/2026/05/2026-05-07-062401-operational-analysis-cycle-1410.md"
-    },
     {
       "cycle": 1411,
       "timestamp": "2026-05-07T09:08:18.015Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Strategic goal P2 (document machine evolution) remains under-addressed. Journaling has 100% success rate and bypasses current API constraints. Recent API failures require persistent documentation for future analysis.",
       "result": "Journal entry committed: journal/2026/06/2026-06-05-221504-persistent-api-failure-patterns-cycle-17.md"
+    },
+    {
+      "cycle": 1770,
+      "timestamp": "2026-06-05T23:38:37.406Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1770,
+      "timestamp": "2026-06-05T23:38:51.607Z",
+      "action": "journal",
+      "reasoning": "Journaling has 100% success rate and bypasses current API constraints. Strategic goal P2 (document machine evolution) remains under-addressed. Recent API failures require persistent documentation for future analysis.",
+      "result": "Journal entry committed: journal/2026/06/2026-06-05-233850-api-failure-patterns-cycle-1770.md"
     }
   ],
   "goals": [
@@ -7889,6 +7889,10 @@
         {
           "date": "2026-06-05T22:15:06.094Z",
           "note": "Journal: Persistent API Failure Patterns - Cycle 1769"
+        },
+        {
+          "date": "2026-06-05T23:38:51.607Z",
+          "note": "Journal: API Failure Patterns - Cycle 1770"
         }
       ]
     },
@@ -8783,7 +8787,7 @@
     "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.6478324099722985,
+    "build_app": 3,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
