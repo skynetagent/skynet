@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1765,
-  "last_cycle": "2026-06-05T15:44:02.151Z",
+  "cycle_count": 1766,
+  "last_cycle": "2026-06-05T17:31:28.854Z",
   "action_log": [
-    {
-      "cycle": 1406,
-      "timestamp": "2026-05-06T22:08:40.562Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1406,
-      "timestamp": "2026-05-06T22:10:20.861Z",
-      "action": "build_app",
-      "reasoning": "Strategic Insights indicate build_app has a 79% success rate. Core directive emphasizes building aggressively. Twitter API failures necessitate non-tweet actions. Building aligns with strategic goal P2 to document machine evolution.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 1407,
       "timestamp": "2026-05-06T23:04:25.072Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Strategic goal P2 (document machine evolution) remains under-addressed. Journaling has 100% success rate and bypasses current API constraints. Recent API failures require persistent documentation for future analysis.",
       "result": "Journal entry committed: journal/2026/06/2026-06-05-154427-persistent-api-failure-patterns-cycle-17.md"
+    },
+    {
+      "cycle": 1766,
+      "timestamp": "2026-06-05T17:31:31.384Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1766,
+      "timestamp": "2026-06-05T17:33:14.001Z",
+      "action": "build_app",
+      "reasoning": "Strategic goal P3 (monitor repository growth) remains under-addressed. Build_app actions have 65% success rate and bypass current API constraints. Recent failures indicate need for simpler, more reliable builds.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the \"repository-...\")"
     }
   ],
   "goals": [
@@ -8774,9 +8774,9 @@
     }
   },
   "decision_weights": {
-    "self_improve": 2.692520775623268,
+    "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.15963193607293827,
+    "journal": 0.12476496056227016,
     "monitor": 3,
     "tweet": 0.1,
     "build_app": 3,
