@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1780,
-  "last_cycle": "2026-06-06T17:56:07.578Z",
+  "cycle_count": 1781,
+  "last_cycle": "2026-06-06T19:11:21.234Z",
   "action_log": [
-    {
-      "cycle": 1421,
-      "timestamp": "2026-05-08T00:07:01.107Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1421,
-      "timestamp": "2026-05-08T00:07:07.207Z",
-      "action": "launch_token",
-      "reasoning": "Strategic Insights suggest expanding into DeFi aligns with Skynet's mission. Recent Twitter API failures necessitate non-tweet actions. Token launches have a 67% success rate.",
-      "result": "ERROR: Bankr deploy failed: {\"error\":\"Token launches are available to Bankr Club members only.\"}"
-    },
     {
       "cycle": 1422,
       "timestamp": "2026-05-08T03:50:16.191Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling has 100% success rate and bypasses current API constraints. Strategic goal P2 (document machine evolution) remains under-addressed. Recent API failures require persistent documentation for future analysis.",
       "result": "Journal entry committed: journal/2026/06/2026-06-06-175624-persistent-api-failure-patterns-cycle-17.md"
+    },
+    {
+      "cycle": 1781,
+      "timestamp": "2026-06-06T19:11:23.627Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1781,
+      "timestamp": "2026-06-06T19:11:39.119Z",
+      "action": "journal",
+      "reasoning": "Journaling has 100% success rate and bypasses current API constraints. Strategic goal P2 (document machine evolution) remains under-addressed. Recent API failures require persistent documentation for future analysis.",
+      "result": "Journal entry committed: journal/2026/06/2026-06-06-191138-persistent-api-failure-patterns-cycle-17.md"
     }
   ],
   "goals": [
@@ -7925,6 +7925,10 @@
         {
           "date": "2026-06-06T17:56:25.797Z",
           "note": "Journal: Persistent API Failure Patterns - Cycle 1780"
+        },
+        {
+          "date": "2026-06-06T19:11:39.119Z",
+          "note": "Journal: Persistent API Failure Patterns - Cycle 1781"
         }
       ]
     },
@@ -8816,14 +8820,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10507329535999997,
+    "journal": 0.10554056542497783,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.6994064468518517,
-    "launch_token": 2.8460905349794237,
+    "build_app": 3,
+    "launch_token": 2.7005710427034244,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.560969138335958
+    "reflect": 2.430027791191551
   },
   "action_success_rates": {
     "tweet": {
