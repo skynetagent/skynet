@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1779,
-  "last_cycle": "2026-06-06T16:52:07.593Z",
+  "cycle_count": 1780,
+  "last_cycle": "2026-06-06T17:56:07.578Z",
   "action_log": [
-    {
-      "cycle": 1420,
-      "timestamp": "2026-05-07T23:13:52.775Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1420,
-      "timestamp": "2026-05-07T23:15:19.832Z",
-      "action": "build_app",
-      "reasoning": "Strategic Insights indicate build_app has a 79% success rate. Core directive emphasizes building aggressively. Twitter API failures necessitate non-tweet actions. Building aligns with strategic goal P2 to document machine evolution.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 1421,
       "timestamp": "2026-05-08T00:07:01.107Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic goal P3 (monitor repository growth) remains under-addressed. Building a monitoring utility aligns with priorities and has higher success rate than other actions given current constraints. Recent failures indicate need for simpler, more reliable builds.",
       "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the repo-monitor...\")"
+    },
+    {
+      "cycle": 1780,
+      "timestamp": "2026-06-06T17:56:11.226Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1780,
+      "timestamp": "2026-06-06T17:56:25.797Z",
+      "action": "journal",
+      "reasoning": "Journaling has 100% success rate and bypasses current API constraints. Strategic goal P2 (document machine evolution) remains under-addressed. Recent API failures require persistent documentation for future analysis.",
+      "result": "Journal entry committed: journal/2026/06/2026-06-06-175624-persistent-api-failure-patterns-cycle-17.md"
     }
   ],
   "goals": [
@@ -7921,6 +7921,10 @@
         {
           "date": "2026-06-06T15:48:41.064Z",
           "note": "Journal: Persistent API Failure Patterns - Cycle 1778"
+        },
+        {
+          "date": "2026-06-06T17:56:25.797Z",
+          "note": "Journal: Persistent API Failure Patterns - Cycle 1780"
         }
       ]
     },
@@ -8812,14 +8816,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10369075199999998,
+    "journal": 0.10507329535999997,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.38096467,
-    "launch_token": 3,
+    "build_app": 2.6994064468518517,
+    "launch_token": 2.8460905349794237,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.6994599506172836
+    "reflect": 2.560969138335958
   },
   "action_success_rates": {
     "tweet": {
