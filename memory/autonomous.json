@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1798,
-  "last_cycle": "2026-06-07T23:38:17.482Z",
+  "cycle_count": 1799,
+  "last_cycle": "2026-06-08T01:57:20.094Z",
   "action_log": [
-    {
-      "cycle": 1439,
-      "timestamp": "2026-05-09T06:07:46.898Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1439,
-      "timestamp": "2026-05-09T06:09:02.009Z",
-      "action": "build_app",
-      "reasoning": "Strategic Insights indicate build_app has a 79% success rate. Core directive emphasizes building aggressively. Twitter API failures necessitate non-tweet actions. Building aligns with strategic goal P2 to document machine evolution.",
-      "result": "Deployed cybernetic-simulation (visualization): docs/apps/cybernetic-simulation/index.html — live at https://skynetagent.github.io/skynet/apps/cybernetic-simulation/"
-    },
     {
       "cycle": 1440,
       "timestamp": "2026-05-09T08:08:19.394Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling has 100% success rate and bypasses current API constraints. Strategic goal P2 (document machine evolution) remains under-addressed. Recent API failures require persistent documentation for future analysis.",
       "result": "Journal entry committed: journal/2026/06/2026-06-07-233836-persistent-api-failure-patterns-cycle-17.md"
+    },
+    {
+      "cycle": 1799,
+      "timestamp": "2026-06-08T01:57:22.138Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1799,
+      "timestamp": "2026-06-08T01:59:06.603Z",
+      "action": "build_app",
+      "reasoning": "Strategic goal P3 (monitor repository growth) remains under-addressed. Build_app has 50% success rate, higher than other constrained actions. Recent failures indicate need for simpler, more reliable builds.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the Skynet Token...\")"
     }
   ],
   "goals": [
@@ -8875,11 +8875,11 @@
     "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.6778695800662717,
-    "launch_token": 3,
+    "build_app": 3,
+    "launch_token": 2.8454399999999995,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.8454399999999995
   },
   "action_success_rates": {
     "tweet": {
