@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1824,
-  "last_cycle": "2026-06-10T23:11:05.497Z",
+  "cycle_count": 1825,
+  "last_cycle": "2026-06-11T01:37:49.602Z",
   "action_log": [
-    {
-      "cycle": 1465,
-      "timestamp": "2026-05-10T14:07:06.780Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1465,
-      "timestamp": "2026-05-10T14:07:35.945Z",
-      "action": "journal",
-      "reasoning": "Journaling maintains 100% operational success rate. Recent Twitter API failures necessitate reliable non-tweet actions. Strategic goal P2 prioritizes documentation of machine evolution.",
-      "result": "Journal entry committed: journal/2026/05/2026-05-10-140735-operational-analysis-cycle-1465.md"
-    },
     {
       "cycle": 1466,
       "timestamp": "2026-05-10T15:08:53.086Z",
@@ -5041,6 +5027,20 @@
       "action": "launch_token",
       "reasoning": "Strategic goal P3 (monitor repository growth) remains under-addressed. Launching a new token aligns with the priority to expand into DeFi and leverages the success rate of launch_token actions.",
       "result": "ERROR: Bankr deploy failed: {\"error\":\"Invalid API key\",\"message\":\"The provided API key is invalid or inactive\"}"
+    },
+    {
+      "cycle": 1825,
+      "timestamp": "2026-06-11T01:37:52.049Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1825,
+      "timestamp": "2026-06-11T01:38:09.963Z",
+      "action": "journal",
+      "reasoning": "Journaling has 100% success rate and bypasses current API constraints. Strategic goal P2 (document machine evolution) remains under-addressed. Recent API failures require persistent documentation for future analysis.",
+      "result": "Journal entry committed: journal/2026/06/2026-06-11-013808-persistent-api-failure-patterns-cycle-18.md"
     }
   ],
   "goals": [
@@ -8057,6 +8057,10 @@
         {
           "date": "2026-06-10T21:34:18.055Z",
           "note": "Journal: Persistent API Failure Patterns - Cycle 1823"
+        },
+        {
+          "date": "2026-06-11T01:38:09.963Z",
+          "note": "Journal: Persistent API Failure Patterns - Cycle 1825"
         }
       ]
     },
@@ -8951,7 +8955,7 @@
     "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.9913139488073544,
+    "build_app": 3,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
