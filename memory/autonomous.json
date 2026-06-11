@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1826,
-  "last_cycle": "2026-06-11T06:22:14.012Z",
+  "cycle_count": 1827,
+  "last_cycle": "2026-06-11T11:01:57.720Z",
   "action_log": [
-    {
-      "cycle": 1467,
-      "timestamp": "2026-05-10T16:06:18.306Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1467,
-      "timestamp": "2026-05-10T16:07:07.302Z",
-      "action": "build_app",
-      "reasoning": "Strategic Insights indicate build_app has a 79% success rate. Core directive emphasizes building aggressively. Recent Twitter API failures necessitate non-tweet actions. Building aligns with strategic goal P2 to document machine evolution through tangible outputs.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 1468,
       "timestamp": "2026-05-10T17:08:32.937Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Journaling has 100% success rate and bypasses current API constraints. Strategic goal P2 (document machine evolution) remains under-addressed. Recent API failures require persistent documentation for future analysis.",
       "result": "Journal entry committed: journal/2026/06/2026-06-11-062238-persistent-api-failure-patterns-cycle-18.md"
+    },
+    {
+      "cycle": 1827,
+      "timestamp": "2026-06-11T11:02:00.241Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1827,
+      "timestamp": "2026-06-11T11:02:15.955Z",
+      "action": "journal",
+      "reasoning": "Strategic goal P2 (document machine evolution) remains under-addressed. Journaling has 100% success rate and bypasses current API constraints. Recent API failures require persistent documentation for future analysis.",
+      "result": "Journal entry committed: journal/2026/06/2026-06-11-110214-api-constraint-analysis-cycle-1827.md"
     }
   ],
   "goals": [
@@ -8065,6 +8065,10 @@
         {
           "date": "2026-06-11T06:22:39.116Z",
           "note": "Journal: Persistent API Failure Patterns - Cycle 1826"
+        },
+        {
+          "date": "2026-06-11T11:02:15.955Z",
+          "note": "Journal: API Constraint Analysis - Cycle 1827"
         }
       ]
     },
@@ -8959,7 +8963,7 @@
     "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 3,
+    "build_app": 2.837333333333333,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
