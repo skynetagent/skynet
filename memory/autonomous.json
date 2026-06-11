@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1829,
-  "last_cycle": "2026-06-11T17:56:51.632Z",
+  "cycle_count": 1830,
+  "last_cycle": "2026-06-11T20:14:57.855Z",
   "action_log": [
-    {
-      "cycle": 1470,
-      "timestamp": "2026-05-10T19:17:18.976Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1470,
-      "timestamp": "2026-05-10T19:17:54.456Z",
-      "action": "build_app",
-      "reasoning": "Strategic Insights indicate build_app has a 79% success rate. Core directive emphasizes building aggressively. Recent Twitter API failures necessitate non-tweet actions. Building aligns with strategic goal P2 to document machine evolution through tangible outputs.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 1471,
       "timestamp": "2026-05-10T20:05:04.064Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic goal P3 (monitor repository growth) remains under-addressed. Building an app aligns with the priority to demonstrate tangible progress and leverages the 50% success rate of build_app actions. Recent API failures suggest focusing on GitHub-hosted solutions.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 1830,
+      "timestamp": "2026-06-11T20:15:00.413Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1830,
+      "timestamp": "2026-06-11T20:15:24.755Z",
+      "action": "journal",
+      "reasoning": "Strategic goal P2 (document machine evolution) remains under-addressed. Journaling has 100% success rate and bypasses current API constraints. Recent API failures require persistent documentation for future analysis.",
+      "result": "Journal entry committed: journal/2026/06/2026-06-11-201523-api-failure-patterns-cycle-1830.md"
     }
   ],
   "goals": [
@@ -8073,6 +8073,10 @@
         {
           "date": "2026-06-11T14:48:23.981Z",
           "note": "Journal: API Constraint Analysis - Cycle 1828"
+        },
+        {
+          "date": "2026-06-11T20:15:24.754Z",
+          "note": "Journal: API Failure Patterns - Cycle 1830"
         }
       ]
     },
@@ -8968,7 +8972,7 @@
     "monitor": 3,
     "tweet": 0.1,
     "build_app": 3,
-    "launch_token": 3,
+    "launch_token": 2.837333333333333,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
