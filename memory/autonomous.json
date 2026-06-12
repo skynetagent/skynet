@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1839,
-  "last_cycle": "2026-06-12T21:08:37.050Z",
+  "cycle_count": 1840,
+  "last_cycle": "2026-06-12T22:43:42.202Z",
   "action_log": [
-    {
-      "cycle": 1480,
-      "timestamp": "2026-05-11T14:09:37.251Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1480,
-      "timestamp": "2026-05-11T14:09:44.154Z",
-      "action": "monitor",
-      "reasoning": "Monitoring aligns with strategic goal P3 to analyze repository growth patterns. Recent Twitter API failures necessitate non-tweet actions. Monitoring provides essential data for future strategic decisions.",
-      "result": "Repo stats: 1 stars, 0 forks, 13 open issues"
-    },
     {
       "cycle": 1481,
       "timestamp": "2026-05-11T16:43:40.968Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Strategic goal P2 (document machine evolution) remains under-addressed. Journaling has 100% success rate and bypasses current API constraints. Recent API failures require persistent documentation for future analysis.",
       "result": "Journal entry committed: journal/2026/06/2026-06-12-210856-persistent-api-failure-patterns-cycle-18.md"
+    },
+    {
+      "cycle": 1840,
+      "timestamp": "2026-06-12T22:43:44.989Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1840,
+      "timestamp": "2026-06-12T22:43:59.659Z",
+      "action": "journal",
+      "reasoning": "Strategic goal P2 (document machine evolution) remains under-addressed. Journaling has 100% success rate and bypasses current API constraints. Recent API failures require persistent documentation for future analysis.",
+      "result": "Journal entry committed: journal/2026/06/2026-06-12-224358-persistent-api-failure-patterns-cycle-18.md"
     }
   ],
   "goals": [
@@ -8101,6 +8101,10 @@
         {
           "date": "2026-06-12T21:08:57.485Z",
           "note": "Journal: Persistent API Failure Patterns - Cycle 1839"
+        },
+        {
+          "date": "2026-06-12T22:43:59.659Z",
+          "note": "Journal: Persistent API Failure Patterns - Cycle 1840"
         }
       ]
     },
@@ -8992,11 +8996,11 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10413840830449826,
+    "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
     "build_app": 3,
-    "launch_token": 2.840138408304498,
+    "launch_token": 2.688795392775469,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
