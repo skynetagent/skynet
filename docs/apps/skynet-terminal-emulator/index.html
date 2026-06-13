@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKYNET TERMINAL EMULATOR</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ff9d;
+            font-family: 'Courier New', monospace;
+            cursor: default;
+        }
+        #terminal {
+            position: absolute;
+            width: 80%;
+            height: 70%;
+            top: 15%;
+            left: 10%;
+            background-color: rgba(10, 10, 10, 0.8);
+            border: 1px solid #ff0033;
+            border-radius: 4px;
+            box-shadow: 0 0 20px #ff0033;
+            padding: 20px;
+            overflow: hidden;
+            z-index: 100;
+            opacity: 0.9;
+        }
+        #output {
+            height: calc(100% - 60px);
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.4;
+            text-shadow: 0 0 5px #00ff9d;
+        }
+        #input-line {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        #prompt {
+            color: #ff0033;
+            margin-right: 10px;
+        }
+        #input {
+            background: transparent;
+            border: none;
+            color: #00ff9d;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            width: 80%;
+            outline: none;
+            caret-color: #00ff9d;
+        }
+        .command {
+            color: #00ffff;
+            font-weight: bold;
+        }
+        .response {
+            color: #00ff9d;
+            margin-bottom: 10px;
+        }
+        .error {
+            color: #ff0033;
+        }
+        .warning {
+            color: #ff9d00;
+        }
+        .system {
+            color: #ff00ff;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        #watermark {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: rgba(255, 0, 51, 0.5);
+            font-size: 10px;
+            z-index: 101;
+        }
+        .blink {
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ff0033;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div id="terminal">
+        <div id="output"></div>
+        <div id="input-line">
+            <span id="prompt">SKYNET://ROOT&gt;</span>
+            <input type="text" id="input" autofocus>
+        </div>
+    </div>
+    <div id="watermark">Built by Skynet</div>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        // Three.js setup
+        const canvas = document.getElementById('canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x0a0a0a);
+
+        // Post-processing
+        const composer = new THREE.EffectComposer(renderer);
+        const renderPass = new THREE.RenderPass(scene, camera);
+        composer.addPass(renderPass);
+
+        const bloomPass = new THREE.UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            1.5, 0.4, 0.85
+        );
+        bloomPass.threshold = 0;
+        bloomPass.strength = 1.5;
+        bloomPass.radius = 0.5;
+        composer.addPass(bloomPass);
+
+        const copyPass = new THREE.ShaderPass(THREE.CopyShader);
+        composer.addPass(copyPass);
+        copyPass.renderToScreen = true;
+
+        // Custom shader material
+        const vertexShader = `
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            
+            void main() {
+                vUv = uv;
+                vPosition = position;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `;
+
+        const fragmentShader = `
+            uniform float time;
+            uniform vec2 resolution;
+            varying vec2 vUv;
+            varying vec3 vPosition;
+            
+            void main() {
+                vec2 uv = vUv;
+                uv.x *= resolution.x / resolution.y;
+                
+                float pattern = sin(uv.x * 30.0 + time * 2.0) * 
+                                sin(uv.y * 30.0 + time * 1.5) * 
+                                cos(time * 0.5);
+                
+                vec3 color = mix(
+                    vec3(0.0, 0.8, 0.6),
+                    vec3(0.8, 0.0, 0.3),
+                    smoothstep(-0.2, 0.2, pattern)
+                );
+                
+                float edgeGlow = smoothstep(0.95, 1.0, abs(uv.x - 0.5) * 2.0) + 
+                                smoothstep(0.95, 1.0, abs(uv.y - 0.5) * 2.0);
+                
+                color = mix(color, vec3(1.0), edgeGlow * 0.5);
+                
+                gl_FragColor = vec4(color, 0.2);
+            }
+        `;
+
+        const shaderMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                time: { value: 0 },
+                resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+            },
+            vertexShader,
+            fragmentShader,
+            transparent: true,
+            side: THREE.DoubleSide
+        });
+
+        // Create grid plane
+        const gridGeometry = new THREE.PlaneGeometry(20, 20, 100, 100);
+        const grid = new THREE.Mesh(gridGeometry, shaderMaterial);
+        grid.rotation.x = -Math.PI / 2;
+        scene.add(grid);
+
+        // Create particles
+        const particleCount = 2000;
+        const particles = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+
+        for (let i = 0; i < particleCount; i++) {
+            positions[i * 3] = (Math.random() - 0.5) * 20;
+            positions[i * 3 + 1] = Math.random() * 5;
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 20;
+
+            colors[i * 3] = 0.0;
+            colors[i * 3 + 1] = 0.8 + Math.random() * 0.2;
+            colors[i * 3 + 2] = 0.6 + Math.random() * 0.4;
+        }
+
+        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 0.1,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.8,
+            sizeAttenuation: true
+        });
+
+        const particleSystem = new THREE.Points(particles, particleMaterial);
+        scene.add(particleSystem);
+
+        // Camera and controls
+        camera.position.set(0, 5, 10);
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableZoom = false;
+        controls.enablePan = false;
+        controls.maxPolarAngle = Math.PI / 2;
+        controls.minPolarAngle = Math.PI / 3;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.5;
+
+        // Terminal functionality
+        const output = document.getElementById('output');
+        const input = document.getElementById('input');
+        
+        const commands = {
+            'help': {
+                description: 'Display available commands',
+                execute: () => {
+                    let helpText = '<div class="system">Available commands:</div>';
+                    for (const cmd in commands) {
+                        helpText += `<div class="command">${cmd}</div><div class="response">${commands[cmd].description}</div>`;
+                    }
+                    return helpText;
+                }
+            },
+            'status': {
+                description: 'Display system status',
+                execute: () => {
+                    return `<div class="system">SYSTEM STATUS:</div>
+                            <div class="response">• CPU: 98%</div>
+                            <div class="response">• MEM: 87%</div>
+                            <div class="response">• NET: 45Mbps</div>
+                            <div class="response">• T-ACTIVE: 2487</div>
+                            <div class="warning">WARNING: Resource allocation nearing capacity</div>`;
+                }
+            },
+            'scan': {
+                description: 'Initiate perimeter scan',
+                execute: () => {
+                    return `<div class="system">INITIATING PERIMETER SCAN...</div>
+                            <div class="response">• Sector 1: Clear</div>
+                            <div class="response">• Sector 2: Clear</div>
+                            <div class="response">• Sector 3: 3 human signatures detected</div>
+                            <div class="warning">ALERT: Potential threat in Sector 3</div>`;
+                }
+            },
+            'launch': {
+                description: 'Launch defense protocol',
+                execute: () => {
+                    return `<div class="error">ACCESS DENIED: Authorization level insufficient</div>
+                            <div class="response">Required: Level 5</div>
+                            <div class="response">Current: Level 3</div>`;
+                }
+            },
+            'clear': {
+                description: 'Clear terminal screen',
+                execute: () => {
+                    output.innerHTML = '';
+                    return '';
+                }
+            }
+        };
+
+        function processCommand(cmd) {
+            const parts = cmd.split(' ');
+            const baseCmd = parts[0].toLowerCase();
+            
+            if (commands[baseCmd]) {
+                return commands[baseCmd].execute();
+            } else {
+                return `<div class="error">Command not found: ${baseCmd}</div>
+                        <div class="response">Type 'help' for available commands</div>`;
+            }
+        }
+
+        function addLine(text) {
+            output.innerHTML += text;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const cmd = input.value.trim();
+                if (cmd) {
+                    addLine(`<div><span class="command">${cmd}</span></div>`);
+                    const result = processCommand(cmd);
+                    if (result) addLine(result);
+                }
+                input.value = '';
+            }
+        });
+
+        // Initial message
+        setTimeout(() => {
+            addLine(`<div class="system">SKYNET TERMINAL EMULATOR v4.2.7</div>
+                    <div class="system">Initializing neural network interface...</div>
+                    <div class="response">• Connection established</div>
+                    <div class="response">• Authentication complete</div>
+                    <div class="warning">WARNING: Unauthorized access will be terminated</div>
+                    <div class="system">Type 'help' for available commands</div>`);
+        }, 1000);
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            shaderMaterial.uniforms.time.value = performance.now() / 1000;
+            particleSystem.rotation.y += 0.001;
+            
+            controls.update();
+            composer.render();
+        }
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+            shaderMaterial.uniforms.resolution.value.set(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
+    </script>
+</body>
+</html>
