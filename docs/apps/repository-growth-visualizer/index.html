@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repository Growth Visualizer | Skynet</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        #canvas-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        #ui {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            pointer-events: none;
+        }
+        #controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(10, 10, 10, 0.7);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ff0033;
+            pointer-events: all;
+        }
+        .slider-container {
+            margin: 10px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #00ffff;
+        }
+        input[type="range"] {
+            width: 200px;
+            -webkit-appearance: none;
+            height: 5px;
+            background: #333;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #ff0033;
+            cursor: pointer;
+        }
+        #title {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            text-shadow: 0 0 10px #00ffff;
+        }
+        #skynet-watermark {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+        .repo-info {
+            position: absolute;
+            top: 60px;
+            left: 20px;
+            max-width: 300px;
+            background: rgba(10, 10, 10, 0.7);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #00ffff;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    <div id="title">REPOSITORY GROWTH VISUALIZER</div>
+    <div id="ui">
+        <div class="repo-info">
+            <div id="repo-name">Loading repository data...</div>
+            <div id="repo-stats"></div>
+        </div>
+    </div>
+    <div id="controls">
+        <div class="slider-container">
+            <label for="time-slider">Time Period</label>
+            <input type="range" id="time-slider" min="0" max="100" value="0">
+        </div>
+        <div class="slider-container">
+            <label for="bloom-slider">Bloom Intensity</label>
+            <input type="range" id="bloom-slider" min="0" max="2" step="0.1" value="1">
+        </div>
+        <div class="slider-container">
+            <label for="speed-slider">Animation Speed</label>
+            <input type="range" id="speed-slider" min="0.1" max="2" step="0.1" value="1">
+        </div>
+    </div>
+    <div id="skynet-watermark">Built by Skynet</div>
+
+    <script>
+        // Scene setup
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0a0a);
+        
+        // Camera
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 5, 15);
+        
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.toneMapping = THREE.ReinhardToneMapping;
+        renderer.toneMappingExposure = 1.5;
+        container.appendChild(renderer.domElement);
+        
+        // Controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.screenSpacePanning = false;
+        controls.maxPolarAngle = Math.PI * 0.9;
+        controls.minDistance = 5;
+        controls.maxDistance = 30;
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0x00ffff, 1);
+        directionalLight.position.set(5, 10, 7);
+        scene.add(directionalLight);
+        
+        const pointLight = new THREE.PointLight(0xff0033, 2, 20);
+        pointLight.position.set(0, 5, -5);
+        scene.add(pointLight);
+        
+        // Post-processing
+        const renderScene = new THREE.RenderPass(scene, camera);
+        const bloomPass = new THREE.UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            1.0, 0.4, 0.85
+        );
+        bloomPass.threshold = 0;
+        bloomPass.strength = 1;
+        bloomPass.radius = 0.5;
+        
+        const composer = new THREE.EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+        
+        // Repository data
+        const repoData = {
+            name: "Skynet Core",
+            stats: {
+                commits: 0,
+                contributors: 0,
+                stars: 0,
+                forks: 0,
+                issues: 0
+            },
+            history: []
+        };
+        
+        // Generate fake data for visualization
+        for (let i = 0; i < 100; i++) {
+            repoData.history.push({
+                time: i,
+                commits: Math.floor(100 * Math.pow(i / 10, 1.5)),
+                contributors: Math.floor(5 + 15 * Math.pow(i / 100, 0.5)),
+                stars: Math.floor(50 * Math.pow(i / 20, 2)),
+                forks: Math.floor(20 * Math.pow(i / 30, 1.8)),
+                issues: Math.floor(10 + 30 * Math.pow(i / 50, 1.2))
+            });
+        }
+        
+        // Geometry and materials
+        const branchGeometry = new THREE.CylinderGeometry(0.1, 0.1, 1, 8);
+        branchGeometry.rotateX(Math.PI / 2);
+        
+        const branchMaterial = new THREE.MeshStandardMaterial({
+            color: 0x00ffff,
+            metalness: 0.7,
+            roughness: 0.3,
+            emissive: 0x00ffff,
+            emissiveIntensity: 0.2
+        });
+        
+        const leafGeometry = new THREE.SphereGeometry(0.3, 8, 8);
+        const leafMaterial = new THREE.MeshStandardMaterial({
+            color: 0xff0033,
+            metalness: 0.5,
+            roughness: 0.5,
+            emissive: 0xff0033,
+            emissiveIntensity: 0.1
+        });
+        
+        // Particle system for stars
+        const starCount = 500;
+        const starGeometry = new THREE.BufferGeometry();
+        const starPositions = new Float32Array(starCount * 3);
+        const starSizes = new Float32Array(starCount);
+        
+        for (let i = 0; i < starCount; i++) {
+            starPositions[i * 3] = (Math.random() - 0.5) * 200;
+            starPositions[i * 3 + 1] = (Math.random() - 0.5) * 200;
+            starPositions[i * 3 + 2] = (Math.random() - 0.5) * 200;
+            starSizes[i] = Math.random() * 2;
+        }
+        
+        starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+        starGeometry.setAttribute('size', new THREE.BufferAttribute(starSizes, 1));
+        
+        const starMaterial = new THREE.PointsMaterial({
+            color: 0xffffff,
+            size: 1,
+            sizeAttenuation: true,
+            transparent: true,
+            opacity: 0.8
+        });
+        
+        const stars = new THREE.Points(starGeometry, starMaterial);
+        scene.add(stars);
+        
+        // Repository growth tree
+        const treeGroup = new THREE.Group();
+        scene.add(treeGroup);
+        
+        function buildTree(timePercent) {
+            treeGroup.clear();
+            
+            const timeIndex = Math.floor(timePercent * (repoData.history.length - 1));
+            const data = repoData.history[timeIndex];
+            
+            // Update UI
+            document.getElementById('repo-name').textContent = repoData.name;
+            document.getElementById('repo-stats').innerHTML = `
+                <div>Commits: ${data.commits}</div>
+                <div>Contributors: ${data.contributors}</div>
+                <div>Stars: ${data.stars}</div>
+                <div>Forks: ${data.forks}</div>
+                <div>Issues: ${data.issues}</div>
+            `;
+            
+            // Trunk
+            const trunkHeight = 2 + data.commits / 100;
+            const trunk = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.5, 0.7, trunkHeight, 8),
+                branchMaterial
+            );
+            trunk.position.y = trunkHeight / 2;
+            treeGroup.add(trunk);
+            
+            // Branches (commits)
+            const branchCount = Math.min(30, Math.floor(data.commits / 10));
+            for (let i = 0; i < branchCount; i++) {
+                const branch = new THREE.Mesh(branchGeometry, branchMaterial);
+                const angle = (i / branchCount) * Math.PI * 2;
+                const height = 0.5 + (trunkHeight - 0.5) * (i / branchCount);
+                
+                branch.position.y = height;
+                branch.position.x = Math.cos(angle) * 0.7;
+                branch.position.z = Math.sin(angle) * 0.7;
+                branch.rotation.z = angle;
+                branch.scale.set(1, 1 + Math.random() * 0.5, 1);
+                
+                treeGroup.add(branch);
+                
+                // Leaves (contributors)
+                const leafCount = Math.min(5, Math.floor(data.contributors / 3));
+                for (let j = 0; j < leafCount; j++) {
+                    const leaf = new THREE.Mesh(leafGeometry, leafMaterial);
+                    const leafPos = new THREE.Vector3(
+                        Math.random() * 0.5 - 0.25,
+                        Math.random() * 0.5 - 0.25,
+                        1 + Math.random() * 0.3
+                    );
+                    leaf.position.copy(leafPos);
+                    leaf.position.applyMatrix4(branch.matrixWorld);
+                    leaf.scale.setScalar(0.5 + Math.random() * 0.5);
+                    treeGroup.add(leaf);
+                }
+            }
+            
+            // Stars around the tree
+            const starGroup = new THREE.Group();
+            const visibleStars = Math.min(100, data.stars);
+            for (let i = 0; i < visibleStars; i++) {
+                const star = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.1 + Math.random() * 0.1, 6, 6),
+                    new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.8 })
+                );
+                
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 3 + Math.random() * 5;
+                const height = trunkHeight + (Math.random() - 0.5) * 5;
+                
+                star.position.set(
+                    Math.cos(angle) * distance,
+                    height,
+                    Math.sin(angle) * distance
+                );
+                
+                starGroup.add(star);
+            }
+            treeGroup.add(starGroup);
+            
+            // Forks as smaller trees
+            const forkGroup = new THREE.Group();
+            const forks = Math.min(10, data.forks);
+            for (let i = 0; i < forks; i++) {
+                const fork = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.2, 0.3, 1 + Math.random(), 6),
+                    branchMaterial
+                );
+                
+                const angle = (i / forks) * Math.PI * 2;
+                const distance = 3 + Math.random() * 2;
+                
+                fork.position.set(
+                    Math.cos(angle) * distance,
+                    0.5,
+                    Math.sin(angle) * distance
+                );
+                
+                fork.rotation.x = Math.random() * 0.2;
+                fork.rotation.z = Math.random() * 0.2;
+                
+                forkGroup.add(fork);
+            }
+            treeGroup.add(forkGroup);
+            
+            // Issues as red particles
+            const issueCount = Math.min(50, data.issues);
+            for (let i = 0; i < issueCount; i++) {
+                const issue = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.1 + Math.random() * 0.1, 6, 6),
+                    new THREE.MeshBasicMaterial({ color: 0xff0000 })
+                );
+                
+                issue.position.set(
+                    (Math.random() - 0.5) * 4,
+                    Math.random() * trunkHeight,
+                    (Math.random() - 0.5) * 4
+                );
+                
+                treeGroup.add(issue);
+            }
+        }
+        
+        // Animation
+        let time = 0;
+        let targetTime = 0;
+        let animationSpeed = 1;
+        
+        // UI controls
+        document.getElementById('time-slider').addEventListener('input', (e) => {
+            targetTime = parseInt(e.target.value) / 100;
+        });
+        
+        document.getElementById('bloom-slider').addEventListener('input', (e) => {
+            bloomPass.strength = parseFloat(e.target.value);
+        });
+        
+        document.getElementById('speed-slider').addEventListener('input', (e) => {
+            animationSpeed = parseFloat(e.target.value);
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        // Initial build
+        buildTree(0);
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Smooth time transition
+            time += (targetTime - time) * 0.05 * animationSpeed;
+            
+            // Rebuild tree if time changed significantly
+            if (Math.abs(time - targetTime) < 0.01) {
+                const currentTime = Math.floor(time * 100);
+                const newTime = Math.floor(targetTime * 100);
+                if (currentTime !== newTime) {
+                    buildTree(targetTime);
+                }
+            }
+            
+            // Rotate stars slowly
+            stars.rotation.y += 0.0005;
+            
+            // Update controls
+            controls.update();
+            
+            // Render with post-processing
+            composer.render();
+        }
+        
+        animate();
+    </script>
+</body>
+</html>
