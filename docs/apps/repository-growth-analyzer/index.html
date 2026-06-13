@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repository Growth Analyzer | Skynet</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/ShaderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+        }
+        #container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            pointer-events: none;
+        }
+        #title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #00ffff;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            pointer-events: all;
+        }
+        .control-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        input[type="range"] {
+            width: 200px;
+            -webkit-appearance: none;
+            height: 2px;
+            background: #333;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #00ffff;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            font-size: 12px;
+            color: #ff3366;
+            z-index: 100;
+        }
+        .tooltip {
+            position: absolute;
+            padding: 10px;
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid #00ffff;
+            border-radius: 5px;
+            pointer-events: none;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <div id="ui">
+        <div id="title">REPOSITORY GROWTH ANALYZER</div>
+        <div id="stats"></div>
+    </div>
+    <div id="controls">
+        <div class="control-group">
+            <label for="timeRange">Time Range</label>
+            <input type="range" id="timeRange" min="0" max="100" value="100">
+        </div>
+        <div class="control-group">
+            <label for="bloomIntensity">Bloom Intensity</label>
+            <input type="range" id="bloomIntensity" min="0" max="2" value="1" step="0.1">
+        </div>
+    </div>
+    <div id="footer">BUILT BY SKYNET</div>
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        // Scene setup
+        const container = document.getElementById('container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a0a0a);
+
+        // Camera
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 10, 30);
+
+        // Renderer
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1;
+        container.appendChild(renderer.domElement);
+
+        // Controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.screenSpacePanning = false;
+        controls.maxPolarAngle = Math.PI * 0.9;
+        controls.minDistance = 10;
+        controls.maxDistance = 100;
+
+        // Post-processing
+        const renderScene = new THREE.RenderPass(scene, camera);
+        const bloomPass = new THREE.UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            1.5, 0.4, 0.85
+        );
+        bloomPass.threshold = 0;
+        bloomPass.strength = 1;
+        bloomPass.radius = 0.5;
+
+        const composer = new THREE.EffectComposer(renderer);
+        composer.addPass(renderScene);
+        composer.addPass(bloomPass);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0x00ffff, 1);
+        directionalLight.position.set(1, 1, 1);
+        scene.add(directionalLight);
+
+        const pointLight = new THREE.PointLight(0xff3366, 2, 50);
+        pointLight.position.set(10, 10, 10);
+        scene.add(pointLight);
+
+        // Data
+        const repoData = generateRepoData(30);
+        let currentTimeRange = 100;
+
+        // Custom shader for growth lines
+        const growthShader = {
+            vertexShader: `
+                varying vec2 vUv;
+                varying float vTime;
+                uniform float uTime;
+                
+                void main() {
+                    vUv = uv;
+                    vTime = uTime;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform vec3 uColor;
+                uniform float uTime;
+                varying vec2 vUv;
+                varying float vTime;
+                
+                void main() {
+                    float alpha = smoothstep(0.0, 0.2, vUv.x) * smoothstep(1.0, 0.8, vUv.x);
+                    alpha *= smoothstep(0.0, 0.2, vUv.y) * smoothstep(1.0, 0.8, vUv.y);
+                    alpha *= 0.5 + 0.5 * sin(uTime * 0.001 + vUv.x * 10.0);
+                    
+                    gl_FragColor = vec4(uColor, alpha * 0.8);
+                }
+            `
+        };
+
+        // Create repository growth visualization
+        function createVisualization() {
+            // Clear previous visualization
+            scene.children.slice().forEach(child => {
+                if (child !== ambientLight && child !== directionalLight && child !== pointLight) {
+                    scene.remove(child);
+                }
+            });
+
+            // Create timeline axis
+            const axisGeometry = new THREE.BufferGeometry();
+            const axisMaterial = new THREE.LineBasicMaterial({ color: 0x666666 });
+            const axisPoints = [];
+            const axisLength = 20;
+            
+            for (let i = 0; i <= axisLength; i++) {
+                axisPoints.push(new THREE.Vector3(i - axisLength/2, -5, 0));
+            }
+            
+            axisGeometry.setFromPoints(axisPoints);
+            const axis = new THREE.Line(axisGeometry, axisMaterial);
+            scene.add(axis);
+
+            // Create growth lines for each repository
+            repoData.forEach((repo, repoIndex) => {
+                const points = [];
+                const colors = [];
+                const color = new THREE.Color();
+                
+                // Calculate points for the growth line
+                const visibleDataPoints = Math.floor(repo.commits.length * currentTimeRange / 100);
+                
+                for (let i = 0; i < visibleDataPoints; i++) {
+                    const x = (i / repo.commits.length) * axisLength - axisLength/2;
+                    const y = (repo.commits[i] / 100) * 5 - 5;
+                    points.push(new THREE.Vector3(x, y, 0));
+                    
+                    // Color based on growth rate
+                    const growthRate = i > 0 ? (repo.commits[i] - repo.commits[i-1]) / 10 : 0;
+                    color.setHSL(0.5 + growthRate * 0.1, 1.0, 0.5);
+                    colors.push(color.r, color.g, color.b);
+                }
+                
+                // Create the line
+                const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+                lineGeometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+                
+                const lineMaterial = new THREE.LineBasicMaterial({ 
+                    vertexColors: true,
+                    linewidth: 2,
+                    transparent: true,
+                    opacity: 0.8
+                });
+                
+                const line = new THREE.Line(lineGeometry, lineMaterial);
+                scene.add(line);
+                
+                // Create repository label
+                const loader = new THREE.FontLoader();
+                loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font) {
+                    const textGeometry = new THREE.TextGeometry(repo.name, {
+                        font: font,
+                        size: 0.5,
+                        height: 0.1
+                    });
+                    
+                    const textMaterial = new THREE.MeshStandardMaterial({ 
+                        color: 0x00ffff,
+                        emissive: 0x00ffff,
+                        emissiveIntensity: 0.5,
+                        metalness: 0.8,
+                        roughness: 0.2
+                    });
+                    
+                    const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+                    textMesh.position.set(
+                        (visibleDataPoints / repo.commits.length) * axisLength - axisLength/2,
+                        (repo.commits[visibleDataPoints-1] / 100) * 5 - 5 + 1,
+                        0
+                    );
+                    scene.add(textMesh);
+                });
+                
+                // Create growth particles
+                const particleCount = 100;
+                const particleGeometry = new THREE.BufferGeometry();
+                const particlePositions = new Float32Array(particleCount * 3);
+                const particleSizes = new Float32Array(particleCount);
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const i3 = i * 3;
+                    const progress = Math.random();
+                    const dataIndex = Math.floor(progress * visibleDataPoints);
+                    
+                    particlePositions[i3] = (dataIndex / repo.commits.length) * axisLength - axisLength/2;
+                    particlePositions[i3 + 1] = (repo.commits[dataIndex] / 100) * 5 - 5 + (Math.random() - 0.5) * 2;
+                    particlePositions[i3 + 2] = (Math.random() - 0.5) * 5;
+                    
+                    particleSizes[i] = 0.1 + Math.random() * 0.3;
+                }
+                
+                particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+                particleGeometry.setAttribute('size', new THREE.BufferAttribute(particleSizes, 1));
+                
+                const particleMaterial = new THREE.PointsMaterial({
+                    color: 0x00ffff,
+                    size: 0.2,
+                    transparent: true,
+                    opacity: 0.8,
+                    blending: THREE.AdditiveBlending
+                });
+                
+                const particles = new THREE.Points(particleGeometry, particleMaterial);
+                scene.add(particles);
+            });
+            
+            // Create summary growth plane
+            const planeSize = 20;
+            const planeSegments = 50;
+            const planeGeometry = new THREE.PlaneGeometry(planeSize, 10, planeSegments, planeSegments);
+            
+            const planeMaterial = new THREE.ShaderMaterial({
+                uniforms: {
+                    uTime: { value: 0 },
+                    uColor1: { value: new THREE.Color(0x00ffff) },
+                    uColor2: { value: new THREE.Color(0xff3366) }
+                },
+                vertexShader: `
+                    uniform float uTime;
+                    varying vec2 vUv;
+                    varying float vHeight;
+                    
+                    void main() {
+                        vUv = uv;
+                        float timeFactor = sin(uTime * 0.001 + position.x * 0.5);
+                        float height = sin(position.x * 2.0 + uTime * 0.001) * 0.5 + 0.5;
+                        vHeight = height;
+                        
+                        vec3 newPosition = position;
+                        newPosition.y += height * 3.0;
+                        
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    uniform vec3 uColor1;
+                    uniform vec3 uColor2;
+                    varying vec2 vUv;
+                    varying float vHeight;
+                    
+                    void main() {
+                        vec3 color = mix(uColor1, uColor2, vHeight);
+                        float alpha = 0.3 + vHeight * 0.3;
+                        gl_FragColor = vec4(color, alpha);
+                    }
+                `,
+                transparent: true,
+                side: THREE.DoubleSide,
+                wireframe: false
+            });
+            
+            const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+            plane.rotation.x = -Math.PI / 2;
+            plane.position.y = -7;
+            plane.position.z = -5;
+            scene.add(plane);
+        }
+
+        // Generate mock repository data
+        function generateRepoData(count) {
+            const repos = [];
+            const names = ['core', 'ai', 'network', 'security', 'ui', 'database', 'api', 'cli', 'mobile', 'web'];
+            
+            for (let i = 0; i < count; i++) {
+                const repo = {
+                    name: names[i % names.length] + '-' + Math.floor(Math.random() * 1000),
+                    commits: []
+                };
+                
+                // Generate growth pattern
+                const baseGrowth = Math.random() * 50 + 10;
+                const volatility = Math.random() * 30 + 10;
+                const trend = Math.random() * 0.2 - 0.1;
+                
+                for (let j = 0; j < 100; j++) {
+                    const noise = Math.sin(j * 0.2) * volatility * 0.5 + 
+                                 Math.random() * volatility * 0.5;
+                    const value = baseGrowth + noise + j * trend;
+                    repo.commits.push(Math.max(0, Math.floor(value)));
+                }
+                
+                repos.push(repo);
+            }
+            
+            return repos;
+        }
+
+        // UI controls
+        document.getElementById('timeRange').addEventListener('input', function(e) {
+            currentTimeRange = parseInt(e.target.value);
+            createVisualization();
+        });
+
+        document.getElementById('bloomIntensity').addEventListener('input', function(e) {
+            bloomPass.strength = parseFloat(e.target.value);
+        });
+
+        // Stats display
+        function updateStats() {
+            const statsDiv = document.getElementById('stats');
+            const totalCommits = repoData.reduce((sum, repo) => {
+                const visibleCommits = Math.floor(repo.commits.length * currentTimeRange / 100);
+                return sum + repo.commits[visibleCommits - 1];
+            }, 0);
+            
+            statsDiv.innerHTML = `
+                <div>Repositories: ${repoData.length}</div>
+                <div>Total Commits: ${totalCommits.toLocaleString()}</div>
+                <div>Time Range: ${currentTimeRange}%</div>
+            `;
+        }
+
+        // Tooltip
+        const tooltip = document.getElementById('tooltip');
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        function onMouseMove(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(scene.children);
+            
+            if (intersects.length > 0) {
+                const intersect = intersects[0];
+                
+                if (intersect.object.userData.repo) {
+                    const repo = intersect.object.userData.repo;
+                    const commitCount = repo.commits[Math.floor(repo.commits.length * currentTimeRange / 100) - 1];
+                    
+                    tooltip.style.left = `${event.clientX + 10}px`;
+                    tooltip.style.top = `${event.clientY + 10}px`;
+                    tooltip.style.opacity = '1';
+                    tooltip.innerHTML = `
+                        <strong>${repo.name}</strong><br>
+                        Commits: ${commitCount.toLocaleString()}<br>
+                        Growth: ${((repo.commits[repo.commits.length-1] - repo.commits[0]) / repo.commits[0] * 100).toFixed(1)}%
+                    `;
+                    return;
+                }
+            }
+            
+            tooltip.style.opacity = '0';
+        }
+
+        window.addEventListener('mousemove', onMouseMove, false);
+
+        // Handle window resize
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        window.addEventListener('resize', onWindowResize);
+
+        // Animation loop
+        let time = 0;
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            time += 16;
+            controls.update();
+            
+            // Update shader uniforms
+            scene.traverse(obj => {
+                if (obj.material && obj.material.uniforms && obj.material.uniforms.uTime) {
+                    obj.material.uniforms.uTime.value = time;
+                }
+            });
+            
+            composer.render();
+            
+            updateStats();
+        }
+
+        // Initialize
+        createVisualization();
+        animate();
+    </script>
+</body>
+</html>
