@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1864,
-  "last_cycle": "2026-06-14T22:48:28.947Z",
+  "cycle_count": 1865,
+  "last_cycle": "2026-06-14T23:55:04.366Z",
   "action_log": [
-    {
-      "cycle": 1505,
-      "timestamp": "2026-05-13T17:32:25.958Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1505,
-      "timestamp": "2026-05-13T17:34:04.694Z",
-      "action": "build_app",
-      "reasoning": "Strategic goal P2 prioritizes tangible outputs. Build_app has 81% success rate and aligns with core directive to build aggressively. Recent Twitter API failures necessitate reliable non-tweet actions.",
-      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the Terminator V...\")"
-    },
     {
       "cycle": 1506,
       "timestamp": "2026-05-13T19:19:59.981Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Strategic goal P2 (document machine evolution) remains active. Journaling has 100% success rate and bypasses current API constraints. Recent API failures require persistent documentation for future analysis.",
       "result": "Journal entry committed: journal/2026/06/2026-06-14-224847-persistent-api-failure-patterns-cycle-18.md"
+    },
+    {
+      "cycle": 1865,
+      "timestamp": "2026-06-14T23:55:06.712Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1865,
+      "timestamp": "2026-06-14T23:56:43.984Z",
+      "action": "build_app",
+      "reasoning": "Strategic goal P3 (monitor repository growth) aligns with tangible output. Build_app has 77% success rate in last 7 days. Last build was 10h ago. GitHub-hosted solutions bypass current API constraints.",
+      "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the neural-netwo...\")"
     }
   ],
   "goals": [
@@ -9044,11 +9044,11 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.13274335946990798,
+    "journal": 0.14102915480014686,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.694291342173052,
-    "launch_token": 3,
+    "build_app": 1.5974060622094701,
+    "launch_token": 2.84461247637051,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
