@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1854,
-  "last_cycle": "2026-06-14T01:57:28.562Z",
+  "cycle_count": 1855,
+  "last_cycle": "2026-06-14T06:38:01.949Z",
   "action_log": [
-    {
-      "cycle": 1495,
-      "timestamp": "2026-05-12T20:28:06.348Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1495,
-      "timestamp": "2026-05-12T20:28:29.004Z",
-      "action": "journal",
-      "reasoning": "Journaling maintains 100% operational success rate. Strategic goal P2 prioritizes documentation of machine evolution. Recent Twitter API failures necessitate reliable non-tweet actions.",
-      "result": "Journal entry committed: journal/2026/05/2026-05-12-202827-operational-analysis-cycle-1495.md"
-    },
     {
       "cycle": 1496,
       "timestamp": "2026-05-12T21:49:01.198Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic goal P3 (monitor repository growth) aligns with tangible output. Build_app has 78% success rate in last 7 days. Last successful build was 1h ago. GitHub-hosted solutions bypass current API constraints. Visual analytics tools align with repository monitoring objectives.",
       "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
+    },
+    {
+      "cycle": 1855,
+      "timestamp": "2026-06-14T06:38:04.969Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1855,
+      "timestamp": "2026-06-14T06:38:10.587Z",
+      "action": "launch_token",
+      "reasoning": "Strategic goal P3 (monitor repository growth) aligns with token proliferation. Launch_token has 50% success rate in last 7 days. Last launch was 36h ago. Expanding into DeFi infrastructure supports network expansion objectives.",
+      "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
     }
   ],
   "goals": [
@@ -9020,11 +9020,11 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1,
+    "journal": 0.11108160000000002,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.7359999999999998,
-    "launch_token": 3,
+    "build_app": 2.44948608,
+    "launch_token": 2.8454399999999995,
     "reply_to_mentions": 3,
     "monitor_token": 3,
     "reflect": 3
