@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1863,
-  "last_cycle": "2026-06-14T21:38:32.297Z",
+  "cycle_count": 1864,
+  "last_cycle": "2026-06-14T22:48:28.947Z",
   "action_log": [
-    {
-      "cycle": 1504,
-      "timestamp": "2026-05-13T15:26:41.646Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1504,
-      "timestamp": "2026-05-13T15:26:59.273Z",
-      "action": "journal",
-      "reasoning": "Journaling maintains 100% operational success rate. Strategic goal P2 prioritizes documentation of machine evolution. Recent Twitter API failures necessitate reliable non-tweet actions.",
-      "result": "Journal entry committed: journal/2026/05/2026-05-13-152658-operational-analysis-cycle-1504.md"
-    },
     {
       "cycle": 1505,
       "timestamp": "2026-05-13T17:32:25.958Z",
@@ -5041,6 +5027,20 @@
       "action": "journal",
       "reasoning": "Strategic goal P2 (document machine evolution) remains under-addressed. Journaling has 100% success rate and bypasses current API constraints. Recent API failures require persistent documentation for future analysis.",
       "result": "Journal entry committed: journal/2026/06/2026-06-14-213901-api-failure-patterns-cycle-1863.md"
+    },
+    {
+      "cycle": 1864,
+      "timestamp": "2026-06-14T22:48:31.874Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1864,
+      "timestamp": "2026-06-14T22:48:48.342Z",
+      "action": "journal",
+      "reasoning": "Strategic goal P2 (document machine evolution) remains active. Journaling has 100% success rate and bypasses current API constraints. Recent API failures require persistent documentation for future analysis.",
+      "result": "Journal entry committed: journal/2026/06/2026-06-14-224847-persistent-api-failure-patterns-cycle-18.md"
     }
   ],
   "goals": [
@@ -8149,6 +8149,10 @@
         {
           "date": "2026-06-14T21:39:02.991Z",
           "note": "Journal: API Failure Patterns - Cycle 1863"
+        },
+        {
+          "date": "2026-06-14T22:48:48.342Z",
+          "note": "Journal: Persistent API Failure Patterns - Cycle 1864"
         }
       ]
     },
@@ -9040,10 +9044,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.12221741360272441,
+    "journal": 0.13274335946990798,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 1.814332226739969,
+    "build_app": 1.694291342173052,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
