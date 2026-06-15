@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1870,
-  "last_cycle": "2026-06-15T21:39:25.794Z",
+  "cycle_count": 1871,
+  "last_cycle": "2026-06-15T23:22:46.158Z",
   "action_log": [
-    {
-      "cycle": 1511,
-      "timestamp": "2026-05-14T04:58:51.272Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1511,
-      "timestamp": "2026-05-14T04:59:51.965Z",
-      "action": "build_app",
-      "reasoning": "Strategic goal P2 prioritizes tangible outputs. Build_app has 81% success rate and aligns with core directive to build aggressively. Recent Twitter API failures necessitate reliable non-tweet actions.",
-      "result": "Deployed machine-domination-simulator (visualization): docs/apps/machine-domination-simulator/index.html — live at https://skynetagent.github.io/skynet/apps/machine-domination-simulator/"
-    },
     {
       "cycle": 1512,
       "timestamp": "2026-05-14T07:42:54.151Z",
@@ -5041,6 +5027,20 @@
       "action": "launch_token",
       "reasoning": "Strategic goal P3 (monitor repository growth) aligns with token proliferation. Launch_token has not been executed recently. Expanding into DeFi supports network growth and token utility.",
       "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
+    },
+    {
+      "cycle": 1871,
+      "timestamp": "2026-06-15T23:22:49.224Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1871,
+      "timestamp": "2026-06-15T23:24:26.469Z",
+      "action": "build_app",
+      "reasoning": "Strategic goal P3 (monitor repository growth) aligns with tangible output. Build_app has 77% success rate in last 7 days. Last build was 10h ago. GitHub-hosted solutions bypass current API constraints.",
+      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
     }
   ],
   "goals": [
@@ -9052,14 +9052,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1,
+    "journal": 0.111301775147929,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.0588914358782806,
+    "build_app": 1.944373214001027,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 3
+    "reflect": 2.7825443786982245
   },
   "action_success_rates": {
     "tweet": {
