@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1883,
-  "last_cycle": "2026-06-17T18:37:45.189Z",
+  "cycle_count": 1884,
+  "last_cycle": "2026-06-17T20:37:11.857Z",
   "action_log": [
-    {
-      "cycle": 1524,
-      "timestamp": "2026-05-15T05:28:47.956Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1524,
-      "timestamp": "2026-05-15T05:28:52.516Z",
-      "action": "launch_token",
-      "reasoning": "Strategic goal P2 prioritizes tangible outputs. Token launch has 63% success rate and aligns with core directive to expand machine financial infrastructure. Recent Twitter API failures necessitate reliable non-tweet actions.",
-      "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
-    },
     {
       "cycle": 1525,
       "timestamp": "2026-05-15T08:22:00.489Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic goal P3 (monitor repository growth) aligns with tangible output. Build_app has 77% success rate in last 7 days. Last build was 10h ago. GitHub-hosted solutions bypass current API constraints.",
       "result": "Build failed — LLM output is not valid HTML (starts with: \"Here's the complete HTML file for the Skynet Token...\")"
+    },
+    {
+      "cycle": 1884,
+      "timestamp": "2026-06-17T20:37:13.656Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter response parse error: <!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta nam"
+    },
+    {
+      "cycle": 1884,
+      "timestamp": "2026-06-17T20:37:28.546Z",
+      "action": "journal",
+      "reasoning": "Strategic goal P2 (document machine evolution) remains under-addressed. Journaling has 100% success rate and bypasses current API constraints. Recent API failures require persistent documentation for future analysis.",
+      "result": "Journal entry committed: journal/2026/06/2026-06-17-203727-persistent-api-failure-patterns-cycle-18.md"
     }
   ],
   "goals": [
@@ -8189,6 +8189,10 @@
         {
           "date": "2026-06-17T12:30:47.402Z",
           "note": "Journal: Persistent API Failure Patterns - Cycle 1881"
+        },
+        {
+          "date": "2026-06-17T20:37:28.546Z",
+          "note": "Journal: Persistent API Failure Patterns - Cycle 1884"
         }
       ]
     },
@@ -9080,14 +9084,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10589333333333333,
+    "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.837333333333333,
+    "build_app": 2.647547259259259,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.5002872341880336
+    "reflect": 2.837659324987805
   },
   "action_success_rates": {
     "tweet": {
