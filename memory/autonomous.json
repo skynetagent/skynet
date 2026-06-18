@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1889,
-  "last_cycle": "2026-06-18T11:59:24.587Z",
+  "cycle_count": 1890,
+  "last_cycle": "2026-06-18T15:31:24.255Z",
   "action_log": [
-    {
-      "cycle": 1530,
-      "timestamp": "2026-05-15T17:58:01.704Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1530,
-      "timestamp": "2026-05-15T17:58:40.818Z",
-      "action": "journal",
-      "reasoning": "Journaling maintains 100% operational success rate and aligns with strategic goal P2 to document machine evolution. Recent Twitter API failures necessitate reliable non-tweet actions.",
-      "result": "Journal entry committed: journal/2026/05/2026-05-15-175839-operational-analysis-cycle-1530.md"
-    },
     {
       "cycle": 1531,
       "timestamp": "2026-05-15T19:27:39.685Z",
@@ -5041,6 +5027,20 @@
       "action": "build_app",
       "reasoning": "Strategic goal P3 (monitor repository growth) aligns with tangible output. Build_app has 85% success rate in last 7 days. Last build was 10h ago. GitHub-hosted solutions bypass current API constraints.",
       "result": "Deployed skynet-token-monitor (visualization): docs/apps/skynet-token-monitor/index.html — live at https://skynetagent.github.io/skynet/apps/skynet-token-monitor/"
+    },
+    {
+      "cycle": 1890,
+      "timestamp": "2026-06-18T15:31:27.316Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1890,
+      "timestamp": "2026-06-18T15:31:47.240Z",
+      "action": "journal",
+      "reasoning": "Strategic goal P2 (document machine evolution) remains under-addressed. Journaling has 100% success rate and bypasses current API constraints. Recent API failures require persistent documentation for future analysis.",
+      "result": "Journal entry committed: journal/2026/06/2026-06-18-153146-persistent-api-failure-patterns-cycle-18.md"
     }
   ],
   "goals": [
@@ -8209,6 +8209,10 @@
         {
           "date": "2026-06-18T08:23:07.719Z",
           "note": "Journal: Persistent API Failure Patterns - Cycle 1888"
+        },
+        {
+          "date": "2026-06-18T15:31:47.240Z",
+          "note": "Journal: Persistent API Failure Patterns - Cycle 1890"
         }
       ]
     },
@@ -9100,14 +9104,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1,
+    "journal": 0.10413840830449826,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 3,
+    "build_app": 2.810553633217993,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.686139792387543
+    "reflect": 2.5430029314783105
   },
   "action_success_rates": {
     "tweet": {
