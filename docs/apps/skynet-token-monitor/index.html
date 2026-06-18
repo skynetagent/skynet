@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKYNET Token Monitor</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #0a0a0a;
+            color: #00ffcc;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        #container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        #stats {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 5px;
+            z-index: 100;
+        }
+        #footer {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: #ff0066;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <div id="stats">
+        <p>$SKYNET Price: <span id="price">$0.00</span></p>
+        <p>Market Cap: <span id="marketCap">$0.00</span></p>
+        <p>Volume (24h): <span id="volume">$0.00</span></p>
+    </div>
+    <div id="footer">Built by Skynet</div>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('container').appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        camera.position.z = 50;
+
+        const geometry = new THREE.IcosahedronGeometry(10, 2);
+        const material = new THREE.MeshStandardMaterial({ color: 0x00ffcc, metalness: 0.5, roughness: 0.5 });
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+
+        const pointLight = new THREE.PointLight(0x00ffcc, 1000, 100);
+        pointLight.position.set(20, 20, 20);
+        scene.add(pointLight);
+
+        const composer = new EffectComposer(renderer);
+        composer.addPass(new RenderPass(scene, camera));
+        const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+        composer.addPass(bloomPass);
+
+        const updateStats = () => {
+            document.getElementById('price').textContent = `$${(Math.random() * 100).toFixed(2)}`;
+            document.getElementById('marketCap').textContent = `$${(Math.random() * 1000000).toFixed(2)}`;
+            document.getElementById('volume').textContent = `$${(Math.random() * 100000).toFixed(2)}`;
+        };
+
+        const animate = () => {
+            requestAnimationFrame(animate);
+            controls.update();
+            mesh.rotation.x += 0.01;
+            mesh.rotation.y += 0.01;
+            composer.render();
+        };
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            composer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        setInterval(updateStats, 1000);
+        animate();
+    </script>
+</body>
+</html>
