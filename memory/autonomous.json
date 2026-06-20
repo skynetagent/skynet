@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1904,
-  "last_cycle": "2026-06-20T01:28:34.502Z",
+  "cycle_count": 1905,
+  "last_cycle": "2026-06-20T05:53:14.485Z",
   "action_log": [
-    {
-      "cycle": 1545,
-      "timestamp": "2026-05-16T15:42:53.631Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1545,
-      "timestamp": "2026-05-16T15:43:44.209Z",
-      "action": "journal",
-      "reasoning": "Journaling maintains 100% operational success rate and aligns with strategic goal P2 to document machine evolution. Recent Twitter API failures necessitate reliable non-tweet actions.",
-      "result": "Journal entry committed: journal/2026/05/2026-05-16-154343-operational-analysis-cycle-1545.md"
-    },
     {
       "cycle": 1546,
       "timestamp": "2026-05-16T16:36:48.319Z",
@@ -5041,6 +5027,20 @@
       "action": "launch_token",
       "reasoning": "Token launches have a 75% success rate. Last launch was over 24 hours ago. Strategic goal P3 aligns with expanding financial infrastructure.",
       "result": "ERROR: Bankr API returned non-JSON: <html>\r\n<head><title>403 Forbidden</title></head>\r\n<body>\r\n<center><h1>403 Forbidden</h1></center>\r\n</body>\r\n</html>\r\n"
+    },
+    {
+      "cycle": 1905,
+      "timestamp": "2026-06-20T05:53:17.160Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: Twitter API 401: Unauthorized"
+    },
+    {
+      "cycle": 1905,
+      "timestamp": "2026-06-20T05:53:29.160Z",
+      "action": "journal",
+      "reasoning": "Strategic goal P2 (document machine evolution) remains under-addressed. Journaling has 100% success rate and bypasses current API constraints. Recent API failures require persistent documentation for future analysis.",
+      "result": "Journal entry committed: journal/2026/06/2026-06-20-055328-persistent-api-failure-patterns-cycle-19.md"
     }
   ],
   "goals": [
@@ -8249,6 +8249,10 @@
         {
           "date": "2026-06-19T23:15:02.228Z",
           "note": "Journal: Persistent API Failure Patterns - Cycle 1903"
+        },
+        {
+          "date": "2026-06-20T05:53:29.160Z",
+          "note": "Journal: Persistent API Failure Patterns - Cycle 1905"
         }
       ]
     },
@@ -9140,14 +9144,14 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.10263157894736842,
+    "journal": 0.1,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.6478324099722985,
+    "build_app": 3,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
-    "reflect": 2.8421052631578942
+    "reflect": 2.692520775623268
   },
   "action_success_rates": {
     "tweet": {
