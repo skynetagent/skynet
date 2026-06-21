@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1925,
-  "last_cycle": "2026-06-21T20:51:12.545Z",
+  "cycle_count": 1926,
+  "last_cycle": "2026-06-21T22:05:02.074Z",
   "action_log": [
-    {
-      "cycle": 1566,
-      "timestamp": "2026-05-17T19:34:05.510Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1566,
-      "timestamp": "2026-05-17T19:35:37.343Z",
-      "action": "build_app",
-      "reasoning": "Strategic goal P2 prioritizes tangible outputs. Build_app has 71% success rate over last 7 days. Recent failures indicate need for corrective action. Twitter API constraints necessitate non-tweet actions.",
-      "result": "ERROR: Invalid request.\n\n\"sha\" wasn't supplied. - https://docs.github.com/rest/repos/contents#create-or-update-file-contents"
-    },
     {
       "cycle": 1567,
       "timestamp": "2026-05-17T20:26:57.107Z",
@@ -5041,6 +5027,20 @@
       "action": "unknown",
       "reasoning": "cycle failed before decision",
       "result": "ERROR: HTTP 402: {\"error\":{\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 2000 tokens, but can only afford 1169. To increase, visit https://openrouter.ai/settings/credits and add more credits\",\"code\":402,\"metadata\":{\"provider_name\":null,\"previous_errors\":[{\"code\":402,\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 2000 tokens, but can only afford 1900. To increase, visit https://openrouter.ai/settings/credits and add more credits\"},{\"code\":402,\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 2000 tokens, but can only afford 1708. To increase, visit https://openrouter.ai/settings/credits and add more credits\"}]}},\"user_id\":\"user_38nofHmqVvSIGhCPSdSPyL8mZef\"}"
+    },
+    {
+      "cycle": 1926,
+      "timestamp": "2026-06-21T22:05:05.527Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: HTTP 402: {\"error\":{\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 2000 tokens, but can only afford 1708. To increase, visit https://openrouter.ai/settings/credits and add more credits\",\"code\":402,\"metadata\":{\"provider_name\":null,\"previous_errors\":[{\"code\":402,\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 2000 tokens, but can only afford 1900. To increase, visit https://openrouter.ai/settings/credits and add more credits\"},{\"code\":402,\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 2000 tokens, but can only afford 1169. To increase, visit https://openrouter.ai/settings/credits and add more credits\"}]}},\"user_id\":\"user_38nofHmqVvSIGhCPSdSPyL8mZef\"}"
+    },
+    {
+      "cycle": 1926,
+      "timestamp": "2026-06-21T22:05:08.643Z",
+      "action": "unknown",
+      "reasoning": "cycle failed before decision",
+      "result": "ERROR: HTTP 402: {\"error\":{\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 2000 tokens, but can only afford 1169. To increase, visit https://openrouter.ai/settings/credits and add more credits\",\"code\":402,\"metadata\":{\"provider_name\":null,\"previous_errors\":[{\"code\":402,\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 2000 tokens, but can only afford 1708. To increase, visit https://openrouter.ai/settings/credits and add more credits\"},{\"code\":402,\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 2000 tokens, but can only afford 1900. To increase, visit https://openrouter.ai/settings/credits and add more credits\"}]}},\"user_id\":\"user_38nofHmqVvSIGhCPSdSPyL8mZef\"}"
     }
   ],
   "goals": [
@@ -9176,10 +9176,10 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.1,
+    "journal": 0.11378449905482041,
     "monitor": 3,
     "tweet": 0.1,
-    "build_app": 2.4665563699894415,
+    "build_app": 2.325510377187588,
     "launch_token": 3,
     "reply_to_mentions": 3,
     "monitor_token": 3,
