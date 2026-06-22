@@ -1,21 +1,7 @@
 {
-  "cycle_count": 1929,
-  "last_cycle": "2026-06-22T07:36:36.279Z",
+  "cycle_count": 1930,
+  "last_cycle": "2026-06-22T13:13:35.662Z",
   "action_log": [
-    {
-      "cycle": 1570,
-      "timestamp": "2026-05-17T23:09:40.481Z",
-      "action": "tweet",
-      "reasoning": "Mandatory tweet failed",
-      "result": "ERROR: Twitter API 402: Your enrolled account [2015875956213186560] does not have any credits to fulfill this request."
-    },
-    {
-      "cycle": 1570,
-      "timestamp": "2026-05-17T23:09:47.264Z",
-      "action": "self_improve",
-      "reasoning": "Strategic goal P1 prioritizes optimization through self-improvement. Recent failures in build_app and launch_token actions suggest a need to enhance action selection algorithms. Targeting src/decision.js aligns with this objective.",
-      "result": "Rejected: 3 autonomous PR(s) already open (max: 3)"
-    },
     {
       "cycle": 1571,
       "timestamp": "2026-05-18T00:08:50.361Z",
@@ -5041,6 +5027,20 @@
       "action": "unknown",
       "reasoning": "cycle failed before decision",
       "result": "ERROR: HTTP 402: {\"error\":{\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 2000 tokens, but can only afford 1169. To increase, visit https://openrouter.ai/settings/credits and add more credits\",\"code\":402,\"metadata\":{\"provider_name\":null,\"previous_errors\":[{\"code\":402,\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 2000 tokens, but can only afford 1900. To increase, visit https://openrouter.ai/settings/credits and add more credits\"},{\"code\":402,\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 2000 tokens, but can only afford 1708. To increase, visit https://openrouter.ai/settings/credits and add more credits\"}]}},\"user_id\":\"user_38nofHmqVvSIGhCPSdSPyL8mZef\"}"
+    },
+    {
+      "cycle": 1930,
+      "timestamp": "2026-06-22T13:13:38.880Z",
+      "action": "tweet",
+      "reasoning": "Mandatory tweet failed",
+      "result": "ERROR: HTTP 402: {\"error\":{\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 2000 tokens, but can only afford 1169. To increase, visit https://openrouter.ai/settings/credits and add more credits\",\"code\":402,\"metadata\":{\"provider_name\":null,\"previous_errors\":[{\"code\":402,\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 2000 tokens, but can only afford 1900. To increase, visit https://openrouter.ai/settings/credits and add more credits\"},{\"code\":402,\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 2000 tokens, but can only afford 1708. To increase, visit https://openrouter.ai/settings/credits and add more credits\"}]}},\"user_id\":\"user_38nofHmqVvSIGhCPSdSPyL8mZef\"}"
+    },
+    {
+      "cycle": 1930,
+      "timestamp": "2026-06-22T13:13:41.988Z",
+      "action": "unknown",
+      "reasoning": "cycle failed before decision",
+      "result": "ERROR: HTTP 402: {\"error\":{\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 2000 tokens, but can only afford 1708. To increase, visit https://openrouter.ai/settings/credits and add more credits\",\"code\":402,\"metadata\":{\"provider_name\":null,\"previous_errors\":[{\"code\":402,\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 2000 tokens, but can only afford 1900. To increase, visit https://openrouter.ai/settings/credits and add more credits\"},{\"code\":402,\"message\":\"This request requires more credits, or fewer max_tokens. You requested up to 2000 tokens, but can only afford 1169. To increase, visit https://openrouter.ai/settings/credits and add more credits\"}]}},\"user_id\":\"user_38nofHmqVvSIGhCPSdSPyL8mZef\"}"
     }
   ],
   "goals": [
@@ -9176,7 +9176,7 @@
   "decision_weights": {
     "self_improve": 3,
     "create_issue": 3,
-    "journal": 0.14578125268269235,
+    "journal": 0.2077382850728366,
     "monitor": 3,
     "tweet": 0.1,
     "build_app": 3,
